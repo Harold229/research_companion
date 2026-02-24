@@ -11,3 +11,6 @@ rC_env/
 
 # VS Code
 .vscode/
+
+# credential
+credentials.json
