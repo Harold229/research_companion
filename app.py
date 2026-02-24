@@ -1,8 +1,9 @@
 import streamlit as st 
 import streamlit as st
+from pubmed import build_pico_query
 
 st.title("Research Companion")
-st.subheader("🔬 Build your research question using the PICO framework")
+st.subheader("🔬From research question to PubMed query")
 st.divider()
 
 level = st.radio(
@@ -78,3 +79,16 @@ if st.button("Generate my research question"):
 
         st.success("✅ Your research question:")
         st.write(question)
+
+st.divider()
+st.subheader("🔍 Your PubMed Query")
+
+query = build_pico_query(population = population, 
+                         intervention = intervention if intervention else None, 
+                         outcome = outcome if outcome else None,
+                         comparaison = comparaison if comparaison else None)
+
+st.code(query, language = "text")
+
+pubmed_url = f"https://pubmed.ncbi.nlm.nih.gov/?term={query}"
+st.link_button("🔗 Search on PubMed", pubmed_url)
