@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Environnement virtuel
+rC_env/
+
+# Variables d'environnement (clés API — important)
+.env
+
+# VS Code
+.vscode/
