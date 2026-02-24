@@ -1,6 +1,7 @@
 import streamlit as st 
 import streamlit as st
 from pubmed import build_pico_query
+from feedback import save_feedback
 
 st.title("Research Companion")
 st.subheader("🔬From research question to PubMed query")
@@ -92,3 +93,26 @@ st.code(query, language = "text")
 
 pubmed_url = f"https://pubmed.ncbi.nlm.nih.gov/?term={query}"
 st.link_button("🔗 Search on PubMed", pubmed_url)
+
+st.divider()
+st.subheader("Quick feedback")
+st.write("Before you go - 30 seconds to help us improve.")
+
+rating = st.slider("How useful was this tool for you ?", min_value=1, max_value=5)
+
+comment = st.text_area("What was missing or confusing ?",
+                       placeholder="Ex: I didn't understand what Level 2 meant...",
+                       height=100)
+
+if st.button("Send Feedback"):
+    save_feedback(
+        level = level,
+        population=population,
+        intervention=intervention or "",
+        outcome=outcome or "",
+        comparaison=comparaison or "",
+        rating=rating,
+        comment=comment
+    )
+
+    st.success("✅ Thank you! Your feedback helps us improve.")
