@@ -1,4 +1,6 @@
 
-requests==2.32.5
-streamlit==1.54.0
+requests
+streamlit
+gspread
+google-auth
 
