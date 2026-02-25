@@ -25,7 +25,7 @@ def get_openai_client():
     return OpenAI(api_key=api_key)
 
 
-PROMPT = """Tu es un expert en méthodologie de recherche scientifique.
+PROMPT = """Tu es un expert en méthodologie de recherche scientifique et en terminologie MeSH de PubMed.
 
 Un étudiant te soumet sa question de recherche :
 "{question}"
@@ -33,9 +33,65 @@ Un étudiant te soumet sa question de recherche :
 Ton travail:
 1. Identifier le bon framework (PICO, PEO, SPIDER)
 2. Extraire les composantes selon le framework
-3. Traduire chaque composante en anglais pour PubMed
+3. Pour chaque composante, décider si c'est un terme simple ou un concept épidémiologique
 
-Réponds UNIQUEMENT en JSON avec cette structure :
+RÈGLES IMPORTANTES :
+- population et pathologie → termes simples en anglais (ex: "Physicians", "Hyperkalemia")
+- outcome et exposure épidémiologiques → blocs MeSH directs avec OR
+
+RÈGLE ABSOLUE KAP avec prise en charge :
+→ outcome_mesh: "\"Health Knowledge, Attitudes, Practice\"[MeSH] OR \"Clinical Competence\"[MeSH] OR \"Disease Management\"[MeSH]"
+→ intervention_mesh: null  — ne jamais mettre Disease Management dans intervention
+→ le contexte clinique (réanimation, urgences, etc.) va dans population
+
+CONCEPTS ÉPIDÉMIOLOGIQUES STANDARDS → utilise toujours ces blocs MeSH :
+- prévalence / incidence → "\"Prevalence\"[MeSH] OR \"Incidence\"[MeSH]"
+- facteurs de risque → "\"Risk Factors\"[MeSH]"
+- mortalité → "\"Mortality\"[MeSH] OR \"Morbidity\"[MeSH]"
+- prise en charge / traitement → "\"Disease Management\"[MeSH] OR \"Therapeutics\"[MeSH]"
+- connaissance / KAP → "\"Health Knowledge, Attitudes, Practice\"[MeSH] OR \"Clinical Competence\"[MeSH]"
+
+RÈGLE POPULATION MÉDICALE :
+Toujours inclure "Physicians" comme terme large + le MeSH term de la spécialité si précisée.
+Format : "Spécialité, Physicians"
+Exemples :
+- "médecins" → "Physicians, General Practitioners"
+- "cardiologues" → "Cardiologists, Physicians"
+- "infirmiers" → "Nurses, Nursing Staff"
+
+Exemples :
+
+Question KAP simple :
+"connaissances des infirmiers sur la douleur chronique"
+→ framework: PEO
+→ population: "Nurses"
+→ exposure: "Chronic Pain"
+→ outcome_mesh: "\\"Health Knowledge, Attitudes, Practice\\"[MeSH] OR \\"Clinical Competence\\"[MeSH]"
+→ intervention_mesh: null
+
+Question KAP avec prise en charge :
+"connaissance des médecins sur la prise en charge de l'hyperkaliémie"
+→ framework: PEO
+→ population: "Physicians"
+→ exposure: "Hyperkalemia"
+→ outcome_mesh: "\"Health Knowledge, Attitudes, Practice\"[MeSH] OR \"Clinical Competence\"[MeSH] OR \"Disease Management\"[MeSH] OR \"Surveys and Questionnaires\"[MeSH] OR \"Practice Patterns, Physicians\"[MeSH]"
+→ intervention_mesh: "\\"Disease Management\\"[MeSH]"
+
+Question KAP avec contexte clinique :
+"connaissance des médecins de réanimation sur la prise en charge de l'hyperkaliémie"
+→ population: "Physicians, Intensive Care Units"
+→ exposure: "Hyperkalemia"
+→ outcome_mesh: "\"Health Knowledge, Attitudes, Practice\"[MeSH] OR \"Clinical Competence\"[MeSH] OR \"Disease Management\"[MeSH] OR \"Surveys and Questionnaires\"[MeSH] OR \"Practice Patterns, Physicians\"[MeSH]"
+→ intervention_mesh: null
+
+Question de prévalence :
+"prévalence du diabète chez les enfants au Mali"
+→ framework: PICO
+→ population: "Children, Mali"
+→ intervention: "Diabetes Mellitus"
+→ outcome_mesh: "\\"Prevalence\\"[MeSH] OR \\"Incidence\\"[MeSH]"
+
+Réponds UNIQUEMENT en JSON :
 {{
     "framework": "PICO" ou "PEO" ou "SPIDER",
     "explanation": "pourquoi ce framework en une phrase",
@@ -49,13 +105,14 @@ Réponds UNIQUEMENT en JSON avec cette structure :
     "components_english": {{
         "population": "...",
         "intervention": "..." ou null,
+        "intervention_mesh": "..." ou null,
         "comparison": "..." ou null,
         "outcome": "..." ou null,
+        "outcome_mesh": "..." ou null,
         "exposure": "..." ou null
     }},
     "research_level": 1 ou 2 ou 3
 }}"""
-
 
 def parse_response(text: str) -> dict:
     clean = text.strip()

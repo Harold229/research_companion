@@ -54,11 +54,14 @@ if mode == "natural":
                 st.subheader("🔎 Your PubMed Query")
 
                 query = build_pico_query(
-                    population=components_en['population'],
-                    intervention=components_en.get('intervention'),
-                    outcome=components_en.get('outcome'),
-                    comparaison=components_en.get('comparison')
-                )
+                population=components_en['population'],
+                intervention=components_en.get('intervention'),
+                intervention_mesh=components_en.get('intervention_mesh'),
+                outcome=components_en.get('outcome'),
+                outcome_mesh=components_en.get('outcome_mesh'),
+                comparaison=components_en.get('comparison'),
+                exposure=components_en.get('exposure')
+            )
 
                 st.code(query, language="text")
                 st.link_button("🔗 Search on PubMed", f"https://pubmed.ncbi.nlm.nih.gov/?term={query}")
@@ -140,11 +143,11 @@ else:
             st.subheader("🔎 Your PubMed Query")
 
             query = build_pico_query(
-                population=population,
-                intervention=intervention if intervention else None,
-                outcome=outcome if outcome else None,
-                comparaison=comparaison if comparaison else None
-            )
+                    population=population,  # ← les variables du formulaire
+                    intervention=intervention if intervention else None,
+                    outcome=outcome if outcome else None,
+                    comparaison=comparaison if comparaison else None
+                )
 
             st.code(query, language="text")
             st.link_button("🔗 Search on PubMed", f"https://pubmed.ncbi.nlm.nih.gov/?term={query}")

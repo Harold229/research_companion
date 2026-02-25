@@ -37,26 +37,42 @@ def get_mesh_terms(term: str) -> list:
 
 
 def build_pico_query(population: str, intervention: str = None,
-                     outcome: str = None, comparaison: str = None) -> str:
-    """
-Assemble une query PubMed complète à partir des composantes PICO.
-    """
+                     intervention_mesh: str = None,
+                     outcome: str = None, outcome_mesh: str = None,
+                     comparaison: str = None,
+                     exposure: str = None) -> str:
     blocks = []
 
- # Chaque terme PICO devient un bloc MeSH 
+    # Population — toujours via API
     if population:
-        blocks.append(f"({get_mesh_terms(population)})")
-    if intervention:
+        if "," in population:
+            parts = [p.strip() for p in population.split(",")]
+            for part in parts:
+                blocks.append(f"({get_mesh_terms(part)})")
+        else:
+            blocks.append(f"({get_mesh_terms(population)})")
+
+    # Intervention — bloc MeSH direct ou API
+    if intervention_mesh:
+        blocks.append(f"({intervention_mesh})")
+    elif intervention:
         blocks.append(f"({get_mesh_terms(intervention)})")
-    if outcome:
+
+    # Exposure — toujours via API
+    if exposure:
+        blocks.append(f"({get_mesh_terms(exposure)})")
+
+    # Outcome — bloc MeSH direct ou API
+    if outcome_mesh:
+        blocks.append(f"({outcome_mesh})")
+    elif outcome:
         blocks.append(f"({get_mesh_terms(outcome)})")
+
+    # Comparaison — toujours via API
     if comparaison:
         blocks.append(f"({get_mesh_terms(comparaison)})")
-    
-    # On assemble les blocs avec AND
 
-    return " \nAND ".join(blocks)
-
+    return "\nAND ".join(blocks)
 
 if __name__ == "__main__":
     query = build_pico_query(
