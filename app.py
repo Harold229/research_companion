@@ -151,7 +151,7 @@ else:
 
             st.code(query, language="text")
             st.link_button("🔗 Search on PubMed", f"https://pubmed.ncbi.nlm.nih.gov/?term={query}")
-
+            st.caption("💡 Too few results? Remove the most specific term. Too many? Add filters directly in PubMed.")
 st.divider()
 st.subheader("📝 Quick Feedback")
 st.write("Before you go — 30 seconds to help us improve.")
