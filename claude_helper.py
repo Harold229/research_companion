@@ -3,12 +3,13 @@ import streamlit as st
 import os
 import time
 import json
+from openai import OpenAI
 from dotenv import load_dotenv
 
 load_dotenv()
 
 
-def get_client():
+def get_anthropic_client():
     try:
         api_key = st.secrets["ANTHROPIC_API_KEY"].strip()
     except:
@@ -16,16 +17,15 @@ def get_client():
     return anthropic.Anthropic(api_key=api_key)
 
 
-def analyze_research_question(question: str) -> dict:
-    client = get_client()
+def get_openai_client():
+    try:
+        api_key = st.secrets["OPENAI_API_KEY"].strip()
+    except:
+        api_key = os.getenv("OPENAI_API_KEY").strip()
+    return OpenAI(api_key=api_key)
 
-    for attempt in range(3):
-        try:
-            message = client.messages.create(
-                model="claude-sonnet-4-20250514",
-                max_tokens=1024,
-                messages=[
-                    {"role": "user", "content": f"""Tu es un expert en méthodologie de recherche scientifique.
+
+PROMPT = """Tu es un expert en méthodologie de recherche scientifique.
 
 Un étudiant te soumet sa question de recherche :
 "{question}"
@@ -54,28 +54,58 @@ Réponds UNIQUEMENT en JSON avec cette structure :
         "exposure": "..." ou null
     }},
     "research_level": 1 ou 2 ou 3
-}}"""}
-                ]
-            )
+}}"""
 
-            response_text = message.content[0].text
-            clean = response_text.strip()
-            if clean.startswith("```json"):
-                clean = clean[7:]
-            if clean.startswith("```"):
-                clean = clean[3:]
-            if clean.endswith("```"):
-                clean = clean[:-3]
-            return json.loads(clean.strip())
 
+def parse_response(text: str) -> dict:
+    clean = text.strip()
+    if clean.startswith("```json"):
+        clean = clean[7:]
+    if clean.startswith("```"):
+        clean = clean[3:]
+    if clean.endswith("```"):
+        clean = clean[:-3]
+    return json.loads(clean.strip())
+
+
+def analyze_with_claude(question: str) -> dict:
+    client = get_anthropic_client()
+    message = client.messages.create(
+        model="claude-sonnet-4-20250514",
+        max_tokens=1024,
+        messages=[{"role": "user", "content": PROMPT.format(question=question)}]
+    )
+    return parse_response(message.content[0].text)
+
+
+def analyze_with_openai(question: str) -> dict:
+    client = get_openai_client()
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        max_tokens=1024,
+        messages=[{"role": "user", "content": PROMPT.format(question=question)}]
+    )
+    return parse_response(response.choices[0].message.content)
+
+
+def analyze_research_question(question: str) -> dict:
+    # Essaie Claude d'abord
+    for attempt in range(2):
+        try:
+            return analyze_with_claude(question)
         except anthropic.APIStatusError as e:
-            if e.status_code == 529:
-                if attempt < 2:
-                    time.sleep(3)
-                else:
-                    raise Exception("The AI is temporarily busy. Please try again in a moment.")
+            if e.status_code == 529 and attempt < 1:
+                time.sleep(3)
             else:
-                raise e
+                break
+        except Exception:
+            break
+
+    # Fallback sur OpenAI
+    try:
+        return analyze_with_openai(question)
+    except Exception as e:
+        raise Exception(f"Both AI providers are unavailable. Please try again later.")
 
 
 if __name__ == "__main__":
