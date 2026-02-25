@@ -14,3 +14,4 @@ rC_env/
 
 # credential
 credentials.json
+.streamlit/secrets.toml

@@ -1,0 +1,1053 @@
+
+[     UTC     ] Logs for researchcompanion.streamlit.app/
+────────────────────────────────────────────────────────────────────────────────────────
+[17:42:36] 🚀 Starting up repository: 'research_companion', branch: 'main', main module: 'app.py'
+[17:42:36] 🐙 Cloning repository...
+[17:42:36] 🐙 Cloning into '/mount/src/research_companion'...
+
+[17:42:36] 🐙 Cloned repository!
+[17:42:36] 🐙 Pulling code changes from Github...
+[17:42:37] 📦 Processing dependencies...
+
+──────────────────────────────────────── uv ───────────────────────────────────────────
+
+Using uv pip install.
+Using Python 3.13.12 environment at /home/adminuser/venv
+Resolved [2026-02-24 17:42:37.790543] 37 packages in 423ms
+Prepared 37 packages in 1.77s
+Installed 37 packages in 156ms
+ + altair==6.0.0
+ + attrs==25.4.0
+ + blinker==1.9.0
+ + cachetools==6.2.6
+ + certifi==2026.1.4
+ + charset-normalizer==3.4.4
+ + click==8.3.1
+ + gitdb==4.0.12
+ + gitpython==3.1.46
+ + idna==3.11
+ + jinja2==3.1.6
+ + jsonschema==4.26.0
+ + jsonschema-specifications==2025.9.1
+ + markupsafe==3.0.3[2026-02-24 17:42:39.719931] 
+ + narwhals==2.17.0
+ + numpy==2.4.2
+ + packaging==26.0
+ + pandas==2.3.3
+ + pillow==12.1.1
+ + protobuf==6.33.5
+ + pyarrow==23.0.1
+ + pydeck==0.9.1
+ + python-dateutil==2.9.0.post0
+ + pytz==2025.2
+ + referencing==0.37.0
+ + requests==[2026-02-24 17:42:39.720113] 2.32.5
+ + rpds-py==0.30.0
+ + six==1.17.0
+ + smmap==5.0.2
+ + streamlit==1.54.0
+ + tenacity==9.1.4
+ + toml==0.10.2
+ + tornado==6.5.4
+ + typing-extensions==4.15.0
+ + tzdata==2025.3
+ +[2026-02-24 17:42:39.720277]  urllib3==2.6.3
+ + watchdog==6.0.0
+Checking if Streamlit is installed
+Found Streamlit version 1.54.0 in the environment
+Installing rich for an improved exception logging
+Using uv pip install.
+Using Python 3.13.12 environment at /home/adminuser/venv
+Resolved 4 packages in 134ms
+Prepared 4 packages in 122ms
+Installed 4 packages in 15ms
+ + markdown-it-py==4.0.0
+ + mdurl==0.1.2
+ + pygments==2.19.2
+ + rich==14.3.3
+
+────────────────────────────────────────────────────────────────────────────────────────
+
+[17:42:41] 🐍 Python dependencies were installed from /mount/src/research_companion/requirements.txt using uv.
+Check if streamlit is installed
+Streamlit is already installed
+[17:42:43] 📦 Processed dependencies!
+
+
+
+[17:46:23] 🐙 Pulling code changes from Github...
+[17:46:24] 📦 Processing dependencies...
+[17:46:24] 📦 Processed dependencies!
+[17:46:25] 🔄 Updated app!
+2026-02-24 20:51:12.009 Session with id d450de56-4f94-4d32-a401-0c8d3bf5978d is already connected! Connecting to a new session.
+[22:46:25] 🐙 Pulling code changes from Github...
+[22:46:25] 📦 Processing dependencies...
+
+──────────────────────────────────────── uv ───────────────────────────────────────────
+
+Using uv pip install.
+Using Python 3.13.12 environment at /home/adminuser/venv
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/exec_code.py:129 in exec_func_with_error_handling                        
+                                                                                
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/script_runner.py:689 in code_to_exec                                     
+                                                                                
+  /mount/src/research_companion/app.py:4 in <module>                            
+                                                                                
+     1 import streamlit as st                                                   
+     2 import streamlit as st                                                   
+     3                                                                          
+  ❱  4 st.title("Research Companion")                                           
+     5 st.subheader("🔬 Build your research question using the PICO framework"  
+     6 st.divider()                                                             
+     7                                                                          
+                                                                                
+  /mount/src/research_companion/feedback.py:1 in <module>                       
+                                                                                
+  ❱  1 import gspread                                                           
+     2 from google.oauth2.service_account import credentials                    
+     3 from datetime import datetime                                            
+     4                                                                          
+────────────────────────────────────────────────────────────────────────────────
+ModuleNotFoundError: No module named 'gspread'
+Resolved 48 packages in 268ms
+Prepared 11 packages in 112ms
+Installed 11 packages in 8ms
+ + cffi==2.0.0
+ [2026-02-24 22:46:26.359817] + cryptography==46.0.5
+ + google-auth==2.48.0
+ + google-auth-oauthlib==1.2.4
+ + gspread==6.2.1
+ + oauthlib==3.3.1
+ + pyasn1==0.6.2
+ + pyasn1-modules==0.4.2
+ + pycparser==3.0
+ + requests-oauthlib==2.0.0
+ + rsa==4.9.1
+Checking if Streamlit is installed
+Found Streamlit version 1.54.0 in the environment
+Installing rich for an improved exception logging
+Using uv pip install.
+Using Python 3.13.12 environment at /home/adminuser/venv
+Audited 1 package in 2ms
+
+────────────────────────────────────────────────────────────────────────────────────────
+
+[22:46:27] 🐍 Python dependencies were installed from /mount/src/research_companion/requirements.txt using uv.
+[22:46:27] 📦 Processed dependencies!
+  Stopping...
+
+
+
+[22:46:29] 🔄 Updated app!
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/exec_code.py:129 in exec_func_with_error_handling                        
+                                                                                
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/script_runner.py:689 in code_to_exec                                     
+                                                                                
+  /mount/src/research_companion/app.py:87 in <module>                           
+                                                                                
+     84 st.divider()                                                            
+     85 st.subheader("🔍 Your PubMed Query")                                    
+     86                                                                         
+  ❱  87 query = build_pico_query(population = population,                       
+     88 │   │   │   │   │   │    intervention = intervention if intervention e  
+     89 │   │   │   │   │   │    outcome = outcome if outcome else None,        
+     90 │   │   │   │   │   │    comparaison = comparaison if comparaison else  
+                                                                                
+  /mount/src/research_companion/pubmed.py:43 in build_pico_query                
+                                                                                
+    40 │   if population:                                                       
+    41 │   │   blocks.append(f"({get_mesh_terms(population)})")                 
+    42 │   if intervention:                                                     
+  ❱ 43 │   │   blocks.append(f"({get_mesh_terms(intervention)})")               
+    44 │   if outcome:                                                          
+    45 │   │   blocks.append(f"({get_mesh_terms(outcome)})")                    
+    46 │   if comparaison:                                                      
+                                                                                
+  /mount/src/research_companion/pubmed.py:18 in get_mesh_terms                  
+                                                                                
+    15 │   }                                                                    
+    16 │                                                                        
+    17 │   response = requests.get(base_url, params = params)                   
+  ❱ 18 │   root = ET.fromstring(response.text)                                  
+    19 │   query_translation = root.find("QueryTranslation")                    
+    20 │                                                                        
+    21 │   if query_translation is not None:                                    
+                                                                                
+  /usr/local/lib/python3.13/xml/etree/ElementTree.py:1348 in XML                
+                                                                                
+    1345 │   """                                                                
+    1346 │   if not parser:                                                     
+    1347 │   │   parser = XMLParser(target=TreeBuilder())                       
+  ❱ 1348 │   parser.feed(text)                                                  
+    1349 │   return parser.close()                                              
+    1350                                                                        
+    1351                                                                        
+────────────────────────────────────────────────────────────────────────────────
+────────────────────────────────────────────────────────────────────────────────
+                                                                                
+  ▲                                                                             
+────────────────────────────────────────────────────────────────────────────────
+ParseError: not well-formed (invalid token): line 1, column 0
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/exec_code.py:129 in exec_func_with_error_handling                        
+                                                                                
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/script_runner.py:689 in code_to_exec                                     
+                                                                                
+  /mount/src/research_companion/app.py:87 in <module>                           
+                                                                                
+     84 st.divider()                                                            
+     85 st.subheader("🔍 Your PubMed Query")                                    
+     86                                                                         
+  ❱  87 query = build_pico_query(population = population,                       
+     88 │   │   │   │   │   │    intervention = intervention if intervention e  
+     89 │   │   │   │   │   │    outcome = outcome if outcome else None,        
+     90 │   │   │   │   │   │    comparaison = comparaison if comparaison else  
+                                                                                
+  /mount/src/research_companion/pubmed.py:45 in build_pico_query                
+                                                                                
+    42 │   if intervention:                                                     
+    43 │   │   blocks.append(f"({get_mesh_terms(intervention)})")               
+    44 │   if outcome:                                                          
+  ❱ 45 │   │   blocks.append(f"({get_mesh_terms(outcome)})")                    
+    46 │   if comparaison:                                                      
+    47 │   │   blocks.append(f"({get_mesh_terms(comparaison)})")                
+    48                                                                          
+                                                                                
+  /mount/src/research_companion/pubmed.py:18 in get_mesh_terms                  
+                                                                                
+    15 │   }                                                                    
+    16 │                                                                        
+    17 │   response = requests.get(base_url, params = params)                   
+  ❱ 18 │   root = ET.fromstring(response.text)                                  
+    19 │   query_translation = root.find("QueryTranslation")                    
+    20 │                                                                        
+    21 │   if query_translation is not None:                                    
+                                                                                
+  /usr/local/lib/python3.13/xml/etree/ElementTree.py:1348 in XML                
+                                                                                
+    1345 │   """                                                                
+    1346 │   if not parser:                                                     
+    1347 │   │   parser = XMLParser(target=TreeBuilder())                       
+  ❱ 1348 │   parser.feed(text)                                                  
+    1349 │   return parser.close()                                              
+    1350                                                                        
+    1351                                                                        
+────────────────────────────────────────────────────────────────────────────────
+────────────────────────────────────────────────────────────────────────────────
+                                                                                
+  ▲                                                                             
+────────────────────────────────────────────────────────────────────────────────
+ParseError: not well-formed (invalid token): line 1, column 0
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/exec_code.py:129 in exec_func_with_error_handling                        
+                                                                                
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/script_runner.py:689 in code_to_exec                                     
+                                                                                
+  /mount/src/research_companion/app.py:87 in <module>                           
+                                                                                
+     84 st.divider()                                                            
+     85 st.subheader("🔍 Your PubMed Query")                                    
+     86                                                                         
+  ❱  87 query = build_pico_query(population = population,                       
+     88 │   │   │   │   │   │    intervention = intervention if intervention e  
+     89 │   │   │   │   │   │    outcome = outcome if outcome else None,        
+     90 │   │   │   │   │   │    comparaison = comparaison if comparaison else  
+                                                                                
+  /mount/src/research_companion/pubmed.py:45 in build_pico_query                
+                                                                                
+    42 │   if intervention:                                                     
+    43 │   │   blocks.append(f"({get_mesh_terms(intervention)})")               
+    44 │   if outcome:                                                          
+  ❱ 45 │   │   blocks.append(f"({get_mesh_terms(outcome)})")                    
+    46 │   if comparaison:                                                      
+    47 │   │   blocks.append(f"({get_mesh_terms(comparaison)})")                
+    48                                                                          
+                                                                                
+  /mount/src/research_companion/pubmed.py:18 in get_mesh_terms                  
+                                                                                
+    15 │   }                                                                    
+    16 │                                                                        
+    17 │   response = requests.get(base_url, params = params)                   
+  ❱ 18 │   root = ET.fromstring(response.text)                                  
+    19 │   query_translation = root.find("QueryTranslation")                    
+    20 │                                                                        
+    21 │   if query_translation is not None:                                    
+                                                                                
+  /usr/local/lib/python3.13/xml/etree/ElementTree.py:1348 in XML                
+                                                                                
+    1345 │   """                                                                
+    1346 │   if not parser:                                                     
+    1347 │   │   parser = XMLParser(target=TreeBuilder())                       
+  ❱ 1348 │   parser.feed(text)                                                  
+    1349 │   return parser.close()                                              
+    1350                                                                        
+    1351                                                                        
+────────────────────────────────────────────────────────────────────────────────
+────────────────────────────────────────────────────────────────────────────────
+                                                                                
+  ▲                                                                             
+────────────────────────────────────────────────────────────────────────────────
+ParseError: not well-formed (invalid token): line 1, column 0
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/exec_code.py:129 in exec_func_with_error_handling                        
+                                                                                
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/script_runner.py:689 in code_to_exec                                     
+                                                                                
+  /mount/src/research_companion/app.py:87 in <module>                           
+                                                                                
+     84 st.divider()                                                            
+     85 st.subheader("🔍 Your PubMed Query")                                    
+     86                                                                         
+  ❱  87 query = build_pico_query(population = population,                       
+     88 │   │   │   │   │   │    intervention = intervention if intervention e  
+     89 │   │   │   │   │   │    outcome = outcome if outcome else None,        
+     90 │   │   │   │   │   │    comparaison = comparaison if comparaison else  
+                                                                                
+  /mount/src/research_companion/pubmed.py:43 in build_pico_query                
+                                                                                
+    40 │   if population:                                                       
+    41 │   │   blocks.append(f"({get_mesh_terms(population)})")                 
+    42 │   if intervention:                                                     
+  ❱ 43 │   │   blocks.append(f"({get_mesh_terms(intervention)})")               
+    44 │   if outcome:                                                          
+    45 │   │   blocks.append(f"({get_mesh_terms(outcome)})")                    
+    46 │   if comparaison:                                                      
+                                                                                
+  /mount/src/research_companion/pubmed.py:18 in get_mesh_terms                  
+                                                                                
+    15 │   }                                                                    
+    16 │                                                                        
+    17 │   response = requests.get(base_url, params = params)                   
+  ❱ 18 │   root = ET.fromstring(response.text)                                  
+    19 │   query_translation = root.find("QueryTranslation")                    
+    20 │                                                                        
+    21 │   if query_translation is not None:                                    
+                                                                                
+  /usr/local/lib/python3.13/xml/etree/ElementTree.py:1348 in XML                
+                                                                                
+    1345 │   """                                                                
+    1346 │   if not parser:                                                     
+    1347 │   │   parser = XMLParser(target=TreeBuilder())                       
+  ❱ 1348 │   parser.feed(text)                                                  
+    1349 │   return parser.close()                                              
+    1350                                                                        
+    1351                                                                        
+────────────────────────────────────────────────────────────────────────────────
+────────────────────────────────────────────────────────────────────────────────
+                                                                                
+  ▲                                                                             
+────────────────────────────────────────────────────────────────────────────────
+ParseError: not well-formed (invalid token): line 1, column 0
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/exec_code.py:129 in exec_func_with_error_handling                        
+                                                                                
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/script_runner.py:689 in code_to_exec                                     
+                                                                                
+  /mount/src/research_companion/app.py:87 in <module>                           
+                                                                                
+     84 st.divider()                                                            
+     85 st.subheader("🔍 Your PubMed Query")                                    
+     86                                                                         
+  ❱  87 query = build_pico_query(population = population,                       
+     88 │   │   │   │   │   │    intervention = intervention if intervention e  
+     89 │   │   │   │   │   │    outcome = outcome if outcome else None,        
+     90 │   │   │   │   │   │    comparaison = comparaison if comparaison else  
+                                                                                
+  /mount/src/research_companion/pubmed.py:43 in build_pico_query                
+                                                                                
+    40 │   if population:                                                       
+    41 │   │   blocks.append(f"({get_mesh_terms(population)})")                 
+    42 │   if intervention:                                                     
+  ❱ 43 │   │   blocks.append(f"({get_mesh_terms(intervention)})")               
+    44 │   if outcome:                                                          
+    45 │   │   blocks.append(f"({get_mesh_terms(outcome)})")                    
+    46 │   if comparaison:                                                      
+                                                                                
+  /mount/src/research_companion/pubmed.py:18 in get_mesh_terms                  
+                                                                                
+    15 │   }                                                                    
+    16 │                                                                        
+    17 │   response = requests.get(base_url, params = params)                   
+  ❱ 18 │   root = ET.fromstring(response.text)                                  
+    19 │   query_translation = root.find("QueryTranslation")                    
+    20 │                                                                        
+    21 │   if query_translation is not None:                                    
+                                                                                
+  /usr/local/lib/python3.13/xml/etree/ElementTree.py:1348 in XML                
+                                                                                
+    1345 │   """                                                                
+    1346 │   if not parser:                                                     
+    1347 │   │   parser = XMLParser(target=TreeBuilder())                       
+  ❱ 1348 │   parser.feed(text)                                                  
+    1349 │   return parser.close()                                              
+    1350                                                                        
+    1351                                                                        
+────────────────────────────────────────────────────────────────────────────────
+────────────────────────────────────────────────────────────────────────────────
+                                                                                
+  ▲                                                                             
+────────────────────────────────────────────────────────────────────────────────
+ParseError: not well-formed (invalid token): line 1, column 0
+[08:35:27] 🐙 Pulling code changes from Github...
+[08:35:27] 📦 Processing dependencies...
+[08:35:27] 📦 Processed dependencies!
+[08:35:29] 🔄 Updated app!
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /mount/src/research_companion/feedback.py:15 in get_sheet                     
+                                                                                
+    12 │   Connexion au Google sheet via le compte de service                   
+    13 │   """                                                                  
+    14 │   try:                                                                 
+  ❱ 15 │   │   creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])        
+    16 │   │   creds = credentials.Credentials.from_service_account_file(       
+    17 │      creds_dict, scopes=SCOPES)                                        
+    18 │   except:                                                              
+────────────────────────────────────────────────────────────────────────────────
+NameError: name 'json' is not defined
+
+During handling of the above exception, another exception occurred:
+
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/exec_code.py:129 in exec_func_with_error_handling                        
+                                                                                
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/script_runner.py:689 in code_to_exec                                     
+                                                                                
+  /mount/src/research_companion/app.py:108 in <module>                          
+                                                                                
+    105 │   │   │   │   │      height=100)                                      
+    106                                                                         
+    107 if st.button("Send Feedback"):                                          
+  ❱ 108 │   save_feedback(                                                      
+    109 │   │   level = level,                                                  
+    110 │   │   population=population,                                          
+    111 │   │   intervention=intervention or "",                                
+                                                                                
+  /mount/src/research_companion/feedback.py:31 in save_feedback                 
+                                                                                
+    28 │   """                                                                  
+    29 │   Sauvegarder les retours utilisateurs dans le google sheet            
+    30 │   """                                                                  
+  ❱ 31 │   sheet = get_sheet()                                                  
+    32 │   row = [                                                              
+    33 │   │   datetime.now().strftime("%Y-%m-%d %H:%M:%S"),                    
+    34 │   │   level,                                                           
+                                                                                
+  /mount/src/research_companion/feedback.py:19 in get_sheet                     
+                                                                                
+    16 │   │   creds = credentials.Credentials.from_service_account_file(       
+    17 │      creds_dict, scopes=SCOPES)                                        
+    18 │   except:                                                              
+  ❱ 19 │   │   creds = Credentials.from_service_account_file(                   
+    20 │   │   │   "credentials.json", scopes=SCOPES                            
+    21 │   │   )                                                                
+    22 │   client = gspread.authorize(creds)                                    
+────────────────────────────────────────────────────────────────────────────────
+NameError: name 'Credentials' is not defined
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /mount/src/research_companion/feedback.py:15 in get_sheet                     
+                                                                                
+    12 │   Connexion au Google sheet via le compte de service                   
+    13 │   """                                                                  
+    14 │   try:                                                                 
+  ❱ 15 │   │   creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])        
+    16 │   │   creds = credentials.Credentials.from_service_account_file(       
+    17 │      creds_dict, scopes=SCOPES)                                        
+    18 │   except:                                                              
+────────────────────────────────────────────────────────────────────────────────
+NameError: name 'json' is not defined
+
+During handling of the above exception, another exception occurred:
+
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/exec_code.py:129 in exec_func_with_error_handling                        
+                                                                                
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/script_runner.py:689 in code_to_exec                                     
+                                                                                
+  /mount/src/research_companion/app.py:108 in <module>                          
+                                                                                
+    105 │   │   │   │   │      height=100)                                      
+    106                                                                         
+    107 if st.button("Send Feedback"):                                          
+  ❱ 108 │   save_feedback(                                                      
+    109 │   │   level = level,                                                  
+    110 │   │   population=population,                                          
+    111 │   │   intervention=intervention or "",                                
+                                                                                
+  /mount/src/research_companion/feedback.py:31 in save_feedback                 
+                                                                                
+    28 │   """                                                                  
+    29 │   Sauvegarder les retours utilisateurs dans le google sheet            
+    30 │   """                                                                  
+  ❱ 31 │   sheet = get_sheet()                                                  
+    32 │   row = [                                                              
+    33 │   │   datetime.now().strftime("%Y-%m-%d %H:%M:%S"),                    
+    34 │   │   level,                                                           
+                                                                                
+  /mount/src/research_companion/feedback.py:19 in get_sheet                     
+                                                                                
+    16 │   │   creds = credentials.Credentials.from_service_account_file(       
+    17 │      creds_dict, scopes=SCOPES)                                        
+    18 │   except:                                                              
+  ❱ 19 │   │   creds = Credentials.from_service_account_file(                   
+    20 │   │   │   "credentials.json", scopes=SCOPES                            
+    21 │   │   )                                                                
+    22 │   client = gspread.authorize(creds)                                    
+────────────────────────────────────────────────────────────────────────────────
+NameError: name 'Credentials' is not defined
+[09:24:43] 🐙 Pulling code changes from Github...
+[09:24:44] 📦 Processing dependencies...
+[09:24:44] 📦 Processed dependencies!
+[09:24:45] 🔄 Updated app!
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /mount/src/research_companion/feedback.py:15 in get_sheet                     
+                                                                                
+    12 │   Connexion au Google sheet via le compte de service                   
+    13 │   """                                                                  
+    14 │   try:                                                                 
+  ❱ 15 │   │   creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])        
+    16 │   │   creds = credentials.Credentials.from_service_account_file(       
+    17 │      creds_dict, scopes=SCOPES)                                        
+    18 │   except:                                                              
+────────────────────────────────────────────────────────────────────────────────
+NameError: name 'json' is not defined
+
+During handling of the above exception, another exception occurred:
+
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/exec_code.py:129 in exec_func_with_error_handling                        
+                                                                                
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/script_runner.py:689 in code_to_exec                                     
+                                                                                
+  /mount/src/research_companion/app.py:108 in <module>                          
+                                                                                
+    105 │   │   │   │   │      height=100)                                      
+    106                                                                         
+    107 if st.button("Send Feedback"):                                          
+  ❱ 108 │   save_feedback(                                                      
+    109 │   │   level = level,                                                  
+    110 │   │   population=population,                                          
+    111 │   │   intervention=intervention or "",                                
+                                                                                
+  /mount/src/research_companion/feedback.py:31 in save_feedback                 
+                                                                                
+    28 │   """                                                                  
+    29 │   Sauvegarder les retours utilisateurs dans le google sheet            
+    30 │   """                                                                  
+  ❱ 31 │   sheet = get_sheet()                                                  
+    32 │   row = [                                                              
+    33 │   │   datetime.now().strftime("%Y-%m-%d %H:%M:%S"),                    
+    34 │   │   level,                                                           
+                                                                                
+  /mount/src/research_companion/feedback.py:19 in get_sheet                     
+                                                                                
+    16 │   │   creds = credentials.Credentials.from_service_account_file(       
+    17 │      creds_dict, scopes=SCOPES)                                        
+    18 │   except:                                                              
+  ❱ 19 │   │   creds = Credentials.from_service_account_file(                   
+    20 │   │   │   "credentials.json", scopes=SCOPES                            
+    21 │   │   )                                                                
+    22 │   client = gspread.authorize(creds)                                    
+────────────────────────────────────────────────────────────────────────────────
+NameError: name 'Credentials' is not defined
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /mount/src/research_companion/feedback.py:15 in get_sheet                     
+                                                                                
+    12 def get_sheet():                                                         
+    13 │   """                                                                  
+    14 │   Connexion au Google sheet via le compte de service                   
+  ❱ 15 │   """                                                                  
+    16 │   try:                                                                 
+    17 │   │   creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])        
+    18 │   │   creds = Credentials.from_service_account_info(                   
+────────────────────────────────────────────────────────────────────────────────
+NameError: name 'json' is not defined
+
+During handling of the above exception, another exception occurred:
+
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/exec_code.py:129 in exec_func_with_error_handling                        
+                                                                                
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/script_runner.py:689 in code_to_exec                                     
+                                                                                
+  /mount/src/research_companion/app.py:108 in <module>                          
+                                                                                
+    105 │   │   │   │   │      height=100)                                      
+    106                                                                         
+    107 if st.button("Send Feedback"):                                          
+  ❱ 108 │   save_feedback(                                                      
+    109 │   │   level = level,                                                  
+    110 │   │   population=population,                                          
+    111 │   │   intervention=intervention or "",                                
+                                                                                
+  /mount/src/research_companion/feedback.py:31 in save_feedback                 
+                                                                                
+    28 def save_feedback(level: str, population: str, intervention: str,        
+    29 │   │   │   │     outcome: str, comparaison: str, rating: int, comment:  
+    30 │   """                                                                  
+  ❱ 31 │   Sauvegarder les retours utilisateurs dans le google sheet            
+    32 │   """                                                                  
+    33 │   sheet = get_sheet()                                                  
+    34 │   row = [                                                              
+                                                                                
+  /mount/src/research_companion/feedback.py:19 in get_sheet                     
+                                                                                
+    16 │   try:                                                                 
+    17 │   │   creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])        
+    18 │   │   creds = Credentials.from_service_account_info(                   
+  ❱ 19 │   │   │   creds_dict, scopes=SCOPES)                                   
+    20 │   except:                                                              
+    21 │   │   creds = Credentials.from_service_account_file(                   
+    22 │   │   │   "credentials.json", scopes=SCOPES                            
+────────────────────────────────────────────────────────────────────────────────
+NameError: name 'Credentials' is not defined
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /mount/src/research_companion/feedback.py:15 in get_sheet                     
+                                                                                
+    12 def get_sheet():                                                         
+    13 │   """                                                                  
+    14 │   Connexion au Google sheet via le compte de service                   
+  ❱ 15 │   """                                                                  
+    16 │   try:                                                                 
+    17 │   │   creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])        
+    18 │   │   creds = Credentials.from_service_account_info(                   
+────────────────────────────────────────────────────────────────────────────────
+NameError: name 'json' is not defined
+
+During handling of the above exception, another exception occurred:
+
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/exec_code.py:129 in exec_func_with_error_handling                        
+                                                                                
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/script_runner.py:689 in code_to_exec                                     
+                                                                                
+  /mount/src/research_companion/app.py:108 in <module>                          
+                                                                                
+    105 │   │   │   │   │      height=100)                                      
+    106                                                                         
+    107 if st.button("Send Feedback"):                                          
+  ❱ 108 │   save_feedback(                                                      
+    109 │   │   level = level,                                                  
+    110 │   │   population=population,                                          
+    111 │   │   intervention=intervention or "",                                
+                                                                                
+  /mount/src/research_companion/feedback.py:31 in save_feedback                 
+                                                                                
+    28 def save_feedback(level: str, population: str, intervention: str,        
+    29 │   │   │   │     outcome: str, comparaison: str, rating: int, comment:  
+    30 │   """                                                                  
+  ❱ 31 │   Sauvegarder les retours utilisateurs dans le google sheet            
+    32 │   """                                                                  
+    33 │   sheet = get_sheet()                                                  
+    34 │   row = [                                                              
+                                                                                
+  /mount/src/research_companion/feedback.py:19 in get_sheet                     
+                                                                                
+    16 │   try:                                                                 
+    17 │   │   creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])        
+    18 │   │   creds = Credentials.from_service_account_info(                   
+  ❱ 19 │   │   │   creds_dict, scopes=SCOPES)                                   
+    20 │   except:                                                              
+    21 │   │   creds = Credentials.from_service_account_file(                   
+    22 │   │   │   "credentials.json", scopes=SCOPES                            
+────────────────────────────────────────────────────────────────────────────────
+NameError: name 'Credentials' is not defined
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /mount/src/research_companion/feedback.py:15 in get_sheet                     
+                                                                                
+    12 def get_sheet():                                                         
+    13 │   """                                                                  
+    14 │   Connexion au Google sheet via le compte de service                   
+  ❱ 15 │   """                                                                  
+    16 │   try:                                                                 
+    17 │   │   creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])        
+    18 │   │   creds = Credentials.from_service_account_info(                   
+────────────────────────────────────────────────────────────────────────────────
+NameError: name 'json' is not defined
+
+During handling of the above exception, another exception occurred:
+
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/exec_code.py:129 in exec_func_with_error_handling                        
+                                                                                
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/script_runner.py:689 in code_to_exec                                     
+                                                                                
+  /mount/src/research_companion/app.py:108 in <module>                          
+                                                                                
+    105 │   │   │   │   │      height=100)                                      
+    106                                                                         
+    107 if st.button("Send Feedback"):                                          
+  ❱ 108 │   save_feedback(                                                      
+    109 │   │   level = level,                                                  
+    110 │   │   population=population,                                          
+    111 │   │   intervention=intervention or "",                                
+                                                                                
+  /mount/src/research_companion/feedback.py:31 in save_feedback                 
+                                                                                
+    28 def save_feedback(level: str, population: str, intervention: str,        
+    29 │   │   │   │     outcome: str, comparaison: str, rating: int, comment:  
+    30 │   """                                                                  
+  ❱ 31 │   Sauvegarder les retours utilisateurs dans le google sheet            
+    32 │   """                                                                  
+    33 │   sheet = get_sheet()                                                  
+    34 │   row = [                                                              
+                                                                                
+  /mount/src/research_companion/feedback.py:19 in get_sheet                     
+                                                                                
+    16 │   try:                                                                 
+    17 │   │   creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])        
+    18 │   │   creds = Credentials.from_service_account_info(                   
+  ❱ 19 │   │   │   creds_dict, scopes=SCOPES)                                   
+    20 │   except:                                                              
+    21 │   │   creds = Credentials.from_service_account_file(                   
+    22 │   │   │   "credentials.json", scopes=SCOPES                            
+────────────────────────────────────────────────────────────────────────────────
+NameError: name 'Credentials' is not defined
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /mount/src/research_companion/feedback.py:15 in get_sheet                     
+                                                                                
+    12 def get_sheet():                                                         
+    13 │   """                                                                  
+    14 │   Connexion au Google sheet via le compte de service                   
+  ❱ 15 │   """                                                                  
+    16 │   try:                                                                 
+    17 │   │   creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])        
+    18 │   │   creds = Credentials.from_service_account_info(                   
+────────────────────────────────────────────────────────────────────────────────
+NameError: name 'json' is not defined
+
+During handling of the above exception, another exception occurred:
+
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/exec_code.py:129 in exec_func_with_error_handling                        
+                                                                                
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/script_runner.py:689 in code_to_exec                                     
+                                                                                
+  /mount/src/research_companion/app.py:108 in <module>                          
+                                                                                
+    105 │   │   │   │   │      height=100)                                      
+    106                                                                         
+    107 if st.button("Send Feedback"):                                          
+  ❱ 108 │   save_feedback(                                                      
+    109 │   │   level = level,                                                  
+    110 │   │   population=population,                                          
+    111 │   │   intervention=intervention or "",                                
+                                                                                
+  /mount/src/research_companion/feedback.py:31 in save_feedback                 
+                                                                                
+    28 def save_feedback(level: str, population: str, intervention: str,        
+    29 │   │   │   │     outcome: str, comparaison: str, rating: int, comment:  
+    30 │   """                                                                  
+  ❱ 31 │   Sauvegarder les retours utilisateurs dans le google sheet            
+    32 │   """                                                                  
+    33 │   sheet = get_sheet()                                                  
+    34 │   row = [                                                              
+                                                                                
+  /mount/src/research_companion/feedback.py:19 in get_sheet                     
+                                                                                
+    16 │   try:                                                                 
+    17 │   │   creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])        
+    18 │   │   creds = Credentials.from_service_account_info(                   
+  ❱ 19 │   │   │   creds_dict, scopes=SCOPES)                                   
+    20 │   except:                                                              
+    21 │   │   creds = Credentials.from_service_account_file(                   
+    22 │   │   │   "credentials.json", scopes=SCOPES                            
+────────────────────────────────────────────────────────────────────────────────
+NameError: name 'Credentials' is not defined
+2026-02-25 09:38:00.769 Session with id a4a3ce17-520b-4c03-887f-6d805aa3f22a is already connected! Connecting to a new session.
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /mount/src/research_companion/feedback.py:15 in get_sheet                     
+                                                                                
+    12 def get_sheet():                                                         
+    13 │   """                                                                  
+    14 │   Connexion au Google sheet via le compte de service                   
+  ❱ 15 │   """                                                                  
+    16 │   try:                                                                 
+    17 │   │   creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])        
+    18 │   │   creds = Credentials.from_service_account_info(                   
+────────────────────────────────────────────────────────────────────────────────
+NameError: name 'json' is not defined
+
+During handling of the above exception, another exception occurred:
+
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/exec_code.py:129 in exec_func_with_error_handling                        
+                                                                                
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/script_runner.py:689 in code_to_exec                                     
+                                                                                
+  /mount/src/research_companion/app.py:108 in <module>                          
+                                                                                
+    105 │   │   │   │   │      height=100)                                      
+    106                                                                         
+    107 if st.button("Send Feedback"):                                          
+  ❱ 108 │   save_feedback(                                                      
+    109 │   │   level = level,                                                  
+    110 │   │   population=population,                                          
+    111 │   │   intervention=intervention or "",                                
+                                                                                
+  /mount/src/research_companion/feedback.py:31 in save_feedback                 
+                                                                                
+    28 def save_feedback(level: str, population: str, intervention: str,        
+    29 │   │   │   │     outcome: str, comparaison: str, rating: int, comment:  
+    30 │   """                                                                  
+  ❱ 31 │   Sauvegarder les retours utilisateurs dans le google sheet            
+    32 │   """                                                                  
+    33 │   sheet = get_sheet()                                                  
+    34 │   row = [                                                              
+                                                                                
+  /mount/src/research_companion/feedback.py:19 in get_sheet                     
+                                                                                
+    16 │   try:                                                                 
+    17 │   │   creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])        
+    18 │   │   creds = Credentials.from_service_account_info(                   
+  ❱ 19 │   │   │   creds_dict, scopes=SCOPES)                                   
+    20 │   except:                                                              
+    21 │   │   creds = Credentials.from_service_account_file(                   
+    22 │   │   │   "credentials.json", scopes=SCOPES                            
+────────────────────────────────────────────────────────────────────────────────
+NameError: name 'Credentials' is not defined
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /mount/src/research_companion/feedback.py:15 in get_sheet                     
+                                                                                
+    12 def get_sheet():                                                         
+    13 │   """                                                                  
+    14 │   Connexion au Google sheet via le compte de service                   
+  ❱ 15 │   """                                                                  
+    16 │   try:                                                                 
+    17 │   │   creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])        
+    18 │   │   creds = Credentials.from_service_account_info(                   
+────────────────────────────────────────────────────────────────────────────────
+NameError: name 'json' is not defined
+
+During handling of the above exception, another exception occurred:
+
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/exec_code.py:129 in exec_func_with_error_handling                        
+                                                                                
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/script_runner.py:689 in code_to_exec                                     
+                                                                                
+  /mount/src/research_companion/app.py:108 in <module>                          
+                                                                                
+    105 │   │   │   │   │      height=100)                                      
+    106                                                                         
+    107 if st.button("Send Feedback"):                                          
+  ❱ 108 │   save_feedback(                                                      
+    109 │   │   level = level,                                                  
+    110 │   │   population=population,                                          
+    111 │   │   intervention=intervention or "",                                
+                                                                                
+  /mount/src/research_companion/feedback.py:31 in save_feedback                 
+                                                                                
+    28 def save_feedback(level: str, population: str, intervention: str,        
+    29 │   │   │   │     outcome: str, comparaison: str, rating: int, comment:  
+    30 │   """                                                                  
+  ❱ 31 │   Sauvegarder les retours utilisateurs dans le google sheet            
+    32 │   """                                                                  
+    33 │   sheet = get_sheet()                                                  
+    34 │   row = [                                                              
+                                                                                
+  /mount/src/research_companion/feedback.py:19 in get_sheet                     
+                                                                                
+    16 │   try:                                                                 
+    17 │   │   creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])        
+    18 │   │   creds = Credentials.from_service_account_info(                   
+  ❱ 19 │   │   │   creds_dict, scopes=SCOPES)                                   
+    20 │   except:                                                              
+    21 │   │   creds = Credentials.from_service_account_file(                   
+    22 │   │   │   "credentials.json", scopes=SCOPES                            
+────────────────────────────────────────────────────────────────────────────────
+NameError: name 'Credentials' is not defined
+[09:43:08] 🐙 Pulling code changes from Github...
+[09:43:08] 📦 Processing dependencies...
+[09:43:08] 📦 Processed dependencies!
+[09:43:10] 🔄 Updated app!
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /mount/src/research_companion/feedback.py:15 in get_sheet                     
+                                                                                
+    12 def get_sheet():                                                         
+    13 │   """                                                                  
+    14 │   Connexion au Google sheet via le compte de service                   
+  ❱ 15 │   """                                                                  
+    16 │   try:                                                                 
+    17 │   │   creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])        
+    18 │   │   creds = Credentials.from_service_account_info(                   
+────────────────────────────────────────────────────────────────────────────────
+NameError: name 'json' is not defined
+
+During handling of the above exception, another exception occurred:
+
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/exec_code.py:129 in exec_func_with_error_handling                        
+                                                                                
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/script_runner.py:689 in code_to_exec                                     
+                                                                                
+  /mount/src/research_companion/app.py:108 in <module>                          
+                                                                                
+    105 │   │   │   │   │      height=100)                                      
+    106                                                                         
+    107 if st.button("Send Feedback"):                                          
+  ❱ 108 │   save_feedback(                                                      
+    109 │   │   level = level,                                                  
+    110 │   │   population=population,                                          
+    111 │   │   intervention=intervention or "",                                
+                                                                                
+  /mount/src/research_companion/feedback.py:31 in save_feedback                 
+                                                                                
+    28 def save_feedback(level: str, population: str, intervention: str,        
+    29 │   │   │   │     outcome: str, comparaison: str, rating: int, comment:  
+    30 │   """                                                                  
+  ❱ 31 │   Sauvegarder les retours utilisateurs dans le google sheet            
+    32 │   """                                                                  
+    33 │   sheet = get_sheet()                                                  
+    34 │   row = [                                                              
+                                                                                
+  /mount/src/research_companion/feedback.py:19 in get_sheet                     
+                                                                                
+    16 │   try:                                                                 
+    17 │   │   creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])        
+    18 │   │   creds = Credentials.from_service_account_info(                   
+  ❱ 19 │   │   │   creds_dict, scopes=SCOPES)                                   
+    20 │   except:                                                              
+    21 │   │   creds = Credentials.from_service_account_file(                   
+    22 │   │   │   "credentials.json", scopes=SCOPES                            
+────────────────────────────────────────────────────────────────────────────────
+NameError: name 'Credentials' is not defined
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /mount/src/research_companion/feedback.py:15 in get_sheet                     
+                                                                                
+    12 def get_sheet():                                                         
+    13 │   """                                                                  
+    14 │   Connexion au Google sheet via le compte de service                   
+  ❱ 15 │   """                                                                  
+    16 │   try:                                                                 
+    17 │   │   creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])        
+    18 │   │   creds = Credentials.from_service_account_info(                   
+────────────────────────────────────────────────────────────────────────────────
+NameError: name 'json' is not defined
+
+During handling of the above exception, another exception occurred:
+
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/exec_code.py:129 in exec_func_with_error_handling                        
+                                                                                
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/script_runner.py:689 in code_to_exec                                     
+                                                                                
+  /mount/src/research_companion/app.py:108 in <module>                          
+                                                                                
+    105 │   │   │   │   │      height=100)                                      
+    106                                                                         
+    107 if st.button("Send Feedback"):                                          
+  ❱ 108 │   save_feedback(                                                      
+    109 │   │   level = level,                                                  
+    110 │   │   population=population,                                          
+    111 │   │   intervention=intervention or "",                                
+                                                                                
+  /mount/src/research_companion/feedback.py:31 in save_feedback                 
+                                                                                
+    28 def save_feedback(level: str, population: str, intervention: str,        
+    29 │   │   │   │     outcome: str, comparaison: str, rating: int, comment:  
+    30 │   """                                                                  
+  ❱ 31 │   Sauvegarder les retours utilisateurs dans le google sheet            
+    32 │   """                                                                  
+    33 │   sheet = get_sheet()                                                  
+    34 │   row = [                                                              
+                                                                                
+  /mount/src/research_companion/feedback.py:19 in get_sheet                     
+                                                                                
+    16 │   try:                                                                 
+    17 │   │   creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])        
+    18 │   │   creds = Credentials.from_service_account_info(                   
+  ❱ 19 │   │   │   creds_dict, scopes=SCOPES)                                   
+    20 │   except:                                                              
+    21 │   │   creds = Credentials.from_service_account_file(                   
+    22 │   │   │   "credentials.json", scopes=SCOPES                            
+────────────────────────────────────────────────────────────────────────────────
+NameError: name 'Credentials' is not defined
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /mount/src/research_companion/feedback.py:15 in get_sheet                     
+                                                                                
+    12 def get_sheet():                                                         
+    13 │   """                                                                  
+    14 │   Connexion au Google sheet via le compte de service                   
+  ❱ 15 │   """                                                                  
+    16 │   try:                                                                 
+    17 │   │   creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])        
+    18 │   │   creds = Credentials.from_service_account_info(                   
+────────────────────────────────────────────────────────────────────────────────
+NameError: name 'json' is not defined
+
+During handling of the above exception, another exception occurred:
+
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/exec_code.py:129 in exec_func_with_error_handling                        
+                                                                                
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+  nner/script_runner.py:689 in code_to_exec                                     
+                                                                                
+  /mount/src/research_companion/app.py:108 in <module>                          
+                                                                                
+    105 │   │   │   │   │      height=100)                                      
+    106                                                                         
+    107 if st.button("Send Feedback"):                                          
+  ❱ 108 │   save_feedback(                                                      
+    109 │   │   level = level,                                                  
+    110 │   │   population=population,                                          
+    111 │   │   intervention=intervention or "",                                
+                                                                                
+  /mount/src/research_companion/feedback.py:31 in save_feedback                 
+                                                                                
+    28 def save_feedback(level: str, population: str, intervention: str,        
+    29 │   │   │   │     outcome: str, comparaison: str, rating: int, comment:  
+    30 │   """                                                                  
+  ❱ 31 │   Sauvegarder les retours utilisateurs dans le google sheet            
+    32 │   """                                                                  
+    33 │   sheet = get_sheet()                                                  
+    34 │   row = [                                                              
+                                                                                
+  /mount/src/research_companion/feedback.py:19 in get_sheet                     
+                                                                                
+    16 │   try:                                                                 
+    17 │   │   creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])        
+    18 │   │   creds = Credentials.from_service_account_info(                   
+  ❱ 19 │   │   │   creds_dict, scopes=SCOPES)                                   
+    20 │   except:                                                              
+    21 │   │   creds = Credentials.from_service_account_file(                   
+    22 │   │   │   "credentials.json", scopes=SCOPES                            
+────────────────────────────────────────────────────────────────────────────────
+NameError: name 'Credentials' is not defined
