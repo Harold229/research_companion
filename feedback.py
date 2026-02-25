@@ -1,6 +1,8 @@
 import gspread
-from google.oauth2.service_account import credentials
+from google.oauth2.service_account import Credentials
 from datetime import datetime 
+import streamlit as st
+import json
 
 SCOPES = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -13,8 +15,8 @@ def get_sheet():
     """
     try:
         creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])
-        creds = credentials.Credentials.from_service_account_file(
-       creds_dict, scopes=SCOPES)
+        creds = Credentials.from_service_account_info(
+            creds_dict, scopes=SCOPES)
     except:
         creds = Credentials.from_service_account_file(
             "credentials.json", scopes=SCOPES
