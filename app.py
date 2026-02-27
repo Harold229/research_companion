@@ -27,21 +27,52 @@ outcome = ""
 comparaison = ""
 
 if mode == "natural":
+    intent = st.radio(
+        "What do you want to do?",
+        options=["explore", "structure"],
+        format_func=lambda x: {
+            "explore": "🔍 Explore — I want to know if studies exist on a topic",
+            "structure": "📋 Structure — I have a research question to formalize"
+        }[x],
+        horizontal=True
+    )
     question = st.text_area(
         "Describe your research idea",
-        placeholder="Ex: je veux étudier si les médecins connaissent bien la prise en charge de l'hyperkaliémie au Bénin",
+        placeholder="Ex: est-ce qu'il y a des études sur l'hyperkaliémie chez les enfants..." if intent == "explore" else "Ex: connaissance des médecins sur la prise en charge de l'hyperkaliémie en Afrique...",
         height=100
     )
-
+    search_mode = st.radio(
+        "🔍 Search strategy",
+        options=["sensitive", "balanced", "specific"],
+        format_func=lambda x: {
+            "sensitive": "🌐 Sensitive — maximum results",
+            "balanced": "⚖️ Balanced — precision and recall",
+            "specific": "🎯 Specific — high precision"
+        }[x],
+        horizontal=True,
+        index=0  # Sensitive par défaut
+    )
     if st.button("Analyze my question"):
         if question:
             try:
                 with st.spinner("Analyzing your question..."):
-                    result = analyze_research_question(question)
+                    result = analyze_research_question(question,intent = intent)
+                    comment = result.get('research_question_comment')
+                    question_fr = result.get('research_question_fr')
+                    
 
                 st.success(f"✅ Framework identified: **{result['framework']}**")
                 st.info(f"💡 {result['explanation']}")
-                st.subheader("📊 Your research components:")
+                if intent == "structure":
+                    if question_fr:
+                        st.markdown(f"📝 **{comment}**")
+                        st.markdown(f"*{question_fr}*")
+                    else:
+                        st.success(f"✅ {comment}")
+
+                    st.subheader("📊 Your research components:")
+
+                
 
                 components = result['components']
                 components_en = result['components_english']
@@ -54,14 +85,20 @@ if mode == "natural":
                 st.subheader("🔎 Your PubMed Query")
 
                 query = build_pico_query(
-                population=components_en['population'],
-                intervention=components_en.get('intervention'),
-                intervention_mesh=components_en.get('intervention_mesh'),
-                outcome=components_en.get('outcome'),
-                outcome_mesh=components_en.get('outcome_mesh'),
-                comparaison=components_en.get('comparison'),
-                exposure=components_en.get('exposure')
-            )
+                        population=components_en['population'],
+                        population_tiab=components_en.get('population_tiab'),
+                        intervention=components_en.get('intervention'),
+                        intervention_mesh=components_en.get('intervention_mesh'),
+                        intervention_tiab=components_en.get('intervention_tiab'),
+                        outcome=components_en.get('outcome'),
+                        outcome_mesh=components_en.get('outcome_mesh'),
+                        outcome_tiab=components_en.get('outcome_tiab'),
+                        exposure=components_en.get('exposure'),
+                        exposure_tiab=components_en.get('exposure_tiab'),
+                        comparaison=components_en.get('comparison'),
+                        geography_tiab=result.get('geography_tiab'),
+                        mode=search_mode
+                    )
 
                 st.code(query, language="text")
                 st.link_button("🔗 Search on PubMed", f"https://pubmed.ncbi.nlm.nih.gov/?term={query}")
@@ -112,6 +149,19 @@ else:
 
     st.divider()
 
+    search_mode = st.radio(
+        "🔍 Search strategy",
+        options=["sensitive", "balanced", "specific"],
+        format_func=lambda x: {
+            "sensitive": "🌐 Sensitive — maximum results",
+            "balanced": "⚖️ Balanced — precision and recall",
+            "specific": "🎯 Specific — high precision"
+        }[x],
+        horizontal=True,
+        index=0
+    )
+
+
     if st.button("Generate my research question"):
         if level == "Level 1" and not population:
             st.warning("⚠️ Please fill in at least Population.")
@@ -146,7 +196,8 @@ else:
                     population=population,  # ← les variables du formulaire
                     intervention=intervention if intervention else None,
                     outcome=outcome if outcome else None,
-                    comparaison=comparaison if comparaison else None
+                    comparaison=comparaison if comparaison else None,
+                    mode=search_mode
                 )
 
             st.code(query, language="text")
