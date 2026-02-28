@@ -39,24 +39,19 @@ def build_block(term: str, mesh_block: str = None,
     
     term       → terme simple envoyé à l'API PubMed
     mesh_block → bloc MeSH direct généré par Claude (optionnel)
-    tiab_term  → terme TIAB (optionnel, utilise term par défaut)
+    tiab_term  → termes TIAB séparés par OR (optionnel)
     mode       → sensitive, balanced, specific
     """
-
-
     mesh = mesh_block if mesh_block else get_mesh_terms(term)
-    
-    # Utilise tiab_term si fourni, sinon terme brut
     tiab = f"(({tiab_term})[Title/Abstract])" if tiab_term else f'"{term}"[Title/Abstract]'
 
     if mode == "sensitive":
-        return f"({mesh} OR {tiab})"
+        return f"({mesh}\nOR {tiab})"
     elif mode == "balanced":
-        return f"({mesh} AND {tiab})"
+        return f"({mesh}\nAND {tiab})"
     else:
         return f"({mesh})"
-
-
+    
 def build_pico_query(population: str, population_tiab: str = None,
                      intervention: str = None, intervention_mesh: str = None, intervention_tiab: str = None,
                      outcome: str = None, outcome_mesh: str = None, outcome_tiab: str = None,
@@ -136,7 +131,7 @@ def count_results(query : str) -> str:
         if count is not None:
             return int(count.text)
         return -1
-    except Exception:
+    except Exception as e:
         print(f"count_results error: {str(e)}")
         return -1
     
