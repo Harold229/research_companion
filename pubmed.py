@@ -112,7 +112,82 @@ def build_pico_query(population: str, population_tiab: str = None,
         geo_blocks = [f'"{t.strip()}"[Title/Abstract]' for t in terms]
         blocks.append(f"({' OR '.join(geo_blocks)})")
     return "\nAND ".join(blocks)
+
+def count_results(query : str) -> str:
+    '''
+    Compte le nombre de résultats pour une requête donnée.
+    '''
+    try:
+        base_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
+        params = {
+            "db": "pubmed",
+            "term": query,
+            "retmode": "xml",
+            "retmax": 0
+        }
+
+        response = requests.get(base_url, params=params, timeout=10)
+
+        if response.status_code != 200:
+            return -1
+        root = ET.fromstring(response.text)
+        count = root.find("Count")
+
+        if count is not None:
+            return int(count.text)
+        return -1
+    except Exception:
+        print(f"count_results error: {str(e)}")
+        return -1
     
+def count_geographic_scopes(base_query: str, geography: dict) -> dict:
+    """
+    Compte les résultats pour chaque scope géographique
+    """
+    print("Geography reçu:", geography)
+    print("Base query:", base_query[:100])
+
+    if not geography:
+        return {}
+    
+    country = geography.get('country')
+    region = geography.get('region')
+    continent = geography.get('continent')
+    
+    scopes = {}
+    
+    # Sans géographie — mondial
+    scopes['global'] = {
+        'label': '🌐 Worldwide (no geographic filter)',
+        'count': count_results(base_query)
+    }
+    
+    # Continent
+    if continent:
+        q = base_query + f'\nAND ("{continent}"[Title/Abstract])'
+        scopes['continent'] = {
+            'label': f'🌍 {continent}',
+            'count': count_results(q)
+        }
+    
+    # Région
+    if region:
+        q = base_query + f'\nAND ("{region}"[Title/Abstract])'
+        scopes['region'] = {
+            'label': f'🌍 {region}',
+            'count': count_results(q)
+        }
+    
+    # Pays
+    if country:
+        q = base_query + f'\nAND ("{country}"[Title/Abstract])'
+        scopes['country'] = {
+            'label': f'📍 {country}',
+            'count': count_results(q)
+        }
+    
+    return scopes
+
 if __name__ == "__main__":
     print("=== SENSITIVE ===")
     print(build_pico_query(

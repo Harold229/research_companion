@@ -2,6 +2,7 @@ import streamlit as st
 from pubmed import build_pico_query
 from feedback import save_feedback
 from claude_helper import analyze_research_question
+from pubmed import build_pico_query, count_results, count_geographic_scopes
 
 st.title("Research Companion")
 st.subheader("🔬 From research question to PubMed query")
@@ -60,9 +61,12 @@ if mode == "natural":
                     comment = result.get('research_question_comment')
                     question_fr = result.get('research_question_fr')
                     
-
-                st.success(f"✅ Framework identified: **{result['framework']}**")
-                st.info(f"💡 {result['explanation']}")
+                if intent == "structure":
+                    st.success(f"✅ Framework identified: **{result['framework']}**")
+                    st.info(f"💡 {result['explanation']}")
+                else:
+                    st.info(f"💡 Here are the key concepts identified in your question.")
+                                
                 if intent == "structure":
                     if question_fr:
                         st.markdown(f"📝 **{comment}**")
@@ -101,8 +105,50 @@ if mode == "natural":
                     )
 
                 st.code(query, language="text")
-                st.link_button("🔗 Search on PubMed", f"https://pubmed.ncbi.nlm.nih.gov/?term={query}")
 
+                
+                # Compte global avec géographie
+                with st.spinner("Counting results..."):
+                    count = count_results(query)
+
+                if count >= 0:
+                    st.metric(label="📊 Articles found on PubMed", value=count)
+                
+                if intent == "explore" and count > 10000:
+                    st.info("💡 Your question seems complex. Try the **Structure** mode for a more precise query.")
+
+                # Scopes géographiques — séparé
+                geography = result.get('geography')
+                if geography:
+                    with st.spinner("Counting results by geographic scope..."):
+                        base_query = build_pico_query(
+                            population=components_en['population'],
+                            population_tiab=components_en.get('population_tiab'),
+                            intervention=components_en.get('intervention'),
+                            intervention_mesh=components_en.get('intervention_mesh'),
+                            intervention_tiab=components_en.get('intervention_tiab'),
+                            outcome=components_en.get('outcome'),
+                            outcome_mesh=components_en.get('outcome_mesh'),
+                            outcome_tiab=components_en.get('outcome_tiab'),
+                            exposure=components_en.get('exposure'),
+                            exposure_tiab=components_en.get('exposure_tiab'),
+                            mode=search_mode
+                        )
+                        scopes = count_geographic_scopes(base_query, geography)
+
+                    if scopes:
+                        st.subheader("🗺️ Results by geographic scope")
+                        cols = st.columns(4)
+
+                        scope_order = ['country', 'region', 'continent', 'global']
+                        for i, scope in enumerate(scope_order):
+                            if scope in scopes:
+                                s = scopes[scope]
+                                cols[i].metric(label=s['label'], value=s['count'])
+
+                st.link_button("🔗 Search on PubMed", f"https://pubmed.ncbi.nlm.nih.gov/?term={query}")
+                st.caption("💡 Too few results? Remove the most specific term. Too many? Add filters directly in PubMed.")
+        
             except Exception as e:
                 st.error(f"⚠️ {str(e)}")
         else:
