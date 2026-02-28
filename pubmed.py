@@ -142,11 +142,26 @@ def count_results(query : str) -> str:
     
 def count_geographic_scopes(base_query: str, geography: dict) -> dict:
     """
-    Compte les résultats pour chaque scope géographique
+    Compte le nombre de résultats PubMed pour chaque scope géographique.
+    
+    Paramètres :
+        base_query  → query PubMed sans contrainte géographique
+        geography   → dict avec country, region, continent (retourné par Claude)
+    
+    Retourne :
+        dict avec 4 scopes : country, region, continent, global
+        Chaque scope contient :
+            - label : libellé affiché dans l'interface
+            - query : query PubMed complète pour ce scope
+            - count : nombre de résultats trouvés (-1 si erreur)
+    
+    Exemple :
+        geography = {'country': 'Benin', 'region': 'West Africa', 'continent': 'Sub-Saharan Africa'}
+        → country  : base_query AND "Benin"[Title/Abstract]
+        → region   : base_query AND "West Africa"[Title/Abstract]
+        → continent: base_query AND "Sub-Saharan Africa"[Title/Abstract]
+        → global   : base_query (sans contrainte géographique)
     """
-    print("Geography reçu:", geography)
-    print("Base query:", base_query[:100])
-
     if not geography:
         return {}
     
@@ -156,9 +171,10 @@ def count_geographic_scopes(base_query: str, geography: dict) -> dict:
     
     scopes = {}
     
-    # Sans géographie — mondial
+    # Global — query sans contrainte géographique
     scopes['global'] = {
-        'label': '🌐 Worldwide (no geographic filter)',
+        'label': '🌐 Worldwide',
+        'query': base_query,
         'count': count_results(base_query)
     }
     
@@ -167,6 +183,7 @@ def count_geographic_scopes(base_query: str, geography: dict) -> dict:
         q = base_query + f'\nAND ("{continent}"[Title/Abstract])'
         scopes['continent'] = {
             'label': f'🌍 {continent}',
+            'query': q,
             'count': count_results(q)
         }
     
@@ -175,6 +192,7 @@ def count_geographic_scopes(base_query: str, geography: dict) -> dict:
         q = base_query + f'\nAND ("{region}"[Title/Abstract])'
         scopes['region'] = {
             'label': f'🌍 {region}',
+            'query': q,
             'count': count_results(q)
         }
     
@@ -183,6 +201,7 @@ def count_geographic_scopes(base_query: str, geography: dict) -> dict:
         q = base_query + f'\nAND ("{country}"[Title/Abstract])'
         scopes['country'] = {
             'label': f'📍 {country}',
+            'query': q,
             'count': count_results(q)
         }
     

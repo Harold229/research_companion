@@ -145,6 +145,10 @@ if mode == "natural":
                             if scope in scopes:
                                 s = scopes[scope]
                                 cols[i].metric(label=s['label'], value=s['count'])
+                                cols[i].link_button(
+                "🔗 Open",
+                f"https://pubmed.ncbi.nlm.nih.gov/?term={s['query']}"
+            )
 
                 st.link_button("🔗 Search on PubMed", f"https://pubmed.ncbi.nlm.nih.gov/?term={query}")
                 st.caption("💡 Too few results? Remove the most specific term. Too many? Add filters directly in PubMed.")
