@@ -1,0 +1,446 @@
+[
+  {
+    "id": "A",
+    "tags": ["explore", "no_framework", "no_geo", "pediatric"],
+    "question_fr": "est-ce qu'il y a des études sur l'hyperkaliémie chez les enfants ?",
+    "intent": "explore",
+    "example_json": {
+      "intent": "explore",
+      "framework": null,
+      "explanation": "Question exploratoire sans framework nécessaire.",
+      "research_question_fr": "Existe-t-il des études sur l'hyperkaliémie chez les enfants ?",
+      "research_question_en": "Are there studies on hyperkalemia in children?",
+      "research_question_comment": "Reformulation en question exploratoire académique.",
+      "geography": {"country": null, "region": null, "continent": null},
+      "geography_tiab": null,
+      "components": {
+        "population": "Enfants",
+        "intervention": null,
+        "comparison": null,
+        "outcome": null,
+        "exposure": "Hyperkaliémie"
+      },
+      "components_english": {
+        "population": "Children",
+        "population_tiab": "children OR childhood OR pediatric OR youth",
+        "intervention": null,
+        "intervention_mesh": null,
+        "intervention_tiab": null,
+        "comparison": null,
+        "outcome": null,
+        "outcome_mesh": null,
+        "outcome_tiab": null,
+        "exposure": "Hyperkalemia",
+        "exposure_tiab": "elevated potassium OR high potassium OR hyperkalemia OR hyperkalaemia"
+      },
+      "research_level": 1
+    }
+  },
+  {
+    "id": "B",
+    "tags": ["structure", "PEO", "M-KAP", "geo_africa", "HCP"],
+    "question_fr": "connaissance des médecins sur la prise en charge de l'hyperkaliémie au Bénin",
+    "intent": "structure",
+    "example_json": {
+      "intent": "structure",
+      "framework": "PEO",
+      "explanation": "Question sur la connaissance → règle A : PEO obligatoire.",
+      "research_question_fr": "Dans quelle mesure les médecins généralistes connaissent-ils la prise en charge de l'hyperkaliémie au Bénin ?",
+      "research_question_en": "To what extent do general practitioners know about the management of hyperkalemia in Benin?",
+      "research_question_comment": "Précision du type de médecin et formulation académique.",
+      "geography": {"country": "Benin", "region": "West Africa", "continent": "Sub-Saharan Africa"},
+      "geography_tiab": "Benin OR \"West Africa\" OR \"Sub-Saharan Africa\"",
+      "components": {
+        "population": "Médecins généralistes",
+        "intervention": null,
+        "comparison": null,
+        "outcome": "Connaissance et pratique",
+        "exposure": "Prise en charge de l'hyperkaliémie"
+      },
+      "components_english": {
+        "population": "Physicians, General Practitioners",
+        "population_tiab": "clinicians OR doctors OR general practitioners OR physicians",
+        "intervention": null,
+        "intervention_mesh": null,
+        "intervention_tiab": null,
+        "comparison": null,
+        "outcome": "Knowledge and Practice",
+        "outcome_mesh": "\"Health Knowledge, Attitudes, Practice\"[MeSH] OR \"Clinical Competence\"[MeSH] OR \"Surveys and Questionnaires\"[MeSH] OR \"Practice Patterns, Physicians\"[MeSH]",
+        "outcome_tiab": "attitudes OR knowledge OR practice OR questionnaire OR survey",
+        "exposure": "Hyperkalemia management",
+        "exposure_tiab": "hyperkalemia OR hyperkalaemia OR potassium management"
+      },
+      "research_level": 2
+    }
+  },
+  {
+    "id": "C",
+    "tags": ["structure", "PICO", "M-PREV", "geo_africa", "pediatric"],
+    "question_fr": "prévalence du diabète chez les enfants au Mali",
+    "intent": "structure",
+    "example_json": {
+      "intent": "structure",
+      "framework": "PICO",
+      "explanation": "Question épidémiologique sur la prévalence → règle D : PICO.",
+      "research_question_fr": "Quelle est la prévalence du diabète chez les enfants au Mali ?",
+      "research_question_en": "What is the prevalence of diabetes in children in Mali?",
+      "research_question_comment": "Formulation épidémiologique standard.",
+      "geography": {"country": "Mali", "region": "West Africa", "continent": "Sub-Saharan Africa"},
+      "geography_tiab": "Mali OR \"West Africa\" OR \"Sub-Saharan Africa\"",
+      "components": {
+        "population": "Enfants",
+        "intervention": "Diabète",
+        "comparison": null,
+        "outcome": "Prévalence",
+        "exposure": null
+      },
+      "components_english": {
+        "population": "Children",
+        "population_tiab": "children OR childhood OR pediatric OR youth",
+        "intervention": "Diabetes Mellitus",
+        "intervention_mesh": null,
+        "intervention_tiab": "diabetes OR diabetic OR hyperglycemia OR type 2 diabetes",
+        "comparison": null,
+        "outcome": "Prevalence",
+        "outcome_mesh": "\"Prevalence\"[MeSH] OR \"Incidence\"[MeSH]",
+        "outcome_tiab": "burden OR epidemiology OR frequency OR incidence OR prevalence",
+        "exposure": null,
+        "exposure_tiab": null
+      },
+      "research_level": 2
+    }
+  },
+  {
+    "id": "D",
+    "tags": ["structure", "PEO", "M-ADH", "geo_africa"],
+    "question_fr": "adhérence au traitement antirétroviral chez les adolescents au Cameroun",
+    "intent": "structure",
+    "example_json": {
+      "intent": "structure",
+      "framework": "PEO",
+      "explanation": "Question sur l'adhérence thérapeutique → règle B : PEO.",
+      "research_question_fr": "Quel est le niveau d'adhérence au traitement antirétroviral chez les adolescents au Cameroun ?",
+      "research_question_en": "What is the level of adherence to antiretroviral treatment among adolescents in Cameroon?",
+      "research_question_comment": "Précision de la mesure et formulation académique.",
+      "geography": {"country": "Cameroon", "region": "Central Africa", "continent": "Sub-Saharan Africa"},
+      "geography_tiab": "Cameroon OR \"Central Africa\" OR \"Sub-Saharan Africa\"",
+      "components": {
+        "population": "Adolescents",
+        "intervention": null,
+        "comparison": null,
+        "outcome": "Adhérence thérapeutique",
+        "exposure": "Traitement antirétroviral"
+      },
+      "components_english": {
+        "population": "Adolescents",
+        "population_tiab": "adolescents OR teenagers OR young adults OR youth",
+        "intervention": null,
+        "intervention_mesh": null,
+        "intervention_tiab": null,
+        "comparison": null,
+        "outcome": "Treatment Adherence",
+        "outcome_mesh": "\"Medication Adherence\"[MeSH] OR \"Patient Compliance\"[MeSH] OR \"Treatment Adherence and Compliance\"[MeSH]",
+        "outcome_tiab": "adherence OR compliance OR medication adherence OR treatment adherence",
+        "exposure": "Antiretroviral Therapy",
+        "exposure_tiab": "antiretroviral OR antiretroviral therapy OR ART OR HAART"
+      },
+      "research_level": 2
+    }
+  },
+  {
+    "id": "E",
+    "tags": ["structure", "PICO", "M-RISK", "geo_africa"],
+    "question_fr": "facteurs de risque de l'AVC chez les adultes hypertendus en Côte d'Ivoire",
+    "intent": "structure",
+    "example_json": {
+      "intent": "structure",
+      "framework": "PICO",
+      "explanation": "Question sur les facteurs de risque → règle E : PICO.",
+      "research_question_fr": "Quels sont les facteurs de risque d'accident vasculaire cérébral chez les adultes hypertendus en Côte d'Ivoire ?",
+      "research_question_en": "What are the risk factors for stroke in hypertensive adults in Côte d'Ivoire?",
+      "research_question_comment": "Formulation épidémiologique précisant la population et l'outcome.",
+      "geography": {"country": "Cote d'Ivoire", "region": "West Africa", "continent": "Sub-Saharan Africa"},
+      "geography_tiab": "\"Cote d'Ivoire\" OR \"Ivory Coast\" OR \"West Africa\" OR \"Sub-Saharan Africa\"",
+      "components": {
+        "population": "Adultes hypertendus",
+        "intervention": "Facteurs de risque",
+        "comparison": null,
+        "outcome": "Accident vasculaire cérébral",
+        "exposure": null
+      },
+      "components_english": {
+        "population": "Hypertensive Adults",
+        "population_tiab": "adults OR hypertension OR hypertensive",
+        "intervention": "Risk Factors",
+        "intervention_mesh": "\"Risk Factors\"[MeSH]",
+        "intervention_tiab": "determinants OR predictors OR risk factors",
+        "comparison": null,
+        "outcome": "Stroke",
+        "outcome_mesh": null,
+        "outcome_tiab": "cerebrovascular accident OR cerebrovascular disease OR stroke",
+        "exposure": null,
+        "exposure_tiab": null
+      },
+      "research_level": 2
+    }
+  },
+  {
+    "id": "F",
+    "tags": ["structure", "PICO", "M-MORT", "geo_africa"],
+    "question_fr": "mortalité néonatale par sepsis dans les hôpitaux du Sénégal",
+    "intent": "structure",
+    "example_json": {
+      "intent": "structure",
+      "framework": "PICO",
+      "explanation": "Question pronostique sur la mortalité → règle H : PICO.",
+      "research_question_fr": "Quelle est la mortalité néonatale liée au sepsis dans les hôpitaux du Sénégal ?",
+      "research_question_en": "What is the neonatal mortality due to sepsis in hospitals in Senegal?",
+      "research_question_comment": "Formulation épidémiologique standard.",
+      "geography": {"country": "Senegal", "region": "West Africa", "continent": "Sub-Saharan Africa"},
+      "geography_tiab": "Senegal OR \"West Africa\" OR \"Sub-Saharan Africa\"",
+      "components": {
+        "population": "Nouveau-nés hospitalisés",
+        "intervention": "Sepsis néonatal",
+        "comparison": null,
+        "outcome": "Mortalité",
+        "exposure": null
+      },
+      "components_english": {
+        "population": "Hospitalized Neonates",
+        "population_tiab": "hospitalized neonates OR neonatal OR neonates OR newborns",
+        "intervention": "Neonatal Sepsis",
+        "intervention_mesh": null,
+        "intervention_tiab": "neonatal infection OR neonatal sepsis OR sepsis",
+        "comparison": null,
+        "outcome": "Mortality",
+        "outcome_mesh": "\"Mortality\"[MeSH] OR \"Morbidity\"[MeSH]",
+        "outcome_tiab": "case fatality OR death OR mortality OR survival",
+        "exposure": null,
+        "exposure_tiab": null
+      },
+      "research_level": 2
+    }
+  },
+  {
+    "id": "G",
+    "tags": ["structure", "PICO", "M-THER", "comparison", "no_geo"],
+    "question_fr": "efficacité de la metformine vs insuline dans le diabète gestationnel",
+    "intent": "structure",
+    "example_json": {
+      "intent": "structure",
+      "framework": "PICO",
+      "explanation": "Question interventionnelle avec comparaison → règle F : PICO.",
+      "research_question_fr": "Chez les femmes atteintes de diabète gestationnel, la metformine est-elle aussi efficace que l'insuline pour le contrôle glycémique ?",
+      "research_question_en": "In women with gestational diabetes, is metformin as effective as insulin for glycemic control?",
+      "research_question_comment": "Précision de l'outcome et formulation PICO.",
+      "geography": {"country": null, "region": null, "continent": null},
+      "geography_tiab": null,
+      "components": {
+        "population": "Femmes avec diabète gestationnel",
+        "intervention": "Metformine",
+        "comparison": "Insuline",
+        "outcome": "Contrôle glycémique",
+        "exposure": null
+      },
+      "components_english": {
+        "population": "Women with Gestational Diabetes",
+        "population_tiab": "gestational diabetes OR pregnant women OR pregnancy",
+        "intervention": "Metformin",
+        "intervention_mesh": null,
+        "intervention_tiab": "metformin OR oral hypoglycemic",
+        "comparison": "Insulin",
+        "outcome": "Glycemic Control",
+        "outcome_mesh": "\"Disease Management\"[MeSH] OR \"Therapeutics\"[MeSH]",
+        "outcome_tiab": "blood glucose OR glycemic control OR HbA1c OR treatment outcome",
+        "exposure": null,
+        "exposure_tiab": null
+      },
+      "research_level": 3
+    }
+  },
+  {
+    "id": "H",
+    "tags": ["structure", "PEO", "M-PEER", "geo_africa"],
+    "question_fr": "influence des pairs sur le tabagisme chez les lycéens au Togo",
+    "intent": "structure",
+    "example_json": {
+      "intent": "structure",
+      "framework": "PEO",
+      "explanation": "Question sur l'influence sociale des pairs → PEO.",
+      "research_question_fr": "Quelle est l'influence des pairs sur le tabagisme chez les lycéens au Togo ?",
+      "research_question_en": "What is the influence of peers on smoking among high school students in Togo?",
+      "research_question_comment": "Formulation académique standard.",
+      "geography": {"country": "Togo", "region": "West Africa", "continent": "Sub-Saharan Africa"},
+      "geography_tiab": "Togo OR \"West Africa\" OR \"Sub-Saharan Africa\"",
+      "components": {
+        "population": "Lycéens",
+        "intervention": null,
+        "comparison": null,
+        "outcome": "Influence des pairs",
+        "exposure": "Tabagisme"
+      },
+      "components_english": {
+        "population": "High School Students",
+        "population_tiab": "adolescents OR high school students OR secondary school students OR students",
+        "intervention": null,
+        "intervention_mesh": null,
+        "intervention_tiab": null,
+        "comparison": null,
+        "outcome": "Peer Influence",
+        "outcome_mesh": "\"Peer Group\"[MeSH] OR \"Social Support\"[MeSH] OR \"Social Environment\"[MeSH]",
+        "outcome_tiab": "peer influence OR peer pressure OR social environment OR social influence",
+        "exposure": "Smoking",
+        "exposure_tiab": "cigarette OR smoking OR tobacco OR tobacco use"
+      },
+      "research_level": 2
+    }
+  },
+  {
+    "id": "I",
+    "tags": ["structure", "SPIDER", "qualitative", "geo_africa", "no_mesh_outcome"],
+    "question_fr": "vécu des femmes vivant avec le VIH pendant la grossesse au Rwanda",
+    "intent": "structure",
+    "example_json": {
+      "intent": "structure",
+      "framework": "SPIDER",
+      "explanation": "Question sur le vécu / l'expérience subjective → règle C : SPIDER.",
+      "research_question_fr": "Comment les femmes vivant avec le VIH vivent-elles leur grossesse au Rwanda ?",
+      "research_question_en": "How do women living with HIV experience pregnancy in Rwanda?",
+      "research_question_comment": "Formulation qualitative SPIDER.",
+      "geography": {"country": "Rwanda", "region": "East Africa", "continent": "Sub-Saharan Africa"},
+      "geography_tiab": "Rwanda OR \"East Africa\" OR \"Sub-Saharan Africa\"",
+      "components": {
+        "population": "Femmes enceintes vivant avec le VIH",
+        "intervention": null,
+        "comparison": null,
+        "outcome": "Vécu / expérience",
+        "exposure": "Grossesse avec VIH"
+      },
+      "components_english": {
+        "population": "Pregnant Women Living with HIV",
+        "population_tiab": "HIV-positive women OR pregnant women OR women living with HIV",
+        "intervention": null,
+        "intervention_mesh": null,
+        "intervention_tiab": null,
+        "comparison": null,
+        "outcome": "Lived Experience",
+        "outcome_mesh": null,
+        "outcome_tiab": "barriers OR experience OR lived experience OR perceptions OR qualitative",
+        "exposure": "Pregnancy with HIV",
+        "exposure_tiab": "HIV OR HIV infection OR pregnancy"
+      },
+      "research_level": 2
+    }
+  },
+  {
+    "id": "J",
+    "tags": ["structure", "PICO", "M-PREV", "no_mesh_intervention", "geo_africa"],
+    "question_fr": "résistance aux antibiotiques chez les enfants hospitalisés en Éthiopie",
+    "intent": "structure",
+    "example_json": {
+      "intent": "structure",
+      "framework": "PICO",
+      "explanation": "Question épidémiologique. Résistance aux antibiotiques hors whitelist MeSH → intervention_mesh = null.",
+      "research_question_fr": "Quelle est la prévalence de la résistance aux antibiotiques chez les enfants hospitalisés en Éthiopie ?",
+      "research_question_en": "What is the prevalence of antibiotic resistance in hospitalized children in Ethiopia?",
+      "research_question_comment": "Précision de la mesure épidémiologique.",
+      "geography": {"country": "Ethiopia", "region": "East Africa", "continent": "Sub-Saharan Africa"},
+      "geography_tiab": "Ethiopia OR \"East Africa\" OR \"Sub-Saharan Africa\"",
+      "components": {
+        "population": "Enfants hospitalisés",
+        "intervention": "Résistance aux antibiotiques",
+        "comparison": null,
+        "outcome": "Prévalence",
+        "exposure": null
+      },
+      "components_english": {
+        "population": "Hospitalized Children",
+        "population_tiab": "children OR hospitalized children OR pediatric inpatients",
+        "intervention": "Antibiotic Resistance",
+        "intervention_mesh": null,
+        "intervention_tiab": "AMR OR antibiotic resistance OR antimicrobial resistance OR drug resistance",
+        "comparison": null,
+        "outcome": "Prevalence",
+        "outcome_mesh": "\"Prevalence\"[MeSH] OR \"Incidence\"[MeSH]",
+        "outcome_tiab": "burden OR epidemiology OR frequency OR incidence OR prevalence",
+        "exposure": null,
+        "exposure_tiab": null
+      },
+      "research_level": 2
+    }
+  },
+  {
+    "id": "K",
+    "tags": ["explore", "geo_africa", "no_framework"],
+    "question_fr": "études sur le paludisme au Burkina Faso",
+    "intent": "explore",
+    "example_json": {
+      "intent": "explore",
+      "framework": null,
+      "explanation": "Question exploratoire avec géographie.",
+      "research_question_fr": "Existe-t-il des études sur le paludisme au Burkina Faso ?",
+      "research_question_en": "Are there studies on malaria in Burkina Faso?",
+      "research_question_comment": "Reformulation exploratoire standard.",
+      "geography": {"country": "Burkina Faso", "region": "West Africa", "continent": "Sub-Saharan Africa"},
+      "geography_tiab": "\"Burkina Faso\" OR \"West Africa\" OR \"Sub-Saharan Africa\"",
+      "components": {
+        "population": "Population générale",
+        "intervention": null,
+        "comparison": null,
+        "outcome": null,
+        "exposure": "Paludisme"
+      },
+      "components_english": {
+        "population": "General Population",
+        "population_tiab": "adults OR children OR population",
+        "intervention": null,
+        "intervention_mesh": null,
+        "intervention_tiab": null,
+        "comparison": null,
+        "outcome": null,
+        "outcome_mesh": null,
+        "outcome_tiab": null,
+        "exposure": "Malaria",
+        "exposure_tiab": "falciparum OR malaria OR plasmodium"
+      },
+      "research_level": 1
+    }
+  },
+  {
+    "id": "L",
+    "tags": ["structure", "PICO", "M-EDU", "geo_africa", "intervention"],
+    "question_fr": "impact de l'éducation thérapeutique sur le contrôle du diabète chez les adultes au Niger",
+    "intent": "structure",
+    "example_json": {
+      "intent": "structure",
+      "framework": "PICO",
+      "explanation": "Question interventionnelle (éducation) → règle F : PICO.",
+      "research_question_fr": "Chez les adultes diabétiques au Niger, l'éducation thérapeutique améliore-t-elle le contrôle glycémique ?",
+      "research_question_en": "In diabetic adults in Niger, does therapeutic education improve glycemic control?",
+      "research_question_comment": "Formulation PICO avec intervention et outcome précisés.",
+      "geography": {"country": "Niger", "region": "West Africa", "continent": "Sub-Saharan Africa"},
+      "geography_tiab": "Niger OR \"West Africa\" OR \"Sub-Saharan Africa\"",
+      "components": {
+        "population": "Adultes diabétiques",
+        "intervention": "Éducation thérapeutique",
+        "comparison": null,
+        "outcome": "Contrôle glycémique",
+        "exposure": null
+      },
+      "components_english": {
+        "population": "Diabetic Adults",
+        "population_tiab": "adults OR diabetic adults OR type 2 diabetes",
+        "intervention": "Therapeutic Education",
+        "intervention_mesh": "\"Health Education\"[MeSH] OR \"Patient Education as Topic\"[MeSH]",
+        "intervention_tiab": "health education OR patient education OR self-management education OR therapeutic education",
+        "comparison": null,
+        "outcome": "Glycemic Control",
+        "outcome_mesh": null,
+        "outcome_tiab": "blood glucose OR glycemic control OR HbA1c",
+        "exposure": null,
+        "exposure_tiab": null
+      },
+      "research_level": 2
+    }
+  }
+]

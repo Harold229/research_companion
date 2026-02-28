@@ -32,26 +32,30 @@ def get_mesh_terms(term: str) -> str:
         return f'"{term}"[All Fields]'
 
 
-def build_block(term: str, mesh_block: str = None, 
+def build_block(term: str, mesh_block: str = None,
                 tiab_term: str = None, mode: str = "sensitive") -> str:
     """
     Construit un bloc de recherche selon le mode.
-    
-    term       → terme simple envoyé à l'API PubMed
-    mesh_block → bloc MeSH direct généré par Claude (optionnel)
-    tiab_term  → termes TIAB séparés par OR (optionnel)
-    mode       → sensitive, balanced, specific
+
+    mode: sensitive, specific
+    (tout autre mode -> sensitive)
     """
+    # Backward-compatible: any unknown mode (including legacy "balanced") -> sensitive
+    if mode not in ("sensitive", "specific"):
+        mode = "sensitive"
+
     mesh = mesh_block if mesh_block else get_mesh_terms(term)
     tiab = f"(({tiab_term})[Title/Abstract])" if tiab_term else f'"{term}"[Title/Abstract]'
 
-    if mode == "sensitive":
-        return f"({mesh}\nOR {tiab})"
-    elif mode == "balanced":
-        return f"({mesh}\nAND {tiab})"
-    else:
-        return f"({mesh})"
-    
+    if mode == "specific":
+        # Specific = MeSH si dispo, sinon fallback TIAB (évite None)
+        return f"({mesh})" if mesh else f"({tiab})"
+
+    # Sensitive (default) = MeSH OR TIAB
+    if mesh and tiab:
+        return f"(({mesh}) OR ({tiab}))"
+    return f"({mesh})" if mesh else f"({tiab})"
+                
 def build_pico_query(population: str, population_tiab: str = None,
                      intervention: str = None, intervention_mesh: str = None, intervention_tiab: str = None,
                      outcome: str = None, outcome_mesh: str = None, outcome_tiab: str = None,
@@ -63,13 +67,16 @@ def build_pico_query(population: str, population_tiab: str = None,
 
     # Population
     if population:
-        if "," in population:
-            parts = [p.strip() for p in population.split(",")]
-            pop_blocks = [build_block(part, tiab_term=population_tiab, mode=mode) for part in parts]
+        if ";" in population:
+            parts = [p.strip() for p in population.split(";") if p.strip()]
+            pop_blocks = [
+                build_block(part, tiab_term=None, mode=mode)  # tiab commun ne s'applique pas par sous-partie
+                for part in parts
+            ]
             blocks.append(f"({' OR '.join(pop_blocks)})")
         else:
             blocks.append(build_block(population, tiab_term=population_tiab, mode=mode))
-
+                    
     # Intervention
     if intervention_mesh or intervention:
         blocks.append(build_block(
@@ -95,10 +102,9 @@ def build_pico_query(population: str, population_tiab: str = None,
             tiab_term=outcome_tiab or outcome,
             mode=mode
         ))
-
-    # Comparaison
-    if comparaison:
-        blocks.append(build_block(comparaison, mode=mode))
+  
+  # 🚫 COMPARAISON SUPPRIMÉE
+    # On ne l’inclut jamais dans la requête PubMed
 
     # Geography
     if geography_tiab:
@@ -211,13 +217,6 @@ if __name__ == "__main__":
         mode="sensitive"
     ))
 
-    print("\n=== BALANCED ===")
-    print(build_pico_query(
-        population="children with obesity",
-        intervention="physical activity",
-        outcome="BMI reduction",
-        mode="balanced"
-    ))
 
     print("\n=== SPECIFIC ===")
     print(build_pico_query(

@@ -275,5 +275,6 @@ if __name__ == "__main__":
         prompt = build_prompt(question, intent)
         print(f"TAILLE PROMPT: {len(prompt)} caractères")
 
-        result = analyze_research_question(question, intent=intent)
-        print(json.dumps(result, indent=2, ensure_ascii=False))
+        # Décommenter pour tester avec l'API :
+        # result = analyze_research_question(question, intent=intent)
+        # print(json.dumps(result, indent=2, ensure_ascii=False))

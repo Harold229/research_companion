@@ -1,5 +1,4 @@
 import streamlit as st
-from pubmed import build_pico_query
 from feedback import save_feedback
 from claude_helper import analyze_research_question
 from pubmed import build_pico_query, count_results, count_geographic_scopes
@@ -44,10 +43,9 @@ if mode == "natural":
     )
     search_mode = st.radio(
         "🔍 Search strategy",
-        options=["sensitive", "balanced", "specific"],
+        options=["sensitive", "specific"],
         format_func=lambda x: {
             "sensitive": "🌐 Sensitive — maximum results",
-            "balanced": "⚖️ Balanced — precision and recall",
             "specific": "🎯 Specific — high precision"
         }[x],
         horizontal=True,
@@ -99,7 +97,7 @@ if mode == "natural":
                         outcome_tiab=components_en.get('outcome_tiab'),
                         exposure=components_en.get('exposure'),
                         exposure_tiab=components_en.get('exposure_tiab'),
-                        comparaison=components_en.get('comparison'),
+                       # comparaison=components_en.get('comparison'),
                         geography_tiab=result.get('geography_tiab'),
                         mode=search_mode
                     )
@@ -145,11 +143,9 @@ if mode == "natural":
                             if scope in scopes:
                                 s = scopes[scope]
                                 cols[i].metric(label=s['label'], value=s['count'])
-                                cols[i].link_button(
-                "🔗 Open",
-                f"https://pubmed.ncbi.nlm.nih.gov/?term={s['query']}"
-            )
-
+                                cols[i].link_button("🔗 Open",
+                f"https://pubmed.ncbi.nlm.nih.gov/?term={s['query']}")
+                                
                 st.link_button("🔗 Search on PubMed", f"https://pubmed.ncbi.nlm.nih.gov/?term={query}")
                 st.caption("💡 Too few results? Remove the most specific term. Too many? Add filters directly in PubMed.")
         
@@ -201,10 +197,9 @@ else:
 
     search_mode = st.radio(
         "🔍 Search strategy",
-        options=["sensitive", "balanced", "specific"],
+        options=["sensitive", "specific"],
         format_func=lambda x: {
             "sensitive": "🌐 Sensitive — maximum results",
-            "balanced": "⚖️ Balanced — precision and recall",
             "specific": "🎯 Specific — high precision"
         }[x],
         horizontal=True,
