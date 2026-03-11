@@ -20,19 +20,24 @@
         "outcome": null,
         "exposure": "Hyperkaliémie"
       },
-      "components_english": {
-        "population": "Children",
-        "population_tiab": "children OR childhood OR pediatric OR youth",
-        "intervention": null,
-        "intervention_mesh": null,
-        "intervention_tiab": null,
-        "comparison": null,
-        "outcome": null,
-        "outcome_mesh": null,
-        "outcome_tiab": null,
-        "exposure": "Hyperkalemia",
-        "exposure_tiab": "elevated potassium OR high potassium OR hyperkalemia OR hyperkalaemia"
-      },
+      "search_elements": [
+        {
+          "label": "Population",
+          "tiab": "children OR childhood OR pediatric OR youth",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Population spécifique, toujours filtrer"
+        },
+        {
+          "label": "Condition",
+          "tiab": "elevated potassium OR high potassium OR hyperkalemia OR hyperkalaemia",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Condition centrale de la question"
+        }
+      ],
       "research_level": 1
     }
   },
@@ -57,20 +62,83 @@
         "outcome": "Connaissance et pratique",
         "exposure": "Prise en charge de l'hyperkaliémie"
       },
-      "components_english": {
-        "population": "Physicians, General Practitioners",
-        "population_tiab": "clinicians OR doctors OR general practitioners OR physicians",
-        "intervention": null,
-        "intervention_mesh": null,
-        "intervention_tiab": null,
-        "comparison": null,
-        "outcome": "Knowledge and Practice",
-        "outcome_mesh": "\"Health Knowledge, Attitudes, Practice\"[MeSH] OR \"Clinical Competence\"[MeSH] OR \"Surveys and Questionnaires\"[MeSH] OR \"Practice Patterns, Physicians\"[MeSH]",
-        "outcome_tiab": "attitudes OR knowledge OR practice OR questionnaire OR survey",
-        "exposure": "Hyperkalemia management",
-        "exposure_tiab": "hyperkalemia OR hyperkalaemia OR potassium management"
-      },
+      "search_elements": [
+        {
+          "label": "Population",
+          "tiab": "clinicians OR doctors OR general practitioners OR physicians",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Population spécifique"
+        },
+        {
+          "label": "Exposition",
+          "tiab": "hyperkalemia OR hyperkalaemia OR potassium management",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Sujet central de la question"
+        },
+        {
+          "label": "Connaissance / KAP",
+          "tiab": "attitudes OR knowledge OR practice OR questionnaire OR survey",
+          "mesh": "\"Health Knowledge, Attitudes, Practice\"[MeSH] OR \"Clinical Competence\"[MeSH] OR \"Surveys and Questionnaires\"[MeSH] OR \"Practice Patterns, Physicians\"[MeSH]",
+          "search_filter": false,
+          "priority": null,
+          "reason": "Concept générique, un article pertinent peut ne pas mentionner 'knowledge' explicitement"
+        },
+        {
+          "label": "Géographie",
+          "tiab": "Benin OR \"West Africa\" OR \"Sub-Saharan Africa\"",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 2,
+          "reason": "Géographie mentionnée, utile pour affiner"
+        }
+      ],
       "research_level": 2
+    }
+  },
+  {
+    "id": "M",
+    "tags": ["explore", "no_framework", "no_geo", "anesthesia", "generic_outcome"],
+    "question_fr": "accidents d’anesthésie",
+    "intent": "explore",
+    "example_json": {
+      "intent": "explore",
+      "framework": null,
+      "explanation": "Sujet exploratoire. Le concept spécifique 'accidents d'anesthésie' est recherché, mais 'complications' reste trop générique pour devenir un filtre séparé.",
+      "research_question_fr": "Existe-t-il des études sur les accidents d’anesthésie ?",
+      "research_question_en": "Are there studies on anesthesia-related accidents?",
+      "research_question_comment": "Reformulation exploratoire standard.",
+      "geography": {"country": null, "region": null, "continent": null},
+      "geography_tiab": null,
+      "components": {
+        "population": null,
+        "intervention": null,
+        "comparison": null,
+        "outcome": null,
+        "exposure": "Accidents d’anesthésie"
+      },
+      "search_elements": [
+        {
+          "label": "Sujet",
+          "tiab": "anesthesia accident OR anesthesia-related adverse event OR anesthesia-related complication OR anesthetic complication OR perioperative adverse event",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Sujet spécifique de la question"
+        },
+        {
+          "label": "Complications génériques",
+          "tiab": "adverse events OR complications OR incidents OR safety",
+          "mesh": null,
+          "search_filter": false,
+          "priority": null,
+          "reason": "Concept transversal trop générique ; ne doit pas filtrer séparément"
+        }
+      ],
+      "research_level": 1
     }
   },
   {
@@ -94,19 +162,40 @@
         "outcome": "Prévalence",
         "exposure": null
       },
-      "components_english": {
-        "population": "Children",
-        "population_tiab": "children OR childhood OR pediatric OR youth",
-        "intervention": "Diabetes Mellitus",
-        "intervention_mesh": null,
-        "intervention_tiab": "diabetes OR diabetic OR hyperglycemia OR type 2 diabetes",
-        "comparison": null,
-        "outcome": "Prevalence",
-        "outcome_mesh": "\"Prevalence\"[MeSH] OR \"Incidence\"[MeSH]",
-        "outcome_tiab": "burden OR epidemiology OR frequency OR incidence OR prevalence",
-        "exposure": null,
-        "exposure_tiab": null
-      },
+      "search_elements": [
+        {
+          "label": "Population",
+          "tiab": "children OR childhood OR pediatric OR youth",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Population spécifique, toujours filtrer"
+        },
+        {
+          "label": "Condition",
+          "tiab": "diabetes OR diabetic OR hyperglycemia OR type 2 diabetes",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Condition centrale de la question"
+        },
+        {
+          "label": "Géographie",
+          "tiab": "Mali OR \"West Africa\" OR \"Sub-Saharan Africa\"",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 2,
+          "reason": "Géographie mentionnée, utile pour affiner"
+        },
+        {
+          "label": "Mesure épidémiologique",
+          "tiab": "burden OR epidemiology OR frequency OR incidence OR prevalence",
+          "mesh": "\"Prevalence\"[MeSH] OR \"Incidence\"[MeSH]",
+          "search_filter": false,
+          "priority": null,
+          "reason": "Concept trop générique, risque de perdre des articles pertinents"
+        }
+      ],
       "research_level": 2
     }
   },
@@ -131,19 +220,40 @@
         "outcome": "Adhérence thérapeutique",
         "exposure": "Traitement antirétroviral"
       },
-      "components_english": {
-        "population": "Adolescents",
-        "population_tiab": "adolescents OR teenagers OR young adults OR youth",
-        "intervention": null,
-        "intervention_mesh": null,
-        "intervention_tiab": null,
-        "comparison": null,
-        "outcome": "Treatment Adherence",
-        "outcome_mesh": "\"Medication Adherence\"[MeSH] OR \"Patient Compliance\"[MeSH] OR \"Treatment Adherence and Compliance\"[MeSH]",
-        "outcome_tiab": "adherence OR compliance OR medication adherence OR treatment adherence",
-        "exposure": "Antiretroviral Therapy",
-        "exposure_tiab": "antiretroviral OR antiretroviral therapy OR ART OR HAART"
-      },
+      "search_elements": [
+        {
+          "label": "Population",
+          "tiab": "adolescents OR teenagers OR young adults OR youth",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Population spécifique"
+        },
+        {
+          "label": "Traitement",
+          "tiab": "antiretroviral OR antiretroviral therapy OR ART OR HAART",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Exposition centrale de la question"
+        },
+        {
+          "label": "Adhérence",
+          "tiab": "adherence OR compliance OR medication adherence OR treatment adherence",
+          "mesh": "\"Medication Adherence\"[MeSH] OR \"Patient Compliance\"[MeSH] OR \"Treatment Adherence and Compliance\"[MeSH]",
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Sujet d'étude, un article sur l'adhérence mentionnera forcément ce terme"
+        },
+        {
+          "label": "Géographie",
+          "tiab": "Cameroon OR \"Central Africa\" OR \"Sub-Saharan Africa\"",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 2,
+          "reason": "Géographie mentionnée, utile pour affiner"
+        }
+      ],
       "research_level": 2
     }
   },
@@ -168,19 +278,40 @@
         "outcome": "Accident vasculaire cérébral",
         "exposure": null
       },
-      "components_english": {
-        "population": "Hypertensive Adults",
-        "population_tiab": "adults OR hypertension OR hypertensive",
-        "intervention": "Risk Factors",
-        "intervention_mesh": "\"Risk Factors\"[MeSH]",
-        "intervention_tiab": "determinants OR predictors OR risk factors",
-        "comparison": null,
-        "outcome": "Stroke",
-        "outcome_mesh": null,
-        "outcome_tiab": "cerebrovascular accident OR cerebrovascular disease OR stroke",
-        "exposure": null,
-        "exposure_tiab": null
-      },
+      "search_elements": [
+        {
+          "label": "Population",
+          "tiab": "adults OR hypertension OR hypertensive",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Population spécifique avec condition"
+        },
+        {
+          "label": "Condition",
+          "tiab": "cerebrovascular accident OR cerebrovascular disease OR stroke",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Outcome central de la question"
+        },
+        {
+          "label": "Facteurs de risque",
+          "tiab": "determinants OR predictors OR risk factors",
+          "mesh": "\"Risk Factors\"[MeSH]",
+          "search_filter": false,
+          "priority": null,
+          "reason": "Concept générique présent dans presque tout article épidémiologique"
+        },
+        {
+          "label": "Géographie",
+          "tiab": "\"Cote d'Ivoire\" OR \"Ivory Coast\" OR \"West Africa\" OR \"Sub-Saharan Africa\"",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 2,
+          "reason": "Géographie mentionnée, utile pour affiner"
+        }
+      ],
       "research_level": 2
     }
   },
@@ -205,19 +336,40 @@
         "outcome": "Mortalité",
         "exposure": null
       },
-      "components_english": {
-        "population": "Hospitalized Neonates",
-        "population_tiab": "hospitalized neonates OR neonatal OR neonates OR newborns",
-        "intervention": "Neonatal Sepsis",
-        "intervention_mesh": null,
-        "intervention_tiab": "neonatal infection OR neonatal sepsis OR sepsis",
-        "comparison": null,
-        "outcome": "Mortality",
-        "outcome_mesh": "\"Mortality\"[MeSH] OR \"Morbidity\"[MeSH]",
-        "outcome_tiab": "case fatality OR death OR mortality OR survival",
-        "exposure": null,
-        "exposure_tiab": null
-      },
+      "search_elements": [
+        {
+          "label": "Population",
+          "tiab": "hospitalized neonates OR neonatal OR neonates OR newborns",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Population spécifique"
+        },
+        {
+          "label": "Condition",
+          "tiab": "neonatal infection OR neonatal sepsis OR sepsis",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Condition centrale de la question"
+        },
+        {
+          "label": "Mortalité",
+          "tiab": "case fatality OR death OR mortality OR survival",
+          "mesh": "\"Mortality\"[MeSH] OR \"Morbidity\"[MeSH]",
+          "search_filter": false,
+          "priority": null,
+          "reason": "Concept générique, risque de perdre des articles pertinents"
+        },
+        {
+          "label": "Géographie",
+          "tiab": "Senegal OR \"West Africa\" OR \"Sub-Saharan Africa\"",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 2,
+          "reason": "Géographie mentionnée, utile pour affiner"
+        }
+      ],
       "research_level": 2
     }
   },
@@ -242,19 +394,24 @@
         "outcome": "Contrôle glycémique",
         "exposure": null
       },
-      "components_english": {
-        "population": "Women with Gestational Diabetes",
-        "population_tiab": "gestational diabetes OR pregnant women OR pregnancy",
-        "intervention": "Metformin",
-        "intervention_mesh": null,
-        "intervention_tiab": "metformin OR oral hypoglycemic",
-        "comparison": "Insulin",
-        "outcome": "Glycemic Control",
-        "outcome_mesh": "\"Disease Management\"[MeSH] OR \"Therapeutics\"[MeSH]",
-        "outcome_tiab": "blood glucose OR glycemic control OR HbA1c OR treatment outcome",
-        "exposure": null,
-        "exposure_tiab": null
-      },
+      "search_elements": [
+        {
+          "label": "Population/Condition",
+          "tiab": "gestational diabetes OR pregnant women OR pregnancy",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Population-condition combinée, très spécifique"
+        },
+        {
+          "label": "Intervention",
+          "tiab": "metformin OR oral hypoglycemic",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Intervention principale"
+        }
+      ],
       "research_level": 3
     }
   },
@@ -279,19 +436,40 @@
         "outcome": "Influence des pairs",
         "exposure": "Tabagisme"
       },
-      "components_english": {
-        "population": "High School Students",
-        "population_tiab": "adolescents OR high school students OR secondary school students OR students",
-        "intervention": null,
-        "intervention_mesh": null,
-        "intervention_tiab": null,
-        "comparison": null,
-        "outcome": "Peer Influence",
-        "outcome_mesh": "\"Peer Group\"[MeSH] OR \"Social Support\"[MeSH] OR \"Social Environment\"[MeSH]",
-        "outcome_tiab": "peer influence OR peer pressure OR social environment OR social influence",
-        "exposure": "Smoking",
-        "exposure_tiab": "cigarette OR smoking OR tobacco OR tobacco use"
-      },
+      "search_elements": [
+        {
+          "label": "Population",
+          "tiab": "adolescents OR high school students OR secondary school students OR students",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Population spécifique"
+        },
+        {
+          "label": "Exposition",
+          "tiab": "cigarette OR smoking OR tobacco OR tobacco use",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Exposition centrale de la question"
+        },
+        {
+          "label": "Influence sociale / pairs",
+          "tiab": "peer influence OR peer pressure OR social environment OR social influence",
+          "mesh": "\"Peer Group\"[MeSH] OR \"Social Support\"[MeSH] OR \"Social Environment\"[MeSH]",
+          "search_filter": false,
+          "priority": null,
+          "reason": "Concept générique, un article pertinent peut ne pas mentionner 'peer influence' explicitement"
+        },
+        {
+          "label": "Géographie",
+          "tiab": "Togo OR \"West Africa\" OR \"Sub-Saharan Africa\"",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 2,
+          "reason": "Géographie mentionnée, utile pour affiner"
+        }
+      ],
       "research_level": 2
     }
   },
@@ -316,19 +494,40 @@
         "outcome": "Vécu / expérience",
         "exposure": "Grossesse avec VIH"
       },
-      "components_english": {
-        "population": "Pregnant Women Living with HIV",
-        "population_tiab": "HIV-positive women OR pregnant women OR women living with HIV",
-        "intervention": null,
-        "intervention_mesh": null,
-        "intervention_tiab": null,
-        "comparison": null,
-        "outcome": "Lived Experience",
-        "outcome_mesh": null,
-        "outcome_tiab": "barriers OR experience OR lived experience OR perceptions OR qualitative",
-        "exposure": "Pregnancy with HIV",
-        "exposure_tiab": "HIV OR HIV infection OR pregnancy"
-      },
+      "search_elements": [
+        {
+          "label": "Population",
+          "tiab": "HIV-positive women OR pregnant women OR women living with HIV",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Population spécifique"
+        },
+        {
+          "label": "Exposition",
+          "tiab": "HIV OR HIV infection OR pregnancy",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Condition/exposition centrale"
+        },
+        {
+          "label": "Vécu / expérience",
+          "tiab": "barriers OR experience OR lived experience OR perceptions OR qualitative",
+          "mesh": null,
+          "search_filter": false,
+          "priority": null,
+          "reason": "Concept générique pour les études qualitatives, risque de perdre des articles pertinents"
+        },
+        {
+          "label": "Géographie",
+          "tiab": "Rwanda OR \"East Africa\" OR \"Sub-Saharan Africa\"",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 2,
+          "reason": "Géographie mentionnée, utile pour affiner"
+        }
+      ],
       "research_level": 2
     }
   },
@@ -340,7 +539,7 @@
     "example_json": {
       "intent": "structure",
       "framework": "PICO",
-      "explanation": "Question épidémiologique. Résistance aux antibiotiques hors whitelist MeSH → intervention_mesh = null.",
+      "explanation": "Question épidémiologique. Résistance aux antibiotiques hors whitelist MeSH → mesh = null.",
       "research_question_fr": "Quelle est la prévalence de la résistance aux antibiotiques chez les enfants hospitalisés en Éthiopie ?",
       "research_question_en": "What is the prevalence of antibiotic resistance in hospitalized children in Ethiopia?",
       "research_question_comment": "Précision de la mesure épidémiologique.",
@@ -353,19 +552,40 @@
         "outcome": "Prévalence",
         "exposure": null
       },
-      "components_english": {
-        "population": "Hospitalized Children",
-        "population_tiab": "children OR hospitalized children OR pediatric inpatients",
-        "intervention": "Antibiotic Resistance",
-        "intervention_mesh": null,
-        "intervention_tiab": "AMR OR antibiotic resistance OR antimicrobial resistance OR drug resistance",
-        "comparison": null,
-        "outcome": "Prevalence",
-        "outcome_mesh": "\"Prevalence\"[MeSH] OR \"Incidence\"[MeSH]",
-        "outcome_tiab": "burden OR epidemiology OR frequency OR incidence OR prevalence",
-        "exposure": null,
-        "exposure_tiab": null
-      },
+      "search_elements": [
+        {
+          "label": "Population",
+          "tiab": "children OR hospitalized children OR pediatric inpatients",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Population spécifique"
+        },
+        {
+          "label": "Condition",
+          "tiab": "AMR OR antibiotic resistance OR antimicrobial resistance OR drug resistance",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Condition centrale de la question"
+        },
+        {
+          "label": "Mesure épidémiologique",
+          "tiab": "burden OR epidemiology OR frequency OR incidence OR prevalence",
+          "mesh": "\"Prevalence\"[MeSH] OR \"Incidence\"[MeSH]",
+          "search_filter": false,
+          "priority": null,
+          "reason": "Concept générique, risque de perdre des articles pertinents"
+        },
+        {
+          "label": "Géographie",
+          "tiab": "Ethiopia OR \"East Africa\" OR \"Sub-Saharan Africa\"",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 2,
+          "reason": "Géographie mentionnée, utile pour affiner"
+        }
+      ],
       "research_level": 2
     }
   },
@@ -390,19 +610,24 @@
         "outcome": null,
         "exposure": "Paludisme"
       },
-      "components_english": {
-        "population": "General Population",
-        "population_tiab": "adults OR children OR population",
-        "intervention": null,
-        "intervention_mesh": null,
-        "intervention_tiab": null,
-        "comparison": null,
-        "outcome": null,
-        "outcome_mesh": null,
-        "outcome_tiab": null,
-        "exposure": "Malaria",
-        "exposure_tiab": "falciparum OR malaria OR plasmodium"
-      },
+      "search_elements": [
+        {
+          "label": "Condition",
+          "tiab": "falciparum OR malaria OR plasmodium",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Condition centrale de la question exploratoire"
+        },
+        {
+          "label": "Géographie",
+          "tiab": "\"Burkina Faso\" OR \"West Africa\" OR \"Sub-Saharan Africa\"",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 2,
+          "reason": "Géographie mentionnée, utile pour affiner"
+        }
+      ],
       "research_level": 1
     }
   },
@@ -427,19 +652,40 @@
         "outcome": "Contrôle glycémique",
         "exposure": null
       },
-      "components_english": {
-        "population": "Diabetic Adults",
-        "population_tiab": "adults OR diabetic adults OR type 2 diabetes",
-        "intervention": "Therapeutic Education",
-        "intervention_mesh": "\"Health Education\"[MeSH] OR \"Patient Education as Topic\"[MeSH]",
-        "intervention_tiab": "health education OR patient education OR self-management education OR therapeutic education",
-        "comparison": null,
-        "outcome": "Glycemic Control",
-        "outcome_mesh": null,
-        "outcome_tiab": "blood glucose OR glycemic control OR HbA1c",
-        "exposure": null,
-        "exposure_tiab": null
-      },
+      "search_elements": [
+        {
+          "label": "Population",
+          "tiab": "adults OR diabetic adults OR type 2 diabetes",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Population spécifique"
+        },
+        {
+          "label": "Intervention",
+          "tiab": "health education OR patient education OR self-management education OR therapeutic education",
+          "mesh": "\"Health Education\"[MeSH] OR \"Patient Education as Topic\"[MeSH]",
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Intervention centrale et spécifique"
+        },
+        {
+          "label": "Outcome",
+          "tiab": "blood glucose OR glycemic control OR HbA1c",
+          "mesh": null,
+          "search_filter": false,
+          "priority": null,
+          "reason": "Outcome mesurable, mais un article pertinent peut ne pas le mentionner explicitement"
+        },
+        {
+          "label": "Géographie",
+          "tiab": "Niger OR \"West Africa\" OR \"Sub-Saharan Africa\"",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 2,
+          "reason": "Géographie mentionnée, utile pour affiner"
+        }
+      ],
       "research_level": 2
     }
   }

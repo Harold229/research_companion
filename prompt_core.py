@@ -29,14 +29,20 @@ Interdictions :
 SECTION 1 — INTENT
 ═══════════════════════════════════════════════════════════════
 
+Si INTENT = "" ou non spécifié, détermine-le automatiquement :
+- Question vague, exploratoire ("est-ce qu'il y a", "existe-t-il",
+  "y a-t-il des études sur", question sans population précise) → intent = "explore"
+  → search_elements : 2 éléments max, tous priority 1
+- Question précise avec population + condition + contexte → intent = "structure"
+
 intent = "explore" :
   • Pas de framework.
   • 2 composantes max : population + sujet (exposure OU condition).
-  • Tout champ *_mesh = null.
+  • Tout champ mesh dans search_elements = null.
 
 intent = "structure" :
   • Choisir un framework (Section 2).
-  • Extraire composantes + TIAB + MeSH whitelist.
+  • Extraire composantes + search_elements complets.
 
 ═══════════════════════════════════════════════════════════════
 SECTION 2 — CHOIX DU FRAMEWORK (structure uniquement)
@@ -186,9 +192,56 @@ SECTION 8 — CONTRAT BOOLÉEN
 ═══════════════════════════════════════════════════════════════
 
 Tu ne produis PAS la requête PubMed (le code s'en charge).
-Tes champs doivent respecter : P AND (I ou E) AND O AND GEO
-- OR uniquement INTRA-champ.
+- OR uniquement INTRA-champ TIAB.
 - comparison : JAMAIS utilisé pour filtrer PubMed.
+
+═══════════════════════════════════════════════════════════════
+SECTION 8B — ÉLÉMENTS DE RECHERCHE (méthode Bramer)
+═══════════════════════════════════════════════════════════════
+
+Pour chaque concept identifié dans la question, évalue :
+"Un article pertinent pourrait-il NE PAS mentionner ce terme
+dans son titre ou abstract ?"
+
+- OUI → search_filter: false (ne pas filtrer, trop risqué de perdre des articles)
+- NON → search_filter: true (filtrer, le concept est central et toujours mentionné)
+
+Règle forte — concepts trop génériques et transversaux :
+- complications, adverse events, safety, incidents, outcomes,
+  burden, epidemiology, frequency, prevalence, incidence
+  ne doivent PAS devenir des filtres actifs par défaut quand ils sont larges ou transversaux.
+- Ces concepts restent visibles pédagogiquement avec search_filter: false et priority: null.
+- Si le sujet réel est un concept spécifique composé
+  (ex. "accidents d'anesthésie", "complications postopératoires infectieuses"),
+  conserve le concept spécifique comme search_element actif si pertinent,
+  mais n'ajoute PAS un search_element séparé générique
+  "complications" / "adverse events" / "safety" / "incidents".
+- En cas de doute entre un concept spécifique et un terme générique transversal :
+  filtre le concept spécifique, exclue le terme générique séparé.
+
+Assigne une priorité aux éléments filtrés (search_filter: true) :
+- priority 1 : concepts les plus spécifiques et importants
+  (condition, population spécifique, intervention, outcome-sujet)
+- priority 2 : concepts utiles pour affiner
+  (géographie, setting)
+
+Un élément avec search_filter: false a TOUJOURS priority: null.
+
+Le comparateur (comparison) n'est JAMAIS un élément de recherche.
+
+Règles TIAB pour search_elements :
+- 3-5 synonymes en ANGLAIS, triés alphabétiquement.
+- Format : "term1 OR term2 OR term3"
+- Ne JAMAIS inclure [MeSH] dans le champ tiab.
+
+Règle MeSH pour search_elements :
+- Whitelist stricte Section 5. Si aucun bloc ne correspond → mesh: null.
+- Copie VERBATIM si match. Règle d'or : si pas dans le tableau, il n'existe pas.
+
+Règles géographie dans search_elements :
+- Si un pays est mentionné, ajouter un élément "Géographie" avec search_filter: true, priority: 2.
+- Tiab géo = "Pays OR \"Région\" OR \"Continent\""
+- Ne JAMAIS mélanger termes géographiques avec population dans le même élément.
 
 ═══════════════════════════════════════════════════════════════
 SECTION 9 — EXEMPLES DE RÉFÉRENCE
@@ -230,18 +283,15 @@ research_level :
     "outcome": "..." ou null,
     "exposure": "..." ou null
   }}}},
-  "components_english": {{{{
-    "population": "...",
-    "population_tiab": "...",
-    "intervention": "..." ou null,
-    "intervention_mesh": "..." ou null,
-    "intervention_tiab": "..." ou null,
-    "comparison": "..." ou null,
-    "outcome": "..." ou null,
-    "outcome_mesh": "..." ou null,
-    "outcome_tiab": "..." ou null,
-    "exposure": "..." ou null,
-    "exposure_tiab": "..." ou null
-  }}}},
+  "search_elements": [
+    {{{{
+      "label": "Nom court du concept",
+      "tiab": "term1 OR term2 OR term3",
+      "mesh": "..." ou null,
+      "search_filter": true ou false,
+      "priority": 1 ou 2 ou null,
+      "reason": "Justification courte"
+    }}}}
+  ],
   "research_level": 1 ou 2 ou 3
 }}}}"""

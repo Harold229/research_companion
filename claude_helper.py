@@ -36,6 +36,18 @@ def get_openai_client():
 # ═══════════════════════════════════════════════════════════════
 
 _EXAMPLES_CACHE = None
+DEFAULT_CANONICAL_RESULT = {
+    "intent": "structure",
+    "framework": None,
+    "components": {},
+    "search_elements": [],
+    "geography": {
+        "country": None,
+        "region": None,
+        "continent": None,
+    },
+    "research_level": 2,
+}
 
 def load_examples() -> list:
     """Charge examples.json une seule fois (cache mémoire)."""
@@ -109,7 +121,8 @@ def select_examples(question: str, intent: str, max_examples: int = 3) -> str:
     question_lower = question.lower()
 
     # 1. Construire les tags cibles
-    target_tags = {intent}
+    # intent vide = auto-détection LLM → ne pas polluer les tags avec ""
+    target_tags = {intent} if intent else set()
     for keyword, tags in KEYWORD_TO_TAGS.items():
         if keyword in question_lower:
             target_tags.update(tags)
@@ -144,8 +157,13 @@ def select_examples(question: str, intent: str, max_examples: int = 3) -> str:
         if fw:
             frameworks_seen.add(fw)
 
-    # 4. Pour structure, toujours inclure l'exemple J (démo null)
-    if intent == "structure":
+    # 4. Pour structure (explicite ou détectée), toujours inclure exemple J (démo mesh null)
+    _structure_tags = {"PICO", "PEO", "SPIDER", "M-KAP", "M-ADH", "M-PREV",
+                       "M-RISK", "M-MORT", "M-THER", "M-EDU", "M-PEER"}
+    is_structure = (intent == "structure") or (
+        not intent and bool(target_tags & _structure_tags)
+    )
+    if is_structure:
         j_example = next((ex for ex in examples_db if ex["id"] == "J"), None)
         if j_example and j_example not in selected:
             if len(selected) >= max_examples:
@@ -193,14 +211,85 @@ def parse_response(text: str) -> dict:
         clean = clean[3:]
     if clean.endswith("```"):
         clean = clean[:-3]
-    return json.loads(clean.strip())
+    clean = clean.strip()
+
+    try:
+        return json.loads(clean)
+    except json.JSONDecodeError:
+        start = clean.find("{")
+        end = clean.rfind("}")
+        if start != -1 and end != -1 and start < end:
+            return json.loads(clean[start:end + 1])
+        raise ValueError("Invalid JSON response from AI provider.")
+
+
+def normalize_search_elements(search_elements) -> list:
+    if not isinstance(search_elements, list):
+        return []
+
+    normalized = []
+    for element in search_elements:
+        if not isinstance(element, dict):
+            continue
+        normalized.append({
+            **element,
+            "label": element.get("label", "Concept"),
+            "tiab": element.get("tiab"),
+            "mesh": element.get("mesh"),
+            "search_filter": bool(element.get("search_filter")),
+            "priority": element.get("priority"),
+            "reason": element.get("reason", ""),
+        })
+    return normalized
+
+
+def normalize_result(result: dict | None) -> dict:
+    """Apply the minimal JSON fallbacks required by the SPEC."""
+    data = result if isinstance(result, dict) else {}
+
+    intent = data.get("intent")
+    if intent not in {"explore", "structure"}:
+        intent = "structure"
+
+    framework = data.get("framework")
+    if framework not in {"PICO", "PEO", "SPIDER"}:
+        framework = None
+
+    components = data.get("components")
+    if not isinstance(components, dict):
+        components = {}
+
+    search_elements = normalize_search_elements(data.get("search_elements"))
+
+    geography = data.get("geography")
+    if not isinstance(geography, dict):
+        geography = {}
+
+    research_level = data.get("research_level")
+    if research_level not in {1, 2, 3}:
+        research_level = 2
+
+    return {
+        **DEFAULT_CANONICAL_RESULT,
+        **data,
+        "intent": intent,
+        "framework": framework,
+        "components": components,
+        "search_elements": search_elements,
+        "geography": {
+            "country": geography.get("country"),
+            "region": geography.get("region"),
+            "continent": geography.get("continent"),
+        },
+        "research_level": research_level,
+    }
 
 
 # ═══════════════════════════════════════════════════════════════
 # APPELS API
 # ═══════════════════════════════════════════════════════════════
 
-def analyze_with_claude(question: str, intent: str = "structure") -> dict:
+def analyze_with_claude(question: str, intent: str = "") -> dict:
     client = get_anthropic_client()
     prompt = build_prompt(question, intent)
     message = client.messages.create(
@@ -208,10 +297,10 @@ def analyze_with_claude(question: str, intent: str = "structure") -> dict:
         max_tokens=1024,
         messages=[{"role": "user", "content": prompt}]
     )
-    return parse_response(message.content[0].text)
+    return normalize_result(parse_response(message.content[0].text))
 
 
-def analyze_with_openai(question: str, intent: str = "structure") -> dict:
+def analyze_with_openai(question: str, intent: str = "") -> dict:
     client = get_openai_client()
     prompt = build_prompt(question, intent)
     response = client.chat.completions.create(
@@ -219,10 +308,10 @@ def analyze_with_openai(question: str, intent: str = "structure") -> dict:
         max_tokens=1024,
         messages=[{"role": "user", "content": prompt}]
     )
-    return parse_response(response.choices[0].message.content)
+    return normalize_result(parse_response(response.choices[0].message.content))
 
 
-def analyze_research_question(question: str, intent: str = "structure") -> dict:
+def analyze_research_question(question: str, intent: str = "") -> dict:
     """Essaie Claude, fallback sur OpenAI."""
     for attempt in range(2):
         try:
