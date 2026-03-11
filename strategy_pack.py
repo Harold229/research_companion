@@ -2,6 +2,10 @@
 Utilitaires de formatage pour le pack exporté de stratégie de recherche.
 """
 
+from question_display import get_component_label
+from question_display import get_question_presentation
+from question_display import get_visible_explanation
+
 
 def _clean_text(value, fallback="Non précisé") -> str:
     if value is None:
@@ -10,14 +14,14 @@ def _clean_text(value, fallback="Non précisé") -> str:
     return text if text else fallback
 
 
-def _format_components(components: dict) -> str:
+def _format_components(components: dict, presentation: dict) -> str:
     if not components:
         return "- Aucune composante structurée disponible"
 
     lines = []
     for key, value in components.items():
         if value:
-            label = key.replace("_", " ").capitalize()
+            label = get_component_label(key, presentation)
             lines.append(f"- {label} : {value}")
     return "\n".join(lines) if lines else "- Aucune composante structurée disponible"
 
@@ -92,8 +96,9 @@ def build_search_strategy_pack(
         or "Aucune reformulation nécessaire."
     )
     framework = result.get("framework")
-    explanation = result.get("explanation")
     is_identical = strategy.get("is_identical", False)
+    presentation = get_question_presentation(result)
+    visible_explanation = get_visible_explanation(result, presentation)
 
     wide = strategy.get("wide", {})
     narrow = strategy.get("narrow", {})
@@ -117,12 +122,18 @@ def build_search_strategy_pack(
         _clean_text(reformulated_question),
         "",
         "## 3. Compréhension",
-        f"- Framework détecté : {_clean_text(framework, 'Non détecté')}",
+        f"- Type de question : {_clean_text(presentation.get('question_type'), 'Question descriptive')}",
+    ]
+
+    if presentation.get("show_framework") and framework:
+        sections.append(f"- Framework méthodologique : {_clean_text(framework)}")
+
+    sections.extend([
         f"- Niveau de recherche : {_clean_text(result.get('research_level'), '2')}",
-        f"- Explication : {_clean_text(explanation, 'Non précisée')}",
+        f"- Explication : {_clean_text(visible_explanation, 'Non précisée')}",
         "",
         "## 4. Composantes identifiées",
-        _format_components(result.get("components") or {}),
+        _format_components(result.get("components") or {}, presentation),
         "",
         "## 5. Concepts retenus pour la recherche",
         _format_retained_concepts(strategy),
@@ -132,7 +143,7 @@ def build_search_strategy_pack(
         "",
         "## 7. Stratégie canonique",
         f"- Stratégie large : {', '.join(wide.get('elements_used', [])) or 'Aucun concept actif'}",
-    ]
+    ])
 
     if is_identical:
         sections.append("- Stratégie restreinte : identique à la stratégie large")
