@@ -1,0 +1,4 @@
+- Interface bilingue français/anglais
+- Toggle de langue dans l'interface
+- Toutes les strings de l'app traduites
+- Le prompt Claude s'adapte selon la langue choisie

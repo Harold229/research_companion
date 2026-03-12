@@ -13,6 +13,24 @@ from question_display import get_question_presentation
 
 
 DEFAULT_PRICES = ["5 €", "10 €", "Je ne paierais pas"]
+PAYWALL_EVENT_COLUMNS = [
+    "timestamp",
+    "session_id",
+    "event_name",
+    "question_initiale",
+    "question_reformulee",
+    "type_question",
+    "framework",
+    "wide_count",
+    "narrow_count",
+    "is_identical",
+    "price_shown",
+    "price_selected",
+    "email",
+    "comment",
+    "refusal_reason",
+    "source",
+]
 
 
 def get_session_id() -> str:
@@ -40,7 +58,7 @@ def build_paywall_payload(
 ) -> dict:
     result = entry.get("result") or {}
     bramer = (entry.get("platform_outputs") or {}).get("PubMed", {})
-    presentation = get_question_presentation(result)
+    presentation = get_question_presentation(result, entry.get("user_question", ""))
 
     return {
         "timestamp": datetime.utcnow().isoformat(),

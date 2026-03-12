@@ -1,0 +1,1620 @@
+[
+  {
+    "id": "P20260312013516260691",
+    "title": "Quelle est la prévalence du diabète au Mali ?",
+    "created_at": "2026-03-12 01:35:16",
+    "updated_at": "2026-03-12 01:47:05",
+    "questions": [
+      "prévalence diabète au mali"
+    ],
+    "entries": [
+      {
+        "id": "20260312014551860018",
+        "created_at": "2026-03-12 01:45:51",
+        "user_question": "prévalence diabète au mali",
+        "reformulated_question": "Quelle est la prévalence du diabète au Mali ?",
+        "framework": "PICO",
+        "result": {
+          "intent": "structure",
+          "framework": "PICO",
+          "components": {
+            "population": "Population générale",
+            "intervention": "Diabète",
+            "comparison": null,
+            "outcome": "Prévalence",
+            "exposure": null
+          },
+          "search_elements": [
+            {
+              "label": "Condition",
+              "tiab": "diabetes OR diabetic OR hyperglycemia OR type 2 diabetes",
+              "mesh": null,
+              "search_filter": true,
+              "priority": 1,
+              "reason": "Condition centrale de la question"
+            },
+            {
+              "label": "Géographie",
+              "tiab": "Mali OR \"West Africa\" OR \"Sub-Saharan Africa\"",
+              "mesh": "\"Africa\"[MeSH] OR \"Africa South of the Sahara\"[MeSH]",
+              "search_filter": true,
+              "priority": 2,
+              "reason": "Géographie mentionnée, utile pour affiner"
+            },
+            {
+              "label": "Mesure épidémiologique",
+              "tiab": "burden OR epidemiology OR frequency OR incidence OR prevalence",
+              "mesh": "\"Prevalence\"[MeSH] OR \"Incidence\"[MeSH]",
+              "search_filter": false,
+              "priority": null,
+              "reason": "Concept générique, risque de perdre des articles pertinents"
+            }
+          ],
+          "geography": {
+            "country": "Mali",
+            "region": "West Africa",
+            "continent": "Sub-Saharan Africa"
+          },
+          "research_level": 2,
+          "explanation": "Question épidémiologique sur la prévalence → règle D : PICO.",
+          "research_question_fr": "Quelle est la prévalence du diabète au Mali ?",
+          "research_question_en": "What is the prevalence of diabetes in Mali?",
+          "research_question_comment": "Formulation épidémiologique standard avec précision géographique.",
+          "geography_tiab": "Mali OR \"West Africa\" OR \"Sub-Saharan Africa\""
+        },
+        "strategy": {
+          "wide": {
+            "elements": [
+              {
+                "label": "Condition",
+                "tiab": "diabetes OR diabetic OR hyperglycemia OR type 2 diabetes",
+                "mesh": null,
+                "search_filter": true,
+                "priority": 1,
+                "reason": "Condition centrale de la question"
+              }
+            ],
+            "elements_used": [
+              "Condition"
+            ]
+          },
+          "narrow": {
+            "elements": [
+              {
+                "label": "Condition",
+                "tiab": "diabetes OR diabetic OR hyperglycemia OR type 2 diabetes",
+                "mesh": null,
+                "search_filter": true,
+                "priority": 1,
+                "reason": "Condition centrale de la question"
+              },
+              {
+                "label": "Géographie",
+                "tiab": "Mali OR \"West Africa\" OR \"Sub-Saharan Africa\"",
+                "mesh": "\"Africa\"[MeSH] OR \"Africa South of the Sahara\"[MeSH]",
+                "search_filter": true,
+                "priority": 2,
+                "reason": "Géographie mentionnée, utile pour affiner"
+              }
+            ],
+            "elements_used": [
+              "Condition",
+              "Géographie"
+            ]
+          },
+          "excluded": [
+            {
+              "label": "Mesure épidémiologique",
+              "reason": "Concept générique, risque de perdre des articles pertinents"
+            }
+          ],
+          "is_identical": false
+        },
+        "platform_outputs": {
+          "PubMed": {
+            "large": {
+              "query": "((diabetes OR diabetic OR hyperglycemia OR type 2 diabetes)[Title/Abstract])",
+              "elements_used": [
+                "Condition"
+              ],
+              "count": 1131321
+            },
+            "strict": {
+              "query": "((diabetes OR diabetic OR hyperglycemia OR type 2 diabetes)[Title/Abstract])\nAND ((\"Africa\"[MeSH] OR \"Africa South of the Sahara\"[MeSH]) OR ((Mali OR \"West Africa\" OR \"Sub-Saharan Africa\")[Title/Abstract]))",
+              "elements_used": [
+                "Condition",
+                "Géographie"
+              ],
+              "count": 10660
+            },
+            "excluded": [
+              {
+                "label": "Mesure épidémiologique",
+                "reason": "Concept générique, risque de perdre des articles pertinents"
+              }
+            ],
+            "is_identical": false
+          }
+        },
+        "pack": "# Pack de stratégie de recherche\n\n## 1. Question initiale\nprévalence diabète au mali\n\n## 2. Question reformulée\nQuelle est la prévalence du diabète au Mali ?\n\n## 3. Compréhension\n- Type de sujet : question de prévalence\n- Niveau de recherche : 2\n- Explication : Question descriptive visant à estimer la fréquence d’un problème de santé dans une population ou un contexte donné.\n\n## 4. Composantes identifiées\n- Population : Population générale\n- Phénomène ou condition étudiée : Diabète\n- Mesure étudiée : Prévalence\n\n## 5. Concepts retenus pour la recherche\n- Condition (large + restreinte)\n- Géographie (restreinte)\n\n## 6. Concepts exclus du filtrage\n- Mesure épidémiologique : Concept générique, risque de perdre des articles pertinents\n\n## 7. Résumé méthodologique\n- Le sujet a été interprété comme une question de prévalence.\n- Question descriptive visant à estimer la fréquence d’un problème de santé dans une population ou un contexte donné.\n- La stratégie a été construite autour des concepts essentiels suivants : Condition.\n- La version restreinte ajoute les éléments suivants pour affiner la recherche : Géographie.\n- Sur PubMed, la stratégie large renvoie 1131321 résultats et la stratégie restreinte 10660.\n\n## 8. Pourquoi certains concepts ne sont pas utilisés comme filtres\n- Un concept n’est pas utilisé comme filtre actif lorsqu’un article pertinent pourrait rester utile même sans le mentionner explicitement dans les champs recherchés.\n- Cette approche limite les exclusions abusives et suit une logique de recherche d’abord large, puis progressivement affinée.\n- Mesure épidémiologique : Concept générique, risque de perdre des articles pertinents\n\n## 9. Stratégie canonique\n- Stratégie large : Condition\n- Stratégie restreinte : Condition, Géographie\n\n## 10. Comment utiliser la version large et la version restreinte\n- Commencez par la stratégie large pour repérer le volume global de littérature et vérifier que les concepts essentiels capturent bien le sujet.\n- Passez ensuite à la stratégie restreinte pour cibler plus précisément la littérature en ajoutant : Géographie.\n- Si la version restreinte devient trop étroite, revenez à la version large puis réintroduisez les filtres un par un.\n\n## 11. Pistes d’affinement\n- Ajouter un contexte de soins, un type de structure ou un cadre d’étude si cela peut aider à resserrer la recherche.\n- Éviter d’ajouter comme filtres des notions transversales trop larges si elles ne sont pas au cœur du sujet.\n\n## 12. Requêtes par plateforme disponible\n### PubMed\n**Stratégie large**\nNombre de résultats observé : 1131321\n((diabetes OR diabetic OR hyperglycemia OR type 2 diabetes)[Title/Abstract])\n\n**Stratégie restreinte**\nNombre de résultats observé : 10660\n((diabetes OR diabetic OR hyperglycemia OR type 2 diabetes)[Title/Abstract])\nAND ((\"Africa\"[MeSH] OR \"Africa South of the Sahara\"[MeSH]) OR ((Mali OR \"West Africa\" OR \"Sub-Saharan Africa\")[Title/Abstract]))\n\n## 13. Texte prêt à réutiliser dans un mémoire, protocole ou document de travail\nÀ partir du sujet initial « prévalence diabète au mali », une reformulation opérationnelle a été retenue : « Quelle est la prévalence du diabète au Mali ? ». Le sujet correspond à une question de prévalence. La version large repose sur Condition, puis une version restreinte ajoute Géographie. Les notions suivantes ont été laissées hors du filtrage actif afin d’éviter une stratégie trop restrictive : Mesure épidémiologique. Cette stratégie peut être utilisée telle quelle pour une première recherche, puis ajustée selon le volume et la pertinence des résultats.\n\n## 14. Note méthodologique\nLa stratégie large utilise les concepts essentiels (priority = 1). La stratégie restreinte ajoute les concepts d’affinement (priority = 2) pour réduire le volume de résultats.\n",
+        "project_id": "P20260312013516260691",
+        "project_title": "Quelle est la prévalence du diabète au Mali ?"
+      },
+      {
+        "id": "20260311191750495852",
+        "created_at": "2026-03-11 19:17:50",
+        "user_question": "prévalence diabète au mali",
+        "reformulated_question": "Quelle est la prévalence du diabète au Mali ?",
+        "framework": "PICO",
+        "result": {
+          "intent": "structure",
+          "framework": "PICO",
+          "components": {
+            "population": "Population générale",
+            "intervention": "Diabète",
+            "comparison": null,
+            "outcome": "Prévalence",
+            "exposure": null
+          },
+          "search_elements": [
+            {
+              "label": "Condition",
+              "tiab": "diabetes OR diabetic OR hyperglycemia OR type 2 diabetes",
+              "mesh": null,
+              "search_filter": true,
+              "priority": 1,
+              "reason": "Condition centrale de la question"
+            },
+            {
+              "label": "Géographie",
+              "tiab": "Mali OR \"West Africa\" OR \"Sub-Saharan Africa\"",
+              "mesh": "\"Africa\"[MeSH] OR \"Africa South of the Sahara\"[MeSH]",
+              "search_filter": true,
+              "priority": 2,
+              "reason": "Géographie mentionnée, utile pour affiner"
+            },
+            {
+              "label": "Mesure épidémiologique",
+              "tiab": "burden OR epidemiology OR frequency OR incidence OR prevalence",
+              "mesh": "\"Prevalence\"[MeSH] OR \"Incidence\"[MeSH]",
+              "search_filter": false,
+              "priority": null,
+              "reason": "Concept trop générique, risque de perdre des articles pertinents"
+            }
+          ],
+          "geography": {
+            "country": "Mali",
+            "region": "West Africa",
+            "continent": "Sub-Saharan Africa"
+          },
+          "research_level": 2,
+          "explanation": "Question épidémiologique sur la prévalence → règle D : PICO.",
+          "research_question_fr": "Quelle est la prévalence du diabète au Mali ?",
+          "research_question_en": "What is the prevalence of diabetes in Mali?",
+          "research_question_comment": "Formulation épidémiologique standard.",
+          "geography_tiab": "Mali OR \"West Africa\" OR \"Sub-Saharan Africa\""
+        },
+        "strategy": {
+          "wide": {
+            "elements": [
+              {
+                "label": "Condition",
+                "tiab": "diabetes OR diabetic OR hyperglycemia OR type 2 diabetes",
+                "mesh": null,
+                "search_filter": true,
+                "priority": 1,
+                "reason": "Condition centrale de la question"
+              }
+            ],
+            "elements_used": [
+              "Condition"
+            ]
+          },
+          "narrow": {
+            "elements": [
+              {
+                "label": "Condition",
+                "tiab": "diabetes OR diabetic OR hyperglycemia OR type 2 diabetes",
+                "mesh": null,
+                "search_filter": true,
+                "priority": 1,
+                "reason": "Condition centrale de la question"
+              },
+              {
+                "label": "Géographie",
+                "tiab": "Mali OR \"West Africa\" OR \"Sub-Saharan Africa\"",
+                "mesh": "\"Africa\"[MeSH] OR \"Africa South of the Sahara\"[MeSH]",
+                "search_filter": true,
+                "priority": 2,
+                "reason": "Géographie mentionnée, utile pour affiner"
+              }
+            ],
+            "elements_used": [
+              "Condition",
+              "Géographie"
+            ]
+          },
+          "excluded": [
+            {
+              "label": "Mesure épidémiologique",
+              "reason": "Concept trop générique, risque de perdre des articles pertinents"
+            }
+          ],
+          "is_identical": false
+        },
+        "platform_outputs": {
+          "PubMed": {
+            "large": {
+              "query": "((diabetes OR diabetic OR hyperglycemia OR type 2 diabetes)[Title/Abstract])",
+              "elements_used": [
+                "Condition"
+              ],
+              "count": 1131296
+            },
+            "strict": {
+              "query": "((diabetes OR diabetic OR hyperglycemia OR type 2 diabetes)[Title/Abstract])\nAND ((\"Africa\"[MeSH] OR \"Africa South of the Sahara\"[MeSH]) OR ((Mali OR \"West Africa\" OR \"Sub-Saharan Africa\")[Title/Abstract]))",
+              "elements_used": [
+                "Condition",
+                "Géographie"
+              ],
+              "count": 10657
+            },
+            "excluded": [
+              {
+                "label": "Mesure épidémiologique",
+                "reason": "Concept trop générique, risque de perdre des articles pertinents"
+              }
+            ],
+            "is_identical": false
+          }
+        },
+        "pack": "# Pack de stratégie de recherche\n\n## 1. Question initiale\nprévalence diabète au mali\n\n## 2. Question reformulée\nQuelle est la prévalence du diabète au Mali ?\n\n## 3. Compréhension\n- Framework détecté : PICO\n- Niveau de recherche : 2\n- Explication : Question épidémiologique sur la prévalence → règle D : PICO.\n\n## 4. Composantes identifiées\n- Population : Population générale\n- Intervention : Diabète\n- Outcome : Prévalence\n\n## 5. Concepts retenus pour la recherche\n- Condition (large + restreinte)\n- Géographie (restreinte)\n\n## 6. Concepts exclus du filtrage\n- Mesure épidémiologique : Concept trop générique, risque de perdre des articles pertinents\n\n## 7. Stratégie canonique\n- Stratégie large : Condition\n- Stratégie restreinte : Condition, Géographie\n\n## 8. Requêtes par plateforme disponible\n### PubMed\n**Stratégie large**\n((diabetes OR diabetic OR hyperglycemia OR type 2 diabetes)[Title/Abstract])\n\n**Stratégie restreinte**\n((diabetes OR diabetic OR hyperglycemia OR type 2 diabetes)[Title/Abstract])\nAND ((\"Africa\"[MeSH] OR \"Africa South of the Sahara\"[MeSH]) OR ((Mali OR \"West Africa\" OR \"Sub-Saharan Africa\")[Title/Abstract]))\n\n## 9. Note méthodologique\nLa stratégie large utilise les concepts essentiels (priority = 1). La stratégie restreinte ajoute les concepts d’affinement (priority = 2) pour réduire le volume de résultats.\n",
+        "project_id": "P20260312013516260691",
+        "project_title": "Quelle est la prévalence du diabète au Mali ?"
+      }
+    ],
+    "saved_articles": [
+      {
+        "title": "Correlates of diabetic polyneuropathy of the elderly in Sub-Saharan Africa.",
+        "authors": [
+          "Simo N",
+          "Kuate-Tegueu C",
+          "Ngankou-Tchankeu S"
+        ],
+        "year": "2020",
+        "source": "PloS one",
+        "pmid": "33119646",
+        "doi": "10.1371/journal.pone.0240602",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/33119646/",
+        "priority": "À vérifier",
+        "justification": "publication récente",
+        "tags": [
+          "à vérifier",
+          "autre objectif libre",
+          "population générale",
+          "prévalence",
+          "diabète",
+          "mali",
+          "west africa",
+          "sub-saharan africa"
+        ],
+        "argument_note": "Article à vérifier pour Autre objectif libre : publication récente"
+      },
+      {
+        "title": "Correlates of retinopathy in persons living with type 2 diabetes at a clinic in Zambia.",
+        "authors": [
+          "Mwangu JK",
+          "Siame L",
+          "Ngosa M"
+        ],
+        "year": "2024",
+        "source": "The Pan African medical journal",
+        "pmid": "40027085",
+        "doi": "10.11604/pamj.2024.49.83.43657",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/40027085/",
+        "priority": "À vérifier",
+        "justification": "publication récente",
+        "tags": [
+          "à vérifier",
+          "autre objectif libre",
+          "population générale",
+          "prévalence",
+          "diabète",
+          "mali",
+          "west africa",
+          "sub-saharan africa"
+        ],
+        "argument_note": "Article à vérifier pour Autre objectif libre : publication récente"
+      },
+      {
+        "title": "Prevalence of Type 2 Diabetes in South Africa: A Systematic Review and Meta-Analysis.",
+        "authors": [
+          "Pheiffer C",
+          "Pillay-van Wyk V",
+          "Turawa E"
+        ],
+        "year": "2021",
+        "source": "International journal of environmental research and public health",
+        "pmid": "34070714",
+        "doi": "10.3390/ijerph18115868",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/34070714/",
+        "priority": "À vérifier",
+        "justification": "publication récente",
+        "tags": [
+          "à vérifier",
+          "autre objectif libre",
+          "population générale",
+          "prévalence",
+          "diabète",
+          "mali",
+          "west africa",
+          "sub-saharan africa"
+        ],
+        "argument_note": "Article à vérifier pour Autre objectif libre : publication récente"
+      },
+      {
+        "title": "Prevalence of hypertension among type 2 diabetes mellitus patients in Ethiopia: a systematic review and meta-analysis.",
+        "authors": [
+          "Haile TG",
+          "Mariye T",
+          "Tadesse DB"
+        ],
+        "year": "2023",
+        "source": "International health",
+        "pmid": "36055967",
+        "doi": "10.1093/inthealth/ihac060",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/36055967/",
+        "priority": "À vérifier",
+        "justification": "publication récente",
+        "tags": [
+          "à vérifier",
+          "autre objectif libre",
+          "population générale",
+          "prévalence",
+          "diabète",
+          "mali",
+          "west africa",
+          "sub-saharan africa"
+        ],
+        "argument_note": "Article à vérifier pour Autre objectif libre : publication récente"
+      },
+      {
+        "title": "The practice, nature, and impact of nurse-led type 2 diabetic foot prevention services and educational programs in Sub-Saharan Africa: a scoping review.",
+        "authors": [
+          "Sajith R",
+          "Ackers L",
+          "Ackers-Johnson S"
+        ],
+        "year": "2024",
+        "source": "Frontiers in public health",
+        "pmid": "39655252",
+        "doi": "10.3389/fpubh.2024.1465750",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/39655252/",
+        "priority": "À vérifier",
+        "justification": "publication récente",
+        "tags": [
+          "à vérifier",
+          "autre objectif libre",
+          "population générale",
+          "prévalence",
+          "diabète",
+          "mali",
+          "west africa",
+          "sub-saharan africa"
+        ],
+        "argument_note": "Article à vérifier pour Autre objectif libre : publication récente"
+      },
+      {
+        "title": "Type 2 diabetes prevalence, awareness, and risk factors in rural Mali: a cross-sectional study.",
+        "authors": [
+          "Diawara A",
+          "Coulibaly DM",
+          "Hussain TYA"
+        ],
+        "year": "2023",
+        "source": "Scientific reports",
+        "pmid": "36878951",
+        "doi": "10.1038/s41598-023-29743-1",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/36878951/",
+        "priority": "À vérifier",
+        "justification": "publication récente",
+        "tags": [
+          "à vérifier",
+          "autre objectif libre",
+          "population générale",
+          "prévalence",
+          "diabète",
+          "mali",
+          "west africa",
+          "sub-saharan africa"
+        ],
+        "argument_note": "Article à vérifier pour Autre objectif libre : publication récente"
+      },
+      {
+        "title": "[Not Available].",
+        "authors": [
+          "Nganou-Gnindjio CN",
+          "Ngati Nyonga D",
+          "Wafeu GS"
+        ],
+        "year": "2022",
+        "source": "Annales de cardiologie et d'angeiologie",
+        "pmid": "35039142",
+        "doi": "10.1016/j.ancard.2021.09.010",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/35039142/",
+        "priority": "À vérifier",
+        "justification": "publication récente",
+        "tags": [
+          "à vérifier",
+          "autre objectif libre",
+          "population générale",
+          "prévalence",
+          "diabète",
+          "mali",
+          "west africa",
+          "sub-saharan africa"
+        ],
+        "argument_note": "Article à vérifier pour Autre objectif libre : publication récente"
+      },
+      {
+        "title": "Diabetes and complications of the heart in Sub-Saharan Africa: An urgent need for improved awareness, diagnostics and management.",
+        "authors": [
+          "Glezeva N",
+          "Chisale M",
+          "McDonald K"
+        ],
+        "year": "2018",
+        "source": "Diabetes research and clinical practice",
+        "pmid": "29287838",
+        "doi": "10.1016/j.diabres.2017.12.019",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/29287838/",
+        "priority": "À vérifier",
+        "justification": "correspondance partielle avec l’objectif de lecture",
+        "tags": [
+          "à vérifier",
+          "autre objectif libre",
+          "population générale",
+          "prévalence",
+          "diabète",
+          "mali",
+          "west africa",
+          "sub-saharan africa"
+        ],
+        "argument_note": "Article à vérifier pour Autre objectif libre : correspondance partielle avec l’objectif de lecture"
+      },
+      {
+        "title": "Diabetes in sub-Saharan Africa.",
+        "authors": [
+          "Mbanya JC",
+          "Motala AA",
+          "Sobngwi E"
+        ],
+        "year": "2010",
+        "source": "Lancet (London, England)",
+        "pmid": "20609971",
+        "doi": "10.1016/S0140-6736(10)60550-8",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/20609971/",
+        "priority": "À vérifier",
+        "justification": "correspondance partielle avec l’objectif de lecture",
+        "tags": [
+          "à vérifier",
+          "autre objectif libre",
+          "population générale",
+          "prévalence",
+          "diabète",
+          "mali",
+          "west africa",
+          "sub-saharan africa"
+        ],
+        "argument_note": "Article à vérifier pour Autre objectif libre : correspondance partielle avec l’objectif de lecture"
+      },
+      {
+        "title": "Diabetes trends in Africa.",
+        "authors": [
+          "Motala AA"
+        ],
+        "year": "2002",
+        "source": "Diabetes/metabolism research and reviews",
+        "pmid": "12324980",
+        "doi": "10.1002/dmrr.284",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/12324980/",
+        "priority": "À vérifier",
+        "justification": "correspondance partielle avec l’objectif de lecture",
+        "tags": [
+          "à vérifier",
+          "autre objectif libre",
+          "population générale",
+          "prévalence",
+          "diabète",
+          "mali",
+          "west africa",
+          "sub-saharan africa"
+        ],
+        "argument_note": "Article à vérifier pour Autre objectif libre : correspondance partielle avec l’objectif de lecture"
+      },
+      {
+        "title": "Diabetic ketoacidosis: an overlooked child killer in sub-Saharan Africa?",
+        "authors": [
+          "Murunga AN",
+          "Owira PM"
+        ],
+        "year": "2013",
+        "source": "Tropical medicine & international health : TM & IH",
+        "pmid": "24112393",
+        "doi": "10.1111/tmi.12195",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/24112393/",
+        "priority": "À vérifier",
+        "justification": "correspondance partielle avec l’objectif de lecture",
+        "tags": [
+          "à vérifier",
+          "autre objectif libre",
+          "population générale",
+          "prévalence",
+          "diabète",
+          "mali",
+          "west africa",
+          "sub-saharan africa"
+        ],
+        "argument_note": "Article à vérifier pour Autre objectif libre : correspondance partielle avec l’objectif de lecture"
+      },
+      {
+        "title": "Diabetic nephropathy and hypertension in diabetes patients of sub-Saharan countries: a systematic review and meta-analysis.",
+        "authors": [
+          "Wagnew F",
+          "Eshetie S",
+          "Kibret GD"
+        ],
+        "year": "2018",
+        "source": "BMC research notes",
+        "pmid": "30081966",
+        "doi": "10.1186/s13104-018-3670-5",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/30081966/",
+        "priority": "À vérifier",
+        "justification": "correspondance partielle avec l’objectif de lecture",
+        "tags": [
+          "à vérifier",
+          "autre objectif libre",
+          "population générale",
+          "prévalence",
+          "diabète",
+          "mali",
+          "west africa",
+          "sub-saharan africa"
+        ],
+        "argument_note": "Article à vérifier pour Autre objectif libre : correspondance partielle avec l’objectif de lecture"
+      },
+      {
+        "title": "Type 2 diabetes mellitus and obesity in sub-Saharan Africa.",
+        "authors": [
+          "Tuei VC",
+          "Maiyoh GK",
+          "Ha CE"
+        ],
+        "year": "2010",
+        "source": "Diabetes/metabolism research and reviews",
+        "pmid": "20641142",
+        "doi": "10.1002/dmrr.1106",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/20641142/",
+        "priority": "À vérifier",
+        "justification": "correspondance partielle avec l’objectif de lecture",
+        "tags": [
+          "à vérifier",
+          "autre objectif libre",
+          "population générale",
+          "prévalence",
+          "diabète",
+          "mali",
+          "west africa",
+          "sub-saharan africa"
+        ],
+        "argument_note": "Article à vérifier pour Autre objectif libre : correspondance partielle avec l’objectif de lecture"
+      },
+      {
+        "title": "[Familial Wolfram syndrome].",
+        "authors": [
+          "Bessahraoui M",
+          "Paquis V",
+          "Rouzier C"
+        ],
+        "year": "2014",
+        "source": "Archives de pediatrie : organe officiel de la Societe francaise de pediatrie",
+        "pmid": "25282462",
+        "doi": "10.1016/j.arcped.2014.08.017",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/25282462/",
+        "priority": "À vérifier",
+        "justification": "correspondance partielle avec l’objectif de lecture",
+        "tags": [
+          "à vérifier",
+          "autre objectif libre",
+          "population générale",
+          "prévalence",
+          "diabète",
+          "mali",
+          "west africa",
+          "sub-saharan africa"
+        ],
+        "argument_note": "Article à vérifier pour Autre objectif libre : correspondance partielle avec l’objectif de lecture"
+      },
+      {
+        "title": "[The diabetic hand].",
+        "authors": [
+          "Sidibe AT",
+          "Dembele M",
+          "Cisse IA"
+        ],
+        "year": "2006",
+        "source": "Le Mali medical",
+        "pmid": "19434998",
+        "doi": "",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/19434998/",
+        "priority": "À vérifier",
+        "justification": "correspondance partielle avec l’objectif de lecture",
+        "tags": [
+          "à vérifier",
+          "autre objectif libre",
+          "population générale",
+          "prévalence",
+          "diabète",
+          "mali",
+          "west africa",
+          "sub-saharan africa"
+        ],
+        "argument_note": "Article à vérifier pour Autre objectif libre : correspondance partielle avec l’objectif de lecture"
+      }
+    ],
+    "arguments": [],
+    "notes": []
+  },
+  {
+    "id": "P20260312013516258246",
+    "title": "Quelle est la prévalence du diabète au Mali ?",
+    "created_at": "2026-03-12 01:35:16",
+    "updated_at": "2026-03-11 16:05:51",
+    "questions": [
+      "prévalence diabète au mali"
+    ],
+    "entries": [
+      {
+        "id": "20260311160551957621",
+        "created_at": "2026-03-11 16:05:51",
+        "user_question": "prévalence diabète au mali",
+        "reformulated_question": "Quelle est la prévalence du diabète au Mali ?",
+        "framework": "PICO",
+        "result": {
+          "intent": "structure",
+          "framework": "PICO",
+          "components": {
+            "population": "Population générale du Mali",
+            "intervention": "Diabète",
+            "comparison": null,
+            "outcome": "Prévalence",
+            "exposure": null
+          },
+          "search_elements": [
+            {
+              "label": "Condition",
+              "tiab": "diabetes OR diabetic OR hyperglycemia OR type 2 diabetes",
+              "mesh": null,
+              "search_filter": true,
+              "priority": 1,
+              "reason": "Condition centrale de la question"
+            },
+            {
+              "label": "Géographie",
+              "tiab": "Mali OR \"West Africa\" OR \"Sub-Saharan Africa\"",
+              "mesh": "\"Africa\"[MeSH] OR \"Africa South of the Sahara\"[MeSH]",
+              "search_filter": true,
+              "priority": 2,
+              "reason": "Géographie mentionnée, utile pour affiner"
+            },
+            {
+              "label": "Mesure épidémiologique",
+              "tiab": "burden OR epidemiology OR frequency OR incidence OR prevalence",
+              "mesh": "\"Prevalence\"[MeSH] OR \"Incidence\"[MeSH]",
+              "search_filter": false,
+              "priority": null,
+              "reason": "Concept trop générique, risque de perdre des articles pertinents"
+            }
+          ],
+          "geography": {
+            "country": "Mali",
+            "region": "West Africa",
+            "continent": "Sub-Saharan Africa"
+          },
+          "research_level": 2,
+          "explanation": "Question épidémiologique sur la prévalence → règle D : PICO.",
+          "research_question_fr": "Quelle est la prévalence du diabète au Mali ?",
+          "research_question_en": "What is the prevalence of diabetes in Mali?",
+          "research_question_comment": "Formulation épidémiologique standard.",
+          "geography_tiab": "Mali OR \"West Africa\" OR \"Sub-Saharan Africa\""
+        },
+        "strategy": {
+          "wide": {
+            "elements": [
+              {
+                "label": "Condition",
+                "tiab": "diabetes OR diabetic OR hyperglycemia OR type 2 diabetes",
+                "mesh": null,
+                "search_filter": true,
+                "priority": 1,
+                "reason": "Condition centrale de la question"
+              }
+            ],
+            "elements_used": [
+              "Condition"
+            ]
+          },
+          "narrow": {
+            "elements": [
+              {
+                "label": "Condition",
+                "tiab": "diabetes OR diabetic OR hyperglycemia OR type 2 diabetes",
+                "mesh": null,
+                "search_filter": true,
+                "priority": 1,
+                "reason": "Condition centrale de la question"
+              },
+              {
+                "label": "Géographie",
+                "tiab": "Mali OR \"West Africa\" OR \"Sub-Saharan Africa\"",
+                "mesh": "\"Africa\"[MeSH] OR \"Africa South of the Sahara\"[MeSH]",
+                "search_filter": true,
+                "priority": 2,
+                "reason": "Géographie mentionnée, utile pour affiner"
+              }
+            ],
+            "elements_used": [
+              "Condition",
+              "Géographie"
+            ]
+          },
+          "excluded": [
+            {
+              "label": "Mesure épidémiologique",
+              "reason": "Concept trop générique, risque de perdre des articles pertinents"
+            }
+          ],
+          "is_identical": false
+        },
+        "platform_outputs": {
+          "PubMed": {
+            "large": {
+              "query": "((diabetes OR diabetic OR hyperglycemia OR type 2 diabetes)[Title/Abstract])",
+              "elements_used": [
+                "Condition"
+              ],
+              "count": 1131269
+            },
+            "strict": {
+              "query": "((diabetes OR diabetic OR hyperglycemia OR type 2 diabetes)[Title/Abstract])\nAND ((\"Africa\"[MeSH] OR \"Africa South of the Sahara\"[MeSH]) OR ((Mali OR \"West Africa\" OR \"Sub-Saharan Africa\")[Title/Abstract]))",
+              "elements_used": [
+                "Condition",
+                "Géographie"
+              ],
+              "count": 10657
+            },
+            "excluded": [
+              {
+                "label": "Mesure épidémiologique",
+                "reason": "Concept trop générique, risque de perdre des articles pertinents"
+              }
+            ],
+            "is_identical": false
+          }
+        },
+        "pack": "# Pack de stratégie de recherche\n\n## 1. Question initiale\nprévalence diabète au mali\n\n## 2. Question reformulée\nQuelle est la prévalence du diabète au Mali ?\n\n## 3. Compréhension\n- Framework détecté : PICO\n- Niveau de recherche : 2\n- Explication : Question épidémiologique sur la prévalence → règle D : PICO.\n\n## 4. Composantes identifiées\n- Population : Population générale du Mali\n- Intervention : Diabète\n- Outcome : Prévalence\n\n## 5. Concepts retenus pour la recherche\n- Condition (large + restreinte)\n- Géographie (restreinte)\n\n## 6. Concepts exclus du filtrage\n- Mesure épidémiologique : Concept trop générique, risque de perdre des articles pertinents\n\n## 7. Stratégie canonique\n- Stratégie large : Condition\n- Stratégie restreinte : Condition, Géographie\n\n## 8. Requêtes par plateforme disponible\n### PubMed\n**Stratégie large**\n((diabetes OR diabetic OR hyperglycemia OR type 2 diabetes)[Title/Abstract])\n\n**Stratégie restreinte**\n((diabetes OR diabetic OR hyperglycemia OR type 2 diabetes)[Title/Abstract])\nAND ((\"Africa\"[MeSH] OR \"Africa South of the Sahara\"[MeSH]) OR ((Mali OR \"West Africa\" OR \"Sub-Saharan Africa\")[Title/Abstract]))\n\n## 9. Note méthodologique\nLa stratégie large utilise les concepts essentiels (priority = 1). La stratégie restreinte ajoute les concepts d’affinement (priority = 2) pour réduire le volume de résultats.\n",
+        "project_id": "P20260312013516258246",
+        "project_title": "Quelle est la prévalence du diabète au Mali ?"
+      }
+    ],
+    "saved_articles": [],
+    "arguments": [],
+    "notes": []
+  },
+  {
+    "id": "P20260312013516258953",
+    "title": "Quelle est la prévalence du diabète au Mali ?",
+    "created_at": "2026-03-12 01:35:16",
+    "updated_at": "2026-03-11 16:06:52",
+    "questions": [
+      "prévalence diabète au mali"
+    ],
+    "entries": [
+      {
+        "id": "20260311160652030367",
+        "created_at": "2026-03-11 16:06:52",
+        "user_question": "prévalence diabète au mali",
+        "reformulated_question": "Quelle est la prévalence du diabète au Mali ?",
+        "framework": "PICO",
+        "result": {
+          "intent": "structure",
+          "framework": "PICO",
+          "components": {
+            "population": "Population générale au Mali",
+            "intervention": "Diabète",
+            "comparison": null,
+            "outcome": "Prévalence",
+            "exposure": null
+          },
+          "search_elements": [
+            {
+              "label": "Condition",
+              "tiab": "diabetes OR diabetic OR hyperglycemia OR type 2 diabetes",
+              "mesh": null,
+              "search_filter": true,
+              "priority": 1,
+              "reason": "Condition centrale de la question"
+            },
+            {
+              "label": "Géographie",
+              "tiab": "Mali OR \"West Africa\" OR \"Sub-Saharan Africa\"",
+              "mesh": null,
+              "search_filter": true,
+              "priority": 2,
+              "reason": "Géographie mentionnée, utile pour affiner"
+            },
+            {
+              "label": "Mesure épidémiologique",
+              "tiab": "burden OR epidemiology OR frequency OR incidence OR prevalence",
+              "mesh": "\"Prevalence\"[MeSH] OR \"Incidence\"[MeSH]",
+              "search_filter": false,
+              "priority": null,
+              "reason": "Concept trop générique, risque de perdre des articles pertinents"
+            }
+          ],
+          "geography": {
+            "country": "Mali",
+            "region": "West Africa",
+            "continent": "Sub-Saharan Africa"
+          },
+          "research_level": 2,
+          "explanation": "Question épidémiologique sur la prévalence → règle D : PICO.",
+          "research_question_fr": "Quelle est la prévalence du diabète au Mali ?",
+          "research_question_en": "What is the prevalence of diabetes in Mali?",
+          "research_question_comment": "Formulation épidémiologique standard.",
+          "geography_tiab": "Mali OR \"West Africa\" OR \"Sub-Saharan Africa\""
+        },
+        "strategy": {
+          "wide": {
+            "elements": [
+              {
+                "label": "Condition",
+                "tiab": "diabetes OR diabetic OR hyperglycemia OR type 2 diabetes",
+                "mesh": null,
+                "search_filter": true,
+                "priority": 1,
+                "reason": "Condition centrale de la question"
+              }
+            ],
+            "elements_used": [
+              "Condition"
+            ]
+          },
+          "narrow": {
+            "elements": [
+              {
+                "label": "Condition",
+                "tiab": "diabetes OR diabetic OR hyperglycemia OR type 2 diabetes",
+                "mesh": null,
+                "search_filter": true,
+                "priority": 1,
+                "reason": "Condition centrale de la question"
+              },
+              {
+                "label": "Géographie",
+                "tiab": "Mali OR \"West Africa\" OR \"Sub-Saharan Africa\"",
+                "mesh": null,
+                "search_filter": true,
+                "priority": 2,
+                "reason": "Géographie mentionnée, utile pour affiner"
+              }
+            ],
+            "elements_used": [
+              "Condition",
+              "Géographie"
+            ]
+          },
+          "excluded": [
+            {
+              "label": "Mesure épidémiologique",
+              "reason": "Concept trop générique, risque de perdre des articles pertinents"
+            }
+          ],
+          "is_identical": false
+        },
+        "platform_outputs": {
+          "PubMed": {
+            "large": {
+              "query": "((diabetes OR diabetic OR hyperglycemia OR type 2 diabetes)[Title/Abstract])",
+              "elements_used": [
+                "Condition"
+              ],
+              "count": 1131269
+            },
+            "strict": {
+              "query": "((diabetes OR diabetic OR hyperglycemia OR type 2 diabetes)[Title/Abstract])\nAND ((Mali OR \"West Africa\" OR \"Sub-Saharan Africa\")[Title/Abstract])",
+              "elements_used": [
+                "Condition",
+                "Géographie"
+              ],
+              "count": 2073
+            },
+            "excluded": [
+              {
+                "label": "Mesure épidémiologique",
+                "reason": "Concept trop générique, risque de perdre des articles pertinents"
+              }
+            ],
+            "is_identical": false
+          }
+        },
+        "pack": "# Pack de stratégie de recherche\n\n## 1. Question initiale\nprévalence diabète au mali\n\n## 2. Question reformulée\nQuelle est la prévalence du diabète au Mali ?\n\n## 3. Compréhension\n- Framework détecté : PICO\n- Niveau de recherche : 2\n- Explication : Question épidémiologique sur la prévalence → règle D : PICO.\n\n## 4. Composantes identifiées\n- Population : Population générale au Mali\n- Intervention : Diabète\n- Outcome : Prévalence\n\n## 5. Concepts retenus pour la recherche\n- Condition (large + restreinte)\n- Géographie (restreinte)\n\n## 6. Concepts exclus du filtrage\n- Mesure épidémiologique : Concept trop générique, risque de perdre des articles pertinents\n\n## 7. Stratégie canonique\n- Stratégie large : Condition\n- Stratégie restreinte : Condition, Géographie\n\n## 8. Requêtes par plateforme disponible\n### PubMed\n**Stratégie large**\n((diabetes OR diabetic OR hyperglycemia OR type 2 diabetes)[Title/Abstract])\n\n**Stratégie restreinte**\n((diabetes OR diabetic OR hyperglycemia OR type 2 diabetes)[Title/Abstract])\nAND ((Mali OR \"West Africa\" OR \"Sub-Saharan Africa\")[Title/Abstract])\n\n## 9. Note méthodologique\nLa stratégie large utilise les concepts essentiels (priority = 1). La stratégie restreinte ajoute les concepts d’affinement (priority = 2) pour réduire le volume de résultats.\n",
+        "project_id": "P20260312013516258953",
+        "project_title": "Quelle est la prévalence du diabète au Mali ?"
+      }
+    ],
+    "saved_articles": [],
+    "arguments": [],
+    "notes": []
+  },
+  {
+    "id": "P20260312013516259830",
+    "title": "Votre question est bien formulée.",
+    "created_at": "2026-03-12 01:35:16",
+    "updated_at": "2026-03-11 19:13:28",
+    "questions": [
+      "Quelle est la prévalence du diabète au Mali ?"
+    ],
+    "entries": [
+      {
+        "id": "20260311191328916831",
+        "created_at": "2026-03-11 19:13:28",
+        "user_question": "Quelle est la prévalence du diabète au Mali ?",
+        "reformulated_question": "Votre question est bien formulée.",
+        "framework": "PICO",
+        "result": {
+          "intent": "structure",
+          "framework": "PICO",
+          "components": {
+            "population": "Population générale",
+            "intervention": "Diabète",
+            "comparison": null,
+            "outcome": "Prévalence",
+            "exposure": null
+          },
+          "search_elements": [
+            {
+              "label": "Condition",
+              "tiab": "diabetes OR diabetic OR hyperglycemia OR type 2 diabetes",
+              "mesh": null,
+              "search_filter": true,
+              "priority": 1,
+              "reason": "Condition centrale de la question"
+            },
+            {
+              "label": "Géographie",
+              "tiab": "Mali OR \"West Africa\" OR \"Sub-Saharan Africa\"",
+              "mesh": null,
+              "search_filter": true,
+              "priority": 2,
+              "reason": "Géographie mentionnée, utile pour affiner"
+            },
+            {
+              "label": "Mesure épidémiologique",
+              "tiab": "burden OR epidemiology OR frequency OR incidence OR prevalence",
+              "mesh": "\"Prevalence\"[MeSH] OR \"Incidence\"[MeSH]",
+              "search_filter": false,
+              "priority": null,
+              "reason": "Concept trop générique, risque de perdre des articles pertinents"
+            }
+          ],
+          "geography": {
+            "country": "Mali",
+            "region": "West Africa",
+            "continent": "Sub-Saharan Africa"
+          },
+          "research_level": 2,
+          "explanation": "Question épidémiologique sur la prévalence → règle D : PICO.",
+          "research_question_fr": null,
+          "research_question_en": null,
+          "research_question_comment": "Votre question est bien formulée.",
+          "geography_tiab": "Mali OR \"West Africa\" OR \"Sub-Saharan Africa\""
+        },
+        "strategy": {
+          "wide": {
+            "elements": [
+              {
+                "label": "Condition",
+                "tiab": "diabetes OR diabetic OR hyperglycemia OR type 2 diabetes",
+                "mesh": null,
+                "search_filter": true,
+                "priority": 1,
+                "reason": "Condition centrale de la question"
+              }
+            ],
+            "elements_used": [
+              "Condition"
+            ]
+          },
+          "narrow": {
+            "elements": [
+              {
+                "label": "Condition",
+                "tiab": "diabetes OR diabetic OR hyperglycemia OR type 2 diabetes",
+                "mesh": null,
+                "search_filter": true,
+                "priority": 1,
+                "reason": "Condition centrale de la question"
+              },
+              {
+                "label": "Géographie",
+                "tiab": "Mali OR \"West Africa\" OR \"Sub-Saharan Africa\"",
+                "mesh": null,
+                "search_filter": true,
+                "priority": 2,
+                "reason": "Géographie mentionnée, utile pour affiner"
+              }
+            ],
+            "elements_used": [
+              "Condition",
+              "Géographie"
+            ]
+          },
+          "excluded": [
+            {
+              "label": "Mesure épidémiologique",
+              "reason": "Concept trop générique, risque de perdre des articles pertinents"
+            }
+          ],
+          "is_identical": false
+        },
+        "platform_outputs": {
+          "PubMed": {
+            "large": {
+              "query": "((diabetes OR diabetic OR hyperglycemia OR type 2 diabetes)[Title/Abstract])",
+              "elements_used": [
+                "Condition"
+              ],
+              "count": 1131296
+            },
+            "strict": {
+              "query": "((diabetes OR diabetic OR hyperglycemia OR type 2 diabetes)[Title/Abstract])\nAND ((Mali OR \"West Africa\" OR \"Sub-Saharan Africa\")[Title/Abstract])",
+              "elements_used": [
+                "Condition",
+                "Géographie"
+              ],
+              "count": 2073
+            },
+            "excluded": [
+              {
+                "label": "Mesure épidémiologique",
+                "reason": "Concept trop générique, risque de perdre des articles pertinents"
+              }
+            ],
+            "is_identical": false
+          }
+        },
+        "pack": "# Pack de stratégie de recherche\n\n## 1. Question initiale\nQuelle est la prévalence du diabète au Mali ?\n\n## 2. Question reformulée\nVotre question est bien formulée.\n\n## 3. Compréhension\n- Framework détecté : PICO\n- Niveau de recherche : 2\n- Explication : Question épidémiologique sur la prévalence → règle D : PICO.\n\n## 4. Composantes identifiées\n- Population : Population générale\n- Intervention : Diabète\n- Outcome : Prévalence\n\n## 5. Concepts retenus pour la recherche\n- Condition (large + restreinte)\n- Géographie (restreinte)\n\n## 6. Concepts exclus du filtrage\n- Mesure épidémiologique : Concept trop générique, risque de perdre des articles pertinents\n\n## 7. Stratégie canonique\n- Stratégie large : Condition\n- Stratégie restreinte : Condition, Géographie\n\n## 8. Requêtes par plateforme disponible\n### PubMed\n**Stratégie large**\n((diabetes OR diabetic OR hyperglycemia OR type 2 diabetes)[Title/Abstract])\n\n**Stratégie restreinte**\n((diabetes OR diabetic OR hyperglycemia OR type 2 diabetes)[Title/Abstract])\nAND ((Mali OR \"West Africa\" OR \"Sub-Saharan Africa\")[Title/Abstract])\n\n## 9. Note méthodologique\nLa stratégie large utilise les concepts essentiels (priority = 1). La stratégie restreinte ajoute les concepts d’affinement (priority = 2) pour réduire le volume de résultats.\n",
+        "project_id": "P20260312013516259830",
+        "project_title": "Votre question est bien formulée."
+      }
+    ],
+    "saved_articles": [],
+    "arguments": [],
+    "notes": []
+  },
+  {
+    "id": "P20260312013516261287",
+    "title": "Votre question est bien formulée.",
+    "created_at": "2026-03-12 01:35:16",
+    "updated_at": "2026-03-11 19:18:23",
+    "questions": [
+      "Quelle est la prévalence du diabète au Mali ?"
+    ],
+    "entries": [
+      {
+        "id": "20260311191823186829",
+        "created_at": "2026-03-11 19:18:23",
+        "user_question": "Quelle est la prévalence du diabète au Mali ?",
+        "reformulated_question": "Votre question est bien formulée.",
+        "framework": "PICO",
+        "result": {
+          "intent": "structure",
+          "framework": "PICO",
+          "components": {
+            "population": "Population malienne",
+            "intervention": "Diabète",
+            "comparison": null,
+            "outcome": "Prévalence",
+            "exposure": null
+          },
+          "search_elements": [
+            {
+              "label": "Condition",
+              "tiab": "diabetes OR diabetic OR hyperglycemia OR type 1 diabetes OR type 2 diabetes",
+              "mesh": null,
+              "search_filter": true,
+              "priority": 1,
+              "reason": "Condition centrale de la question"
+            },
+            {
+              "label": "Géographie",
+              "tiab": "Mali OR \"West Africa\" OR \"Sub-Saharan Africa\"",
+              "mesh": "\"Africa\"[MeSH] OR \"Africa South of the Sahara\"[MeSH]",
+              "search_filter": true,
+              "priority": 2,
+              "reason": "Géographie mentionnée, utile pour affiner"
+            },
+            {
+              "label": "Mesure épidémiologique",
+              "tiab": "burden OR epidemiology OR frequency OR incidence OR prevalence",
+              "mesh": "\"Prevalence\"[MeSH] OR \"Incidence\"[MeSH]",
+              "search_filter": false,
+              "priority": null,
+              "reason": "Concept trop générique, risque de perdre des articles pertinents"
+            }
+          ],
+          "geography": {
+            "country": "Mali",
+            "region": "West Africa",
+            "continent": "Sub-Saharan Africa"
+          },
+          "research_level": 2,
+          "explanation": "Question épidémiologique sur la prévalence → règle D : PICO.",
+          "research_question_fr": null,
+          "research_question_en": null,
+          "research_question_comment": "Votre question est bien formulée.",
+          "geography_tiab": "Mali OR \"West Africa\" OR \"Sub-Saharan Africa\""
+        },
+        "strategy": {
+          "wide": {
+            "elements": [
+              {
+                "label": "Condition",
+                "tiab": "diabetes OR diabetic OR hyperglycemia OR type 1 diabetes OR type 2 diabetes",
+                "mesh": null,
+                "search_filter": true,
+                "priority": 1,
+                "reason": "Condition centrale de la question"
+              }
+            ],
+            "elements_used": [
+              "Condition"
+            ]
+          },
+          "narrow": {
+            "elements": [
+              {
+                "label": "Condition",
+                "tiab": "diabetes OR diabetic OR hyperglycemia OR type 1 diabetes OR type 2 diabetes",
+                "mesh": null,
+                "search_filter": true,
+                "priority": 1,
+                "reason": "Condition centrale de la question"
+              },
+              {
+                "label": "Géographie",
+                "tiab": "Mali OR \"West Africa\" OR \"Sub-Saharan Africa\"",
+                "mesh": "\"Africa\"[MeSH] OR \"Africa South of the Sahara\"[MeSH]",
+                "search_filter": true,
+                "priority": 2,
+                "reason": "Géographie mentionnée, utile pour affiner"
+              }
+            ],
+            "elements_used": [
+              "Condition",
+              "Géographie"
+            ]
+          },
+          "excluded": [
+            {
+              "label": "Mesure épidémiologique",
+              "reason": "Concept trop générique, risque de perdre des articles pertinents"
+            }
+          ],
+          "is_identical": false
+        },
+        "platform_outputs": {
+          "PubMed": {
+            "large": {
+              "query": "((diabetes OR diabetic OR hyperglycemia OR type 1 diabetes OR type 2 diabetes)[Title/Abstract])",
+              "elements_used": [
+                "Condition"
+              ],
+              "count": 1131296
+            },
+            "strict": {
+              "query": "((diabetes OR diabetic OR hyperglycemia OR type 1 diabetes OR type 2 diabetes)[Title/Abstract])\nAND ((\"Africa\"[MeSH] OR \"Africa South of the Sahara\"[MeSH]) OR ((Mali OR \"West Africa\" OR \"Sub-Saharan Africa\")[Title/Abstract]))",
+              "elements_used": [
+                "Condition",
+                "Géographie"
+              ],
+              "count": 10657
+            },
+            "excluded": [
+              {
+                "label": "Mesure épidémiologique",
+                "reason": "Concept trop générique, risque de perdre des articles pertinents"
+              }
+            ],
+            "is_identical": false
+          }
+        },
+        "pack": "# Pack de stratégie de recherche\n\n## 1. Question initiale\nQuelle est la prévalence du diabète au Mali ?\n\n## 2. Question reformulée\nVotre question est bien formulée.\n\n## 3. Compréhension\n- Type de question : question de prévalence\n- Niveau de recherche : 2\n- Explication : Question épidémiologique sur la prévalence → règle D : PICO.\n\n## 4. Composantes identifiées\n- Population : Population malienne\n- Phénomène ou condition étudiée : Diabète\n- Mesure étudiée : Prévalence\n\n## 5. Concepts retenus pour la recherche\n- Condition (large + restreinte)\n- Géographie (restreinte)\n\n## 6. Concepts exclus du filtrage\n- Mesure épidémiologique : Concept trop générique, risque de perdre des articles pertinents\n\n## 7. Stratégie canonique\n- Stratégie large : Condition\n- Stratégie restreinte : Condition, Géographie\n\n## 8. Requêtes par plateforme disponible\n### PubMed\n**Stratégie large**\n((diabetes OR diabetic OR hyperglycemia OR type 1 diabetes OR type 2 diabetes)[Title/Abstract])\n\n**Stratégie restreinte**\n((diabetes OR diabetic OR hyperglycemia OR type 1 diabetes OR type 2 diabetes)[Title/Abstract])\nAND ((\"Africa\"[MeSH] OR \"Africa South of the Sahara\"[MeSH]) OR ((Mali OR \"West Africa\" OR \"Sub-Saharan Africa\")[Title/Abstract]))\n\n## 9. Note méthodologique\nLa stratégie large utilise les concepts essentiels (priority = 1). La stratégie restreinte ajoute les concepts d’affinement (priority = 2) pour réduire le volume de résultats.\n",
+        "project_id": "P20260312013516261287",
+        "project_title": "Votre question est bien formulée."
+      }
+    ],
+    "saved_articles": [],
+    "arguments": [],
+    "notes": []
+  },
+  {
+    "id": "P20260312013516261897",
+    "title": "Votre question est bien formulée.",
+    "created_at": "2026-03-12 01:35:16",
+    "updated_at": "2026-03-11 22:57:10",
+    "questions": [
+      "Validité d’un algorithme pour l’évaluation du test de lever de chaise (5 fois) par une montre connectée chez les personnes âgées."
+    ],
+    "entries": [
+      {
+        "id": "20260311225710274161",
+        "created_at": "2026-03-11 22:57:10",
+        "user_question": "Validité d’un algorithme pour l’évaluation du test de lever de chaise (5 fois) par une montre connectée chez les personnes âgées.",
+        "reformulated_question": "Votre question est bien formulée.",
+        "framework": "PICO",
+        "result": {
+          "intent": "structure",
+          "framework": "PICO",
+          "components": {
+            "population": "Personnes âgées",
+            "intervention": "Algorithme de montre connectée pour test de lever de chaise",
+            "comparison": "Standard de référence (non spécifié)",
+            "outcome": "Validité diagnostique",
+            "exposure": null
+          },
+          "search_elements": [
+            {
+              "label": "Population",
+              "tiab": "aged OR elderly OR older adults OR seniors",
+              "mesh": null,
+              "search_filter": true,
+              "priority": 1,
+              "reason": "Population spécifique de la question"
+            },
+            {
+              "label": "Test diagnostique",
+              "tiab": "chair stand test OR chair rise test OR five times sit to stand OR sit-to-stand test",
+              "mesh": null,
+              "search_filter": true,
+              "priority": 1,
+              "reason": "Test spécifique évalué"
+            },
+            {
+              "label": "Technologie",
+              "tiab": "algorithm OR smartwatch OR wearable device OR wearable sensor OR wearable technology",
+              "mesh": null,
+              "search_filter": true,
+              "priority": 1,
+              "reason": "Technologie centrale de l'étude"
+            },
+            {
+              "label": "Validité",
+              "tiab": "accuracy OR sensitivity OR specificity OR validation OR validity",
+              "mesh": null,
+              "search_filter": false,
+              "priority": null,
+              "reason": "Concept transversal, un article pertinent peut ne pas mentionner 'validity' explicitement"
+            }
+          ],
+          "geography": {
+            "country": null,
+            "region": null,
+            "continent": null
+          },
+          "research_level": 3,
+          "explanation": "Question de diagnostic/validation d'un test → règle G : PICO obligatoire.",
+          "research_question_fr": null,
+          "research_question_en": null,
+          "research_question_comment": "Votre question est bien formulée.",
+          "geography_tiab": null
+        },
+        "strategy": {
+          "wide": {
+            "elements": [
+              {
+                "label": "Population",
+                "tiab": "aged OR elderly OR older adults OR seniors",
+                "mesh": null,
+                "search_filter": true,
+                "priority": 1,
+                "reason": "Population spécifique de la question"
+              },
+              {
+                "label": "Test diagnostique",
+                "tiab": "chair stand test OR chair rise test OR five times sit to stand OR sit-to-stand test",
+                "mesh": null,
+                "search_filter": true,
+                "priority": 1,
+                "reason": "Test spécifique évalué"
+              },
+              {
+                "label": "Technologie",
+                "tiab": "algorithm OR smartwatch OR wearable device OR wearable sensor OR wearable technology",
+                "mesh": null,
+                "search_filter": true,
+                "priority": 1,
+                "reason": "Technologie centrale de l'étude"
+              }
+            ],
+            "elements_used": [
+              "Population",
+              "Test diagnostique",
+              "Technologie"
+            ]
+          },
+          "narrow": {
+            "elements": [
+              {
+                "label": "Population",
+                "tiab": "aged OR elderly OR older adults OR seniors",
+                "mesh": null,
+                "search_filter": true,
+                "priority": 1,
+                "reason": "Population spécifique de la question"
+              },
+              {
+                "label": "Test diagnostique",
+                "tiab": "chair stand test OR chair rise test OR five times sit to stand OR sit-to-stand test",
+                "mesh": null,
+                "search_filter": true,
+                "priority": 1,
+                "reason": "Test spécifique évalué"
+              },
+              {
+                "label": "Technologie",
+                "tiab": "algorithm OR smartwatch OR wearable device OR wearable sensor OR wearable technology",
+                "mesh": null,
+                "search_filter": true,
+                "priority": 1,
+                "reason": "Technologie centrale de l'étude"
+              }
+            ],
+            "elements_used": [
+              "Population",
+              "Test diagnostique",
+              "Technologie"
+            ]
+          },
+          "excluded": [
+            {
+              "label": "Validité",
+              "reason": "Concept transversal, un article pertinent peut ne pas mentionner 'validity' explicitement"
+            }
+          ],
+          "is_identical": true
+        },
+        "platform_outputs": {
+          "PubMed": {
+            "large": {
+              "query": "((aged OR elderly OR older adults OR seniors)[Title/Abstract])\nAND ((chair stand test OR chair rise test OR five times sit to stand OR sit-to-stand test)[Title/Abstract])\nAND ((algorithm OR smartwatch OR wearable device OR wearable sensor OR wearable technology)[Title/Abstract])",
+              "elements_used": [
+                "Population",
+                "Test diagnostique",
+                "Technologie"
+              ],
+              "count": 247
+            },
+            "strict": {
+              "query": "((aged OR elderly OR older adults OR seniors)[Title/Abstract])\nAND ((chair stand test OR chair rise test OR five times sit to stand OR sit-to-stand test)[Title/Abstract])\nAND ((algorithm OR smartwatch OR wearable device OR wearable sensor OR wearable technology)[Title/Abstract])",
+              "elements_used": [
+                "Population",
+                "Test diagnostique",
+                "Technologie"
+              ],
+              "count": 247
+            },
+            "excluded": [
+              {
+                "label": "Validité",
+                "reason": "Concept transversal, un article pertinent peut ne pas mentionner 'validity' explicitement"
+              }
+            ],
+            "is_identical": true
+          }
+        },
+        "pack": "# Pack de stratégie de recherche\n\n## 1. Question initiale\nValidité d’un algorithme pour l’évaluation du test de lever de chaise (5 fois) par une montre connectée chez les personnes âgées.\n\n## 2. Question reformulée\nVotre question est bien formulée.\n\n## 3. Compréhension\n- Type de question : question descriptive\n- Niveau de recherche : 3\n- Explication : Question descriptive visant à mieux caractériser un problème de santé, une situation ou un contexte.\n\n## 4. Composantes identifiées\n- Population : Personnes âgées\n- Phénomène ou condition étudiée : Algorithme de montre connectée pour test de lever de chaise\n- Comparateur : Standard de référence (non spécifié)\n- Mesure étudiée : Validité diagnostique\n\n## 5. Concepts retenus pour la recherche\n- Population (large + restreinte)\n- Test diagnostique (large + restreinte)\n- Technologie (large + restreinte)\n\n## 6. Concepts exclus du filtrage\n- Validité : Concept transversal, un article pertinent peut ne pas mentionner 'validity' explicitement\n\n## 7. Stratégie canonique\n- Stratégie large : Population, Test diagnostique, Technologie\n- Stratégie restreinte : identique à la stratégie large\n\n## 8. Requêtes par plateforme disponible\n### PubMed\n**Stratégie large**\n((aged OR elderly OR older adults OR seniors)[Title/Abstract])\nAND ((chair stand test OR chair rise test OR five times sit to stand OR sit-to-stand test)[Title/Abstract])\nAND ((algorithm OR smartwatch OR wearable device OR wearable sensor OR wearable technology)[Title/Abstract])\n\n**Stratégie restreinte**\nIdentique à la stratégie large.\n\n## 9. Note méthodologique\nAucun filtre supplémentaire pertinent n’a été identifié. Vous pouvez affiner en précisant un pays, un contexte, une population ou un cadre d’étude.\n",
+        "project_id": "P20260312013516261897",
+        "project_title": "Votre question est bien formulée."
+      }
+    ],
+    "saved_articles": [],
+    "arguments": [],
+    "notes": []
+  },
+  {
+    "id": "P20260312013516262484",
+    "title": "Quelle est la validité de l'Algorithme de montre connectée pour test de lever de chaise chez les Personnes âgées ?",
+    "created_at": "2026-03-12 01:35:16",
+    "updated_at": "2026-03-11 23:18:52",
+    "questions": [
+      "Validité d’un algorithme pour l’évaluation du test de lever de chaise (5 fois) par une montre connectée chez les personnes âgées."
+    ],
+    "entries": [
+      {
+        "id": "20260311231852501157",
+        "created_at": "2026-03-11 23:18:52",
+        "user_question": "Validité d’un algorithme pour l’évaluation du test de lever de chaise (5 fois) par une montre connectée chez les personnes âgées.",
+        "reformulated_question": "Quelle est la validité de l'Algorithme de montre connectée pour test de lever de chaise chez les Personnes âgées ?",
+        "framework": "PICO",
+        "result": {
+          "intent": "structure",
+          "framework": "PICO",
+          "components": {
+            "population": "Personnes âgées",
+            "intervention": "Algorithme de montre connectée pour test de lever de chaise",
+            "comparison": "Test de référence",
+            "outcome": "Validité (sensibilité, spécificité)",
+            "exposure": null
+          },
+          "search_elements": [
+            {
+              "label": "Population",
+              "tiab": "aged OR elderly OR older adults OR seniors",
+              "mesh": null,
+              "search_filter": true,
+              "priority": 1,
+              "reason": "Population spécifique de la question"
+            },
+            {
+              "label": "Test diagnostique",
+              "tiab": "chair rise test OR chair stand test OR five times sit-to-stand OR sit-to-stand test",
+              "mesh": null,
+              "search_filter": true,
+              "priority": 1,
+              "reason": "Test spécifique évalué"
+            },
+            {
+              "label": "Technologie",
+              "tiab": "algorithm OR smartwatch OR wearable device OR wearable sensor",
+              "mesh": null,
+              "search_filter": true,
+              "priority": 1,
+              "reason": "Technologie centrale de la question"
+            },
+            {
+              "label": "Validation",
+              "tiab": "accuracy OR sensitivity OR specificity OR validation OR validity",
+              "mesh": null,
+              "search_filter": false,
+              "priority": null,
+              "reason": "Concept transversal, un article pertinent peut ne pas mentionner 'validity' explicitement"
+            }
+          ],
+          "geography": {
+            "country": null,
+            "region": null,
+            "continent": null
+          },
+          "research_level": 3,
+          "explanation": "Question de validation d'un test diagnostique → règle G : PICO obligatoire.",
+          "research_question_fr": null,
+          "research_question_en": null,
+          "research_question_comment": "Votre question est bien formulée.",
+          "geography_tiab": null
+        },
+        "strategy": {
+          "wide": {
+            "elements": [
+              {
+                "label": "Population",
+                "tiab": "aged OR elderly OR older adults OR seniors",
+                "mesh": null,
+                "search_filter": true,
+                "priority": 1,
+                "reason": "Population spécifique de la question"
+              },
+              {
+                "label": "Test diagnostique",
+                "tiab": "chair rise test OR chair stand test OR five times sit-to-stand OR sit-to-stand test",
+                "mesh": null,
+                "search_filter": true,
+                "priority": 1,
+                "reason": "Test spécifique évalué"
+              },
+              {
+                "label": "Technologie",
+                "tiab": "algorithm OR smartwatch OR wearable device OR wearable sensor",
+                "mesh": null,
+                "search_filter": true,
+                "priority": 1,
+                "reason": "Technologie centrale de la question"
+              }
+            ],
+            "elements_used": [
+              "Population",
+              "Test diagnostique",
+              "Technologie"
+            ]
+          },
+          "narrow": {
+            "elements": [
+              {
+                "label": "Population",
+                "tiab": "aged OR elderly OR older adults OR seniors",
+                "mesh": null,
+                "search_filter": true,
+                "priority": 1,
+                "reason": "Population spécifique de la question"
+              },
+              {
+                "label": "Test diagnostique",
+                "tiab": "chair rise test OR chair stand test OR five times sit-to-stand OR sit-to-stand test",
+                "mesh": null,
+                "search_filter": true,
+                "priority": 1,
+                "reason": "Test spécifique évalué"
+              },
+              {
+                "label": "Technologie",
+                "tiab": "algorithm OR smartwatch OR wearable device OR wearable sensor",
+                "mesh": null,
+                "search_filter": true,
+                "priority": 1,
+                "reason": "Technologie centrale de la question"
+              }
+            ],
+            "elements_used": [
+              "Population",
+              "Test diagnostique",
+              "Technologie"
+            ]
+          },
+          "excluded": [
+            {
+              "label": "Validation",
+              "reason": "Concept transversal, un article pertinent peut ne pas mentionner 'validity' explicitement"
+            }
+          ],
+          "is_identical": true
+        },
+        "platform_outputs": {
+          "PubMed": {
+            "large": {
+              "query": "((aged OR elderly OR older adults OR seniors)[Title/Abstract])\nAND ((chair rise test OR chair stand test OR five times sit-to-stand OR sit-to-stand test)[Title/Abstract])\nAND ((algorithm OR smartwatch OR wearable device OR wearable sensor)[Title/Abstract])",
+              "elements_used": [
+                "Population",
+                "Test diagnostique",
+                "Technologie"
+              ],
+              "count": 240
+            },
+            "strict": {
+              "query": "((aged OR elderly OR older adults OR seniors)[Title/Abstract])\nAND ((chair rise test OR chair stand test OR five times sit-to-stand OR sit-to-stand test)[Title/Abstract])\nAND ((algorithm OR smartwatch OR wearable device OR wearable sensor)[Title/Abstract])",
+              "elements_used": [
+                "Population",
+                "Test diagnostique",
+                "Technologie"
+              ],
+              "count": 240
+            },
+            "excluded": [
+              {
+                "label": "Validation",
+                "reason": "Concept transversal, un article pertinent peut ne pas mentionner 'validity' explicitement"
+              }
+            ],
+            "is_identical": true
+          }
+        },
+        "pack": "# Pack de stratégie de recherche\n\n## 1. Question initiale\nValidité d’un algorithme pour l’évaluation du test de lever de chaise (5 fois) par une montre connectée chez les personnes âgées.\n\n## 2. Question reformulée\nQuelle est la validité de l'Algorithme de montre connectée pour test de lever de chaise chez les Personnes âgées ?\n\n## 3. Compréhension\n- Type de sujet : question de validité / validation\n- Niveau de recherche : 3\n- Explication : Question visant à évaluer la validité, la fiabilité ou les performances d’un outil, d’un test ou d’un algorithme.\n\n## 4. Composantes identifiées\n- Population : Personnes âgées\n- Outil, test ou algorithme évalué : Algorithme de montre connectée pour test de lever de chaise\n- Référence ou comparateur : Test de référence\n- Propriété évaluée : Validité (sensibilité, spécificité)\n\n## 5. Concepts retenus pour la recherche\n- Population (large + restreinte)\n- Test diagnostique (large + restreinte)\n- Technologie (large + restreinte)\n\n## 6. Concepts exclus du filtrage\n- Validation : Concept transversal, un article pertinent peut ne pas mentionner 'validity' explicitement\n\n## 7. Stratégie canonique\n- Stratégie large : Population, Test diagnostique, Technologie\n- Stratégie restreinte : identique à la stratégie large\n\n## 8. Requêtes par plateforme disponible\n### PubMed\n**Stratégie large**\n((aged OR elderly OR older adults OR seniors)[Title/Abstract])\nAND ((chair rise test OR chair stand test OR five times sit-to-stand OR sit-to-stand test)[Title/Abstract])\nAND ((algorithm OR smartwatch OR wearable device OR wearable sensor)[Title/Abstract])\n\n**Stratégie restreinte**\nIdentique à la stratégie large.\n\n## 9. Note méthodologique\nAucun filtre supplémentaire pertinent n’a été identifié. Vous pouvez affiner en précisant un pays, un contexte, une population ou un cadre d’étude.\n",
+        "project_id": "P20260312013516262484",
+        "project_title": "Quelle est la validité de l'Algorithme de montre connectée pour test de lever de chaise chez les Personnes âgées ?"
+      }
+    ],
+    "saved_articles": [],
+    "arguments": [],
+    "notes": []
+  }
+]

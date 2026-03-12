@@ -1,5 +1,173 @@
 [
   {
+    "id": "20260311231852501157",
+    "created_at": "2026-03-11 23:18:52",
+    "user_question": "Validité d’un algorithme pour l’évaluation du test de lever de chaise (5 fois) par une montre connectée chez les personnes âgées.",
+    "reformulated_question": "Quelle est la validité de l'Algorithme de montre connectée pour test de lever de chaise chez les Personnes âgées ?",
+    "framework": "PICO",
+    "result": {
+      "intent": "structure",
+      "framework": "PICO",
+      "components": {
+        "population": "Personnes âgées",
+        "intervention": "Algorithme de montre connectée pour test de lever de chaise",
+        "comparison": "Test de référence",
+        "outcome": "Validité (sensibilité, spécificité)",
+        "exposure": null
+      },
+      "search_elements": [
+        {
+          "label": "Population",
+          "tiab": "aged OR elderly OR older adults OR seniors",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Population spécifique de la question"
+        },
+        {
+          "label": "Test diagnostique",
+          "tiab": "chair rise test OR chair stand test OR five times sit-to-stand OR sit-to-stand test",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Test spécifique évalué"
+        },
+        {
+          "label": "Technologie",
+          "tiab": "algorithm OR smartwatch OR wearable device OR wearable sensor",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Technologie centrale de la question"
+        },
+        {
+          "label": "Validation",
+          "tiab": "accuracy OR sensitivity OR specificity OR validation OR validity",
+          "mesh": null,
+          "search_filter": false,
+          "priority": null,
+          "reason": "Concept transversal, un article pertinent peut ne pas mentionner 'validity' explicitement"
+        }
+      ],
+      "geography": {
+        "country": null,
+        "region": null,
+        "continent": null
+      },
+      "research_level": 3,
+      "explanation": "Question de validation d'un test diagnostique → règle G : PICO obligatoire.",
+      "research_question_fr": null,
+      "research_question_en": null,
+      "research_question_comment": "Votre question est bien formulée.",
+      "geography_tiab": null
+    },
+    "strategy": {
+      "wide": {
+        "elements": [
+          {
+            "label": "Population",
+            "tiab": "aged OR elderly OR older adults OR seniors",
+            "mesh": null,
+            "search_filter": true,
+            "priority": 1,
+            "reason": "Population spécifique de la question"
+          },
+          {
+            "label": "Test diagnostique",
+            "tiab": "chair rise test OR chair stand test OR five times sit-to-stand OR sit-to-stand test",
+            "mesh": null,
+            "search_filter": true,
+            "priority": 1,
+            "reason": "Test spécifique évalué"
+          },
+          {
+            "label": "Technologie",
+            "tiab": "algorithm OR smartwatch OR wearable device OR wearable sensor",
+            "mesh": null,
+            "search_filter": true,
+            "priority": 1,
+            "reason": "Technologie centrale de la question"
+          }
+        ],
+        "elements_used": [
+          "Population",
+          "Test diagnostique",
+          "Technologie"
+        ]
+      },
+      "narrow": {
+        "elements": [
+          {
+            "label": "Population",
+            "tiab": "aged OR elderly OR older adults OR seniors",
+            "mesh": null,
+            "search_filter": true,
+            "priority": 1,
+            "reason": "Population spécifique de la question"
+          },
+          {
+            "label": "Test diagnostique",
+            "tiab": "chair rise test OR chair stand test OR five times sit-to-stand OR sit-to-stand test",
+            "mesh": null,
+            "search_filter": true,
+            "priority": 1,
+            "reason": "Test spécifique évalué"
+          },
+          {
+            "label": "Technologie",
+            "tiab": "algorithm OR smartwatch OR wearable device OR wearable sensor",
+            "mesh": null,
+            "search_filter": true,
+            "priority": 1,
+            "reason": "Technologie centrale de la question"
+          }
+        ],
+        "elements_used": [
+          "Population",
+          "Test diagnostique",
+          "Technologie"
+        ]
+      },
+      "excluded": [
+        {
+          "label": "Validation",
+          "reason": "Concept transversal, un article pertinent peut ne pas mentionner 'validity' explicitement"
+        }
+      ],
+      "is_identical": true
+    },
+    "platform_outputs": {
+      "PubMed": {
+        "large": {
+          "query": "((aged OR elderly OR older adults OR seniors)[Title/Abstract])\nAND ((chair rise test OR chair stand test OR five times sit-to-stand OR sit-to-stand test)[Title/Abstract])\nAND ((algorithm OR smartwatch OR wearable device OR wearable sensor)[Title/Abstract])",
+          "elements_used": [
+            "Population",
+            "Test diagnostique",
+            "Technologie"
+          ],
+          "count": 240
+        },
+        "strict": {
+          "query": "((aged OR elderly OR older adults OR seniors)[Title/Abstract])\nAND ((chair rise test OR chair stand test OR five times sit-to-stand OR sit-to-stand test)[Title/Abstract])\nAND ((algorithm OR smartwatch OR wearable device OR wearable sensor)[Title/Abstract])",
+          "elements_used": [
+            "Population",
+            "Test diagnostique",
+            "Technologie"
+          ],
+          "count": 240
+        },
+        "excluded": [
+          {
+            "label": "Validation",
+            "reason": "Concept transversal, un article pertinent peut ne pas mentionner 'validity' explicitement"
+          }
+        ],
+        "is_identical": true
+      }
+    },
+    "pack": "# Pack de stratégie de recherche\n\n## 1. Question initiale\nValidité d’un algorithme pour l’évaluation du test de lever de chaise (5 fois) par une montre connectée chez les personnes âgées.\n\n## 2. Question reformulée\nQuelle est la validité de l'Algorithme de montre connectée pour test de lever de chaise chez les Personnes âgées ?\n\n## 3. Compréhension\n- Type de sujet : question de validité / validation\n- Niveau de recherche : 3\n- Explication : Question visant à évaluer la validité, la fiabilité ou les performances d’un outil, d’un test ou d’un algorithme.\n\n## 4. Composantes identifiées\n- Population : Personnes âgées\n- Outil, test ou algorithme évalué : Algorithme de montre connectée pour test de lever de chaise\n- Référence ou comparateur : Test de référence\n- Propriété évaluée : Validité (sensibilité, spécificité)\n\n## 5. Concepts retenus pour la recherche\n- Population (large + restreinte)\n- Test diagnostique (large + restreinte)\n- Technologie (large + restreinte)\n\n## 6. Concepts exclus du filtrage\n- Validation : Concept transversal, un article pertinent peut ne pas mentionner 'validity' explicitement\n\n## 7. Stratégie canonique\n- Stratégie large : Population, Test diagnostique, Technologie\n- Stratégie restreinte : identique à la stratégie large\n\n## 8. Requêtes par plateforme disponible\n### PubMed\n**Stratégie large**\n((aged OR elderly OR older adults OR seniors)[Title/Abstract])\nAND ((chair rise test OR chair stand test OR five times sit-to-stand OR sit-to-stand test)[Title/Abstract])\nAND ((algorithm OR smartwatch OR wearable device OR wearable sensor)[Title/Abstract])\n\n**Stratégie restreinte**\nIdentique à la stratégie large.\n\n## 9. Note méthodologique\nAucun filtre supplémentaire pertinent n’a été identifié. Vous pouvez affiner en précisant un pays, un contexte, une population ou un cadre d’étude.\n"
+  },
+  {
     "id": "20260311225710274161",
     "created_at": "2026-03-11 22:57:10",
     "user_question": "Validité d’un algorithme pour l’évaluation du test de lever de chaise (5 fois) par une montre connectée chez les personnes âgées.",

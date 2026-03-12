@@ -6,6 +6,9 @@ import json
 from datetime import datetime
 from pathlib import Path
 
+from question_display import get_question_presentation
+from question_display import get_reformulated_question
+
 
 HISTORY_PATH = Path(__file__).parent / "recent_searches.json"
 MAX_HISTORY_ITEMS = 8
@@ -46,11 +49,8 @@ def build_history_entry(
     pack: str,
 ) -> dict:
     now = datetime.now()
-    reformulated = (
-        result.get("research_question_fr")
-        or result.get("research_question_en")
-        or result.get("research_question_comment")
-    )
+    presentation = get_question_presentation(result, user_question)
+    reformulated = get_reformulated_question(user_question, result, presentation)
 
     return {
         "id": now.strftime("%Y%m%d%H%M%S%f"),
