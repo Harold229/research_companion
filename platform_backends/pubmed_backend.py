@@ -56,6 +56,29 @@ def _extract_doi(article) -> str:
     return ""
 
 
+def _parse_pubmed_articles(fetch_root) -> list:
+    articles = []
+    for article in fetch_root.findall(".//PubmedArticle"):
+        pmid = _safe_text(article, ".//MedlineCitation/PMID")
+        title = _safe_text(article, ".//Article/ArticleTitle")
+        abstract_parts = [
+            "".join(node.itertext()).strip()
+            for node in article.findall(".//Article/Abstract/AbstractText")
+            if "".join(node.itertext()).strip()
+        ]
+        articles.append({
+            "pmid": pmid,
+            "doi": _extract_doi(article),
+            "title": title,
+            "abstract": " ".join(abstract_parts),
+            "journal": _safe_text(article, ".//Journal/Title"),
+            "year": _extract_pub_year(article),
+            "authors": _extract_authors(article),
+            "url": f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/" if pmid else "",
+        })
+    return articles
+
+
 def build_pubmed_date_filter(start_year: str = "", end_year: str = "") -> str:
     """Build a PubMed publication date range filter."""
     start = str(start_year or "").strip()
@@ -156,27 +179,50 @@ def fetch_articles(query: str, max_results: int = 12) -> list:
             return []
 
         fetch_root = ET.fromstring(fetch_response.text)
-        articles = []
-        for article in fetch_root.findall(".//PubmedArticle"):
-            pmid = _safe_text(article, ".//MedlineCitation/PMID")
-            title = _safe_text(article, ".//Article/ArticleTitle")
-            abstract_parts = [
-                "".join(node.itertext()).strip()
-                for node in article.findall(".//Article/Abstract/AbstractText")
-                if "".join(node.itertext()).strip()
-            ]
-            articles.append({
-                "pmid": pmid,
-                "doi": _extract_doi(article),
-                "title": title,
-                "abstract": " ".join(abstract_parts),
-                "journal": _safe_text(article, ".//Journal/Title"),
-                "year": _extract_pub_year(article),
-                "authors": _extract_authors(article),
-                "url": f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/" if pmid else "",
-            })
+        return _parse_pubmed_articles(fetch_root)
+    except Exception:
+        return []
 
-        return articles
+
+def fetch_cited_articles(pmid: str, max_results: int = 12) -> list:
+    """Return a lightweight list of references cited by a PubMed article when available."""
+    if not str(pmid or "").strip():
+        return []
+
+    try:
+        link_response = requests.get(
+            "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi",
+            params={
+                "dbfrom": "pubmed",
+                "db": "pubmed",
+                "id": str(pmid).strip(),
+                "linkname": "pubmed_pubmed_refs",
+                "retmode": "xml",
+            },
+            timeout=10,
+        )
+        if link_response.status_code != 200:
+            return []
+
+        link_root = ET.fromstring(link_response.text)
+        linked_ids = [node.text for node in link_root.findall(".//LinkSetDb/Link/Id") if node.text]
+        if not linked_ids:
+            return []
+
+        fetch_response = requests.get(
+            "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi",
+            params={
+                "db": "pubmed",
+                "id": ",".join(linked_ids[:max_results]),
+                "retmode": "xml",
+            },
+            timeout=10,
+        )
+        if fetch_response.status_code != 200:
+            return []
+
+        fetch_root = ET.fromstring(fetch_response.text)
+        return _parse_pubmed_articles(fetch_root)
     except Exception:
         return []
 

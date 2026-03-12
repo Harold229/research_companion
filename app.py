@@ -1,3 +1,5 @@
+import json
+
 import streamlit as st
 
 from abstract_reader_agent import assess_shortlist_with_agent
@@ -9,6 +11,7 @@ from concept_editor import EDITOR_STATE_OPTIONS
 from concept_editor import get_editor_state
 from concept_editor import serialize_terms
 from feedback import save_feedback
+from hybrid_reranker import rerank_articles_hybrid
 from paywall_tracking import build_paywall_payload
 from paywall_tracking import DEFAULT_PRICES
 from paywall_tracking import get_session_id
@@ -16,11 +19,16 @@ from paywall_tracking import send_paywall_event
 from platform_backends.pubmed_backend import build_pubmed_queries
 from platform_backends.pubmed_backend import count_geographic_scopes
 from platform_backends.pubmed_backend import fetch_articles
+from platform_backends.pubmed_backend import fetch_cited_articles
 from platform_backends.pubmed_backend import apply_pubmed_date_filter
 from question_display import get_component_label
 from question_display import get_question_presentation
 from question_display import get_reformulated_question
 from question_display import get_visible_explanation
+from query_expansion import apply_expansion_terms
+from query_expansion import build_expansion_shortlist
+from query_expansion import propose_query_expansion
+from query_expansion import RECOMMENDATION_LABELS
 from research_projects import create_project
 from research_projects import get_project_by_id
 from research_projects import get_recent_entries
@@ -48,6 +56,29 @@ from zotero_integration import ZoteroIntegrationError
 
 def format_results_count(count) -> str:
     return str(count) if isinstance(count, int) and count >= 0 else "Résultats indisponibles"
+
+
+def get_article_badge(article: dict) -> str:
+    band = article.get("centrality_band")
+    if band == "central":
+        return "Article central"
+    if band == "useful":
+        return "Utile pour le sujet"
+    if band == "contextual":
+        return "Article de contexte"
+    reasons = article.get("reasons", []) or []
+    if reasons:
+        return reasons[0]
+    return "Article retenu"
+
+
+def get_reference_badge(article: dict) -> str:
+    score = float(article.get("hybrid_score", 0.0) or 0.0)
+    if score >= 0.55:
+        return "Article de base"
+    if score >= 0.3:
+        return "Référence citée utile"
+    return "Référence de contexte"
 
 
 def get_pack_preview(pack: str, max_lines: int = 18) -> str:
@@ -86,8 +117,13 @@ def build_history_entry(
     }
 
 
-def _get_articles_cache_key(entry: dict, query: str) -> str:
-    return f"article_cache_{entry.get('id')}_{hash(query)}"
+def _get_articles_cache_key(entry: dict, query: str, scope: str = "default") -> str:
+    return f"article_cache_{entry.get('id')}_{scope}_{hash(query)}"
+
+
+def _get_expansion_signature(query: str, search_elements: list) -> str:
+    payload = json.dumps(search_elements or [], ensure_ascii=False, sort_keys=True)
+    return f"{hash(query)}_{hash(payload)}"
 
 
 def _get_editor_elements(entry: dict) -> list:
@@ -180,6 +216,150 @@ def render_concept_editor(entry: dict) -> None:
         st.session_state.pop(f"prioritized_articles_{entry_id}", None)
         st.success("Stratégie réinitialisée.")
         st.rerun()
+
+
+def render_query_expansion(entry: dict, result: dict, strategy: dict, bramer: dict, time_filter: dict) -> None:
+    search_elements = result.get("search_elements") or []
+    if not search_elements:
+        return
+
+    base_query = bramer["large"]["query"]
+    if not base_query:
+        return
+
+    filtered_query = apply_pubmed_date_filter(
+        base_query,
+        start_year=time_filter.get("start_year", ""),
+        end_year=time_filter.get("end_year", ""),
+    )
+    signature = _get_expansion_signature(filtered_query, search_elements)
+    proposals_key = f"query_expansion_proposals_{entry.get('id')}"
+    signature_key = f"query_expansion_signature_{entry.get('id')}"
+    enriched_key = f"query_expansion_enriched_{entry.get('id')}"
+
+    if st.session_state.get(signature_key) != signature:
+        st.session_state.pop(proposals_key, None)
+        st.session_state.pop(enriched_key, None)
+        st.session_state[signature_key] = signature
+
+    st.divider()
+    st.subheader("Expansion guidée de la requête")
+    st.caption(
+        "À partir des premiers articles trouvés, l’app peut proposer quelques termes réellement utilisés dans la littérature pour enrichir une version optionnelle de la requête."
+    )
+    if time_filter.get("enabled") and time_filter.get("valid"):
+        st.caption(f"La lecture initiale des articles respecte actuellement la période : {time_filter.get('label')}.")
+
+    if st.button("Proposer des termes d’expansion", key=f"query_expansion_run_{entry.get('id')}"):
+        cache_key = _get_articles_cache_key(entry, filtered_query, scope="expansion")
+        articles = st.session_state.get(cache_key)
+        if articles is None:
+            with st.spinner("Récupération d’un noyau initial d’articles..."):
+                articles = fetch_articles(filtered_query, max_results=12)
+            st.session_state[cache_key] = articles
+
+        if not articles:
+            st.caption("Aucun article initial n’a pu être récupéré pour proposer une expansion.")
+        else:
+            shortlist = build_expansion_shortlist(articles)
+            try:
+                with st.spinner("Lecture des premiers titres et abstracts pour proposer des termes..."):
+                    proposals = propose_query_expansion(shortlist, search_elements, entry.get("user_question", ""))
+                st.session_state[proposals_key] = {
+                    "shortlist_size": len(shortlist),
+                    "proposals": proposals.get("proposals", []),
+                    "base_query": base_query,
+                    "filtered_query": filtered_query,
+                }
+            except Exception:
+                st.caption("La proposition d’expansion est indisponible pour le moment.")
+
+    proposals_state = st.session_state.get(proposals_key)
+    if not proposals_state:
+        return
+
+    proposals = proposals_state.get("proposals", [])
+    if not proposals:
+        st.caption("Aucun terme d’expansion prudent n’a été proposé à partir de ce premier noyau d’articles.")
+        return
+
+    st.caption(
+        f"{proposals_state.get('shortlist_size', 0)} article(s) ont été lus sur titre + abstract. Vous gardez le contrôle : chaque terme peut être accepté, refusé ou reformulé."
+    )
+
+    selected_proposals = []
+    for index, proposal in enumerate(proposals):
+        proposal_id = proposal.get("proposal_id", f"T{index + 1}")
+        include_key = f"query_expansion_include_{entry.get('id')}_{proposal_id}"
+        term_key = f"query_expansion_term_{entry.get('id')}_{proposal_id}"
+
+        if include_key not in st.session_state:
+            st.session_state[include_key] = proposal.get("recommendation") != "prudente"
+        if term_key not in st.session_state:
+            st.session_state[term_key] = proposal.get("term", "")
+
+        st.markdown(f"**{proposal.get('term', 'Terme proposé')}**")
+        st.caption(
+            f"Concept cible : {proposal.get('target_concept', 'Concept')} • "
+            f"{RECOMMENDATION_LABELS.get(proposal.get('recommendation'), 'Recommandation utile')}"
+        )
+        row_cols = st.columns([1, 3])
+        row_cols[0].checkbox("Ajouter", key=include_key)
+        row_cols[1].text_input(
+            "Terme éditable",
+            key=term_key,
+        )
+        with st.expander("Pourquoi cette proposition ?", expanded=False):
+            st.caption(proposal.get("reason", ""))
+        st.markdown("---")
+
+        if st.session_state.get(include_key):
+            edited_term = str(st.session_state.get(term_key, "")).strip()
+            if edited_term:
+                selected_proposals.append({
+                    **proposal,
+                    "term": edited_term,
+                })
+
+    if st.button("Générer la requête enrichie", key=f"query_expansion_build_{entry.get('id')}"):
+        if not selected_proposals:
+            st.caption("Sélectionnez au moins un terme à ajouter.")
+        else:
+            enriched_result = dict(result)
+            enriched_result["search_elements"] = apply_expansion_terms(search_elements, selected_proposals)
+            enriched_strategy = build_search_strategy(enriched_result)
+            enriched_bramer = build_pubmed_queries(enriched_strategy)
+            st.session_state[enriched_key] = {
+                "selected_proposals": selected_proposals,
+                "result": enriched_result,
+                "strategy": enriched_strategy,
+                "bramer": enriched_bramer,
+            }
+
+    enriched_state = st.session_state.get(enriched_key)
+    if not enriched_state:
+        return
+
+    enriched_bramer = enriched_state.get("bramer", {})
+    st.write("**Requête initiale**")
+    st.code(base_query, language="text")
+    st.caption(f"Résultats observés : {format_results_count(bramer['large'].get('count'))}")
+
+    st.write("**Requête enrichie proposée**")
+    st.code(enriched_bramer.get("large", {}).get("query", ""), language="text")
+    st.caption(
+        f"Résultats observés : {format_results_count(enriched_bramer.get('large', {}).get('count'))}"
+    )
+    st.caption(
+        "Cette version enrichie reste distincte de la requête initiale. Elle ajoute uniquement les termes que vous avez validés à partir des premiers articles lus."
+    )
+
+    if not enriched_bramer.get("is_identical"):
+        st.write("**Version restreinte enrichie**")
+        st.code(enriched_bramer.get("strict", {}).get("query", ""), language="text")
+        st.caption(
+            f"Résultats observés : {format_results_count(enriched_bramer.get('strict', {}).get('count'))}"
+        )
 
 
 def _validate_year_input(value: str) -> str:
@@ -356,9 +536,10 @@ def render_zotero_ready_section(entry: dict, prioritized: dict, result: dict = N
                 f"{article.get('priority', 'À vérifier')} • {article.get('source', 'Source non précisée')} • "
                 f"{article.get('year', 'Année non précisée')}"
             )
-            st.caption(f"Justification : {article.get('justification', 'Non précisée')}")
             st.caption(f"Tags suggérés : {', '.join(article.get('tags', [])) or 'Aucun tag'}")
-            st.caption(f"Note d’argumentaire : {article.get('argument_note', 'Non précisée')}")
+            with st.expander("Pourquoi cet article ?", expanded=False):
+                st.caption(f"Justification : {article.get('justification', 'Non précisée')}")
+                st.caption(f"Note d’argumentaire : {article.get('argument_note', 'Non précisée')}")
 
         st.download_button(
             "Télécharger en JSON",
@@ -460,16 +641,22 @@ def render_reading_focus(entry: dict, result: dict, bramer: dict) -> None:
             start_year=time_filter.get("start_year", ""),
             end_year=time_filter.get("end_year", ""),
         )
-        cache_key = _get_articles_cache_key(entry, query)
+        cache_key = _get_articles_cache_key(entry, query, scope="reranking")
         articles = st.session_state.get(cache_key)
 
         if articles is None:
             with st.spinner("Récupération d’un premier lot d’articles PubMed..."):
-                articles = fetch_articles(query, max_results=15)
+                articles = fetch_articles(query, max_results=50)
             st.session_state[cache_key] = articles
 
-        prioritized = prioritize_articles(articles or [], result, focus_key, custom_goal)
+        reranked = rerank_articles_hybrid(
+            articles or [],
+            entry.get("user_question", ""),
+            custom_goal,
+        )
+        prioritized = prioritize_articles(reranked.get("articles", []), result, focus_key, custom_goal)
         prioritized["time_filter"] = time_filter
+        prioritized["reranking"] = reranked
         st.session_state[f"prioritized_articles_{entry.get('id')}"] = prioritized
 
     prioritized = st.session_state.get(f"prioritized_articles_{entry.get('id')}")
@@ -491,10 +678,19 @@ def render_reading_focus(entry: dict, result: dict, bramer: dict) -> None:
     st.caption(
         "Cette priorisation est une aide à la lecture. Elle repose d’abord sur le titre et l’abstract, et ne remplace pas une appréciation critique complète des articles."
     )
+    reranking = prioritized.get("reranking") or {}
+    if reranking.get("signals_used"):
+        with st.expander("Détails méthodologiques", expanded=False):
+            st.caption(
+                "Les résultats ont d’abord été rerankés pour rapprocher les articles les plus centraux du sujet exact avant la priorisation finale : "
+                + ", ".join(reranking.get("signals_used", []))
+                + "."
+            )
 
     focus_terms = prioritized.get("focus_terms", [])
     if focus_terms:
-        st.caption(f"Critères utilisés pour faire remonter un article : {', '.join(focus_terms[:5])}")
+        with st.expander("Critères de priorisation", expanded=False):
+            st.caption(f"Critères utilisés pour faire remonter un article : {', '.join(focus_terms[:5])}")
 
     shortlist = build_shortlist_for_agent(prioritized)
     if shortlist:
@@ -522,7 +718,8 @@ def render_reading_focus(entry: dict, result: dict, bramer: dict) -> None:
         "Pertinent": [],
         "À vérifier": [],
     }
-    for article in prioritized.get("articles", []):
+    visible_articles = prioritized.get("display_articles") or prioritized.get("articles", [])
+    for article in visible_articles:
         grouped.setdefault(article["priority"], []).append(article)
 
     for priority in ("Très pertinent", "Pertinent", "À vérifier"):
@@ -542,7 +739,57 @@ def render_reading_focus(entry: dict, result: dict, bramer: dict) -> None:
             ] if part)
             if meta:
                 st.caption(meta)
-            st.caption(f"Pourquoi il remonte : {', '.join(article.get('reasons', [])[:2])}")
+            st.caption(get_article_badge(article))
+            with st.expander("Pourquoi cet article ?", expanded=False):
+                st.caption(f"Pourquoi il remonte : {', '.join(article.get('reasons', [])[:3])}")
+
+    central_article = next(
+        (
+            article for article in prioritized.get("articles", [])
+            if article.get("priority") == "Très pertinent" and article.get("pmid")
+        ),
+        None,
+    )
+    if central_article:
+        st.divider()
+        st.subheader("Cet article cite aussi")
+        st.caption(central_article.get("title", "Article central"))
+        cited_cache_key = f"cited_refs_{entry.get('id')}_{central_article.get('pmid')}"
+        cited_articles = st.session_state.get(cited_cache_key)
+        if cited_articles is None:
+            with st.spinner("Récupération des références citées..."):
+                cited_articles = fetch_cited_articles(central_article.get("pmid"), max_results=15)
+            st.session_state[cited_cache_key] = cited_articles
+
+        if cited_articles:
+            cited_reranked = rerank_articles_hybrid(
+                cited_articles,
+                entry.get("user_question", ""),
+                custom_goal,
+            )
+            visible_refs = [
+                article for article in cited_reranked.get("articles", [])
+                if float(article.get("hybrid_score", 0.0) or 0.0) >= 0.18
+            ][:5]
+            if not visible_refs:
+                visible_refs = cited_reranked.get("articles", [])[:3]
+
+            for article in visible_refs:
+                title = article.get("title") or "Référence sans titre"
+                url = article.get("url")
+                title_line = f"[{title}]({url})" if url else title
+                st.markdown(f"- {title_line}")
+                meta = " · ".join(part for part in [
+                    ", ".join(article.get("authors", [])),
+                    article.get("year"),
+                ] if part)
+                if meta:
+                    st.caption(meta)
+                st.caption(get_reference_badge(article))
+                with st.expander("Pourquoi cette référence ?", expanded=False):
+                    st.caption(", ".join(article.get("hybrid_reasons", [])[:2]) or "Référence proche du sujet.")
+        else:
+            st.caption("Les références citées n’étaient pas accessibles pour cet article central.")
 
     render_zotero_ready_section(entry, prioritized, result=result)
 
@@ -779,18 +1026,20 @@ def render_analysis(entry: dict) -> None:
         st.caption(added_text)
 
     if excluded:
-        st.subheader("Concepts non utilisés comme filtres")
-        for ex in excluded:
-            st.caption(
-                f'Le concept "{ex["label"]}" n’est pas utilisé comme filtre : {ex["reason"]}'
-            )
+        with st.expander("Pourquoi certains concepts ne sont pas utilisés comme filtres ?", expanded=False):
+            for ex in excluded:
+                st.caption(
+                    f'Le concept "{ex["label"]}" n’est pas utilisé comme filtre : {ex["reason"]}'
+                )
 
-    if visible_explanation:
-        st.subheader("Repère méthodologique")
-        st.caption(visible_explanation)
-    st.caption(
-        "La stratégie commence large, puis ajoute seulement les filtres jugés réellement utiles pour éviter d’exclure trop tôt des articles pertinents."
-    )
+    render_query_expansion(entry, result, strategy, bramer, time_filter)
+
+    with st.expander("Détails méthodologiques", expanded=False):
+        if visible_explanation:
+            st.caption(visible_explanation)
+        st.caption(
+            "La stratégie commence large, puis ajoute seulement les filtres jugés réellement utiles pour éviter d’exclure trop tôt des articles pertinents."
+        )
 
     geography = result.get("geography") or {}
     if geography and any(v for v in geography.values() if v):

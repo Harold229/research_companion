@@ -106,9 +106,41 @@ def _score_article(article: dict, focus_terms: list, focus_label: str) -> dict:
     abstract = _normalize(article.get("abstract"))
     haystack = f"{title} {abstract}".strip()
 
-    score = 0
+    hybrid_score = float(article.get("hybrid_score", 0.0) or 0.0)
+    signals = article.get("hybrid_signals", {}) or {}
+    exact_title = float(signals.get("exact_title", 0.0) or 0.0)
+    title_overlap = float(signals.get("title_overlap", 0.0) or 0.0)
+    abstract_overlap = float(signals.get("abstract_overlap", 0.0) or 0.0)
+    semantic_similarity = float(signals.get("semantic_similarity", 0.0) or 0.0)
+    penalty = float(signals.get("penalty", 0.0) or 0.0)
+
+    score = hybrid_score * 5.5
     reasons = []
     matched_terms = []
+
+    if (
+        exact_title >= 0.72
+        or (exact_title >= 0.64 and title_overlap >= 0.58)
+        or (title_overlap >= 0.5 and abstract_overlap >= 0.7 and semantic_similarity >= 0.55 and penalty < 0.05)
+    ):
+        reasons.append("titre quasi directement aligné avec le sujet")
+        score += 3.0
+    elif hybrid_score >= 0.56:
+        reasons.append("très central pour le sujet exact")
+        score += 1.3
+    elif hybrid_score >= 0.36:
+        reasons.append("proche du sujet exact")
+
+    title_matches = signals.get("title_matches", []) or []
+    abstract_matches = signals.get("abstract_matches", []) or []
+    if title_matches:
+        reasons.append(f"concepts couverts dans le titre : {', '.join(title_matches[:3])}")
+    elif abstract_matches:
+        reasons.append(f"concepts surtout retrouvés dans l’abstract : {', '.join(abstract_matches[:3])}")
+    if abstract_overlap >= 0.45 or semantic_similarity >= 0.38:
+        reasons.append("l’abstract traite directement la combinaison des concepts du sujet")
+    if penalty >= 0.1:
+        reasons.append("article plus général que le sujet exact")
 
     for term in focus_terms:
         normalized_term = _normalize(term)
@@ -122,12 +154,13 @@ def _score_article(article: dict, focus_terms: list, focus_label: str) -> dict:
             matched_terms.append(term)
 
     if article.get("year") and article.get("year").isdigit() and int(article["year"]) >= 2020:
-        score += 1
-        reasons.append("publication récente")
+        score += 0.35
+        if not reasons:
+            reasons.append("publication récente")
 
     if matched_terms:
         unique_matches = list(dict.fromkeys(matched_terms))
-        reasons.insert(0, f"mentionne des termes liés à l’objectif : {', '.join(unique_matches[:3])}")
+        reasons.append(f"mentionne des termes liés à l’objectif : {', '.join(unique_matches[:3])}")
 
     if focus_label == "Population spécifique" and matched_terms:
         reasons.append("correspond à la population recherchée")
@@ -138,18 +171,40 @@ def _score_article(article: dict, focus_terms: list, focus_label: str) -> dict:
     elif focus_label == "Validité / performance" and matched_terms:
         reasons.append("traite explicitement des performances ou de la validité")
 
-    if score >= 5:
+    if (
+        exact_title >= 0.72
+        or (exact_title >= 0.64 and title_overlap >= 0.58 and penalty < 0.08)
+        or (title_overlap >= 0.5 and abstract_overlap >= 0.7 and semantic_similarity >= 0.55 and penalty < 0.05)
+    ):
         priority = "Très pertinent"
-    elif score >= 2:
+    elif hybrid_score >= 0.56 and penalty < 0.08:
+        priority = "Très pertinent"
+    elif score >= 4.2:
+        priority = "Très pertinent"
+    elif score >= 2.2:
         priority = "Pertinent"
     else:
         priority = "À vérifier"
+
+    if penalty >= 0.12 and hybrid_score < 0.3 and not matched_terms:
+        priority = "À vérifier"
+
+    ordered_reasons = []
+    for reason in reasons:
+        if reason and reason not in ordered_reasons:
+            ordered_reasons.append(reason)
 
     return {
         **article,
         "score": score,
         "priority": priority,
-        "reasons": reasons or ["correspondance partielle avec l’objectif de lecture"],
+        "reasons": ordered_reasons or ["correspondance partielle avec l’objectif de lecture"],
+        "centrality_band": (
+            "central"
+            if priority == "Très pertinent"
+            else "useful" if priority == "Pertinent"
+            else "contextual"
+        ),
     }
 
 
@@ -167,13 +222,27 @@ def prioritize_articles(
         for article in articles
     ]
 
-    ranked.sort(key=lambda item: (priority_rank(item["priority"]), -item["score"], item.get("title", "")))
+    ranked.sort(
+        key=lambda item: (
+            priority_rank(item["priority"]),
+            -item.get("score", 0),
+            -float(item.get("hybrid_score", 0.0) or 0.0),
+            item.get("title", ""),
+        )
+    )
 
     return {
         "focus_key": focus_key,
         "focus_label": focus_label,
         "focus_terms": focus_terms,
         "articles": ranked,
+        "display_articles": [
+            article
+            for article in ranked
+            if article.get("priority") != "À vérifier"
+            or float(article.get("hybrid_score", 0.0) or 0.0) >= 0.18
+            or article.get("score", 0) >= 1.8
+        ],
     }
 
 
