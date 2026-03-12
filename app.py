@@ -16,11 +16,7 @@ from paywall_tracking import build_paywall_payload
 from paywall_tracking import DEFAULT_PRICES
 from paywall_tracking import get_session_id
 from paywall_tracking import send_paywall_event
-from platform_backends.pubmed_backend import build_pubmed_queries
-from platform_backends.pubmed_backend import count_geographic_scopes
-from platform_backends.pubmed_backend import fetch_articles
-from platform_backends.pubmed_backend import fetch_cited_articles
-from platform_backends.pubmed_backend import apply_pubmed_date_filter
+from platform_backends import pubmed_backend
 from question_display import get_component_label
 from question_display import get_question_presentation
 from question_display import get_reformulated_question
@@ -52,6 +48,13 @@ from zotero_integration import get_default_zotero_api_key
 from zotero_integration import get_zotero_connection
 from zotero_integration import validate_zotero_api_key
 from zotero_integration import ZoteroIntegrationError
+
+
+build_pubmed_queries = pubmed_backend.build_pubmed_queries
+count_geographic_scopes = pubmed_backend.count_geographic_scopes
+fetch_articles = pubmed_backend.fetch_articles
+apply_pubmed_date_filter = pubmed_backend.apply_pubmed_date_filter
+fetch_cited_articles = getattr(pubmed_backend, "fetch_cited_articles", lambda pmid, max_results=12: [])
 
 
 def format_results_count(count) -> str:
