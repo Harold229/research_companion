@@ -6,6 +6,21 @@ Fonction exposée :
   - build_search_strategy(json_result) -> dict
 """
 
+from services.concept_classifier import classify_concept_role
+
+
+def _build_role_map(json_result: dict) -> dict:
+    role_map = {}
+    for concept in (json_result.get("classified_concepts") or []):
+        if isinstance(concept, dict) and concept.get("label"):
+            role_map[concept["label"]] = concept.get("role")
+    return role_map
+
+
+def _should_keep_in_wide(element: dict, role_map: dict) -> bool:
+    role = role_map.get(element.get("label", "")) or classify_concept_role(element)
+    return role == "core"
+
 
 def build_search_strategy(json_result: dict) -> dict:
     """
@@ -22,8 +37,11 @@ def build_search_strategy(json_result: dict) -> dict:
     active = [e for e in elements if e.get("search_filter")]
     priority_1 = [e for e in active if e.get("priority") == 1]
     priority_2 = [e for e in active if e.get("priority") == 2]
+    role_map = _build_role_map(json_result)
 
-    wide_elements = priority_1
+    wide_elements = [e for e in priority_1 if _should_keep_in_wide(e, role_map)]
+    if not wide_elements:
+        wide_elements = priority_1
     narrow_elements = priority_1 + priority_2
 
     return {

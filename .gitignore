@@ -5,6 +5,7 @@ __pycache__/
 
 # Environnement virtuel
 rC_env/
+RC_env/
 
 # Variables d'environnement (clés API — important)
 .env

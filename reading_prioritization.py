@@ -4,6 +4,8 @@ Priorisation légère des articles selon un objectif de lecture.
 
 import re
 
+from services.ranking import score_article_against_detected_concepts
+
 
 FOCUS_OPTIONS = {
     "prevalence": "Prévalence",
@@ -115,7 +117,7 @@ def _score_article(article: dict, focus_terms: list, focus_label: str) -> dict:
     penalty = float(signals.get("penalty", 0.0) or 0.0)
 
     score = hybrid_score * 5.5
-    reasons = []
+    technical_reasons = []
     matched_terms = []
 
     if (
@@ -123,24 +125,24 @@ def _score_article(article: dict, focus_terms: list, focus_label: str) -> dict:
         or (exact_title >= 0.64 and title_overlap >= 0.58)
         or (title_overlap >= 0.5 and abstract_overlap >= 0.7 and semantic_similarity >= 0.55 and penalty < 0.05)
     ):
-        reasons.append("titre quasi directement aligné avec le sujet")
+        technical_reasons.append("titre quasi directement aligné avec le sujet")
         score += 3.0
     elif hybrid_score >= 0.56:
-        reasons.append("très central pour le sujet exact")
+        technical_reasons.append("très central pour le sujet exact")
         score += 1.3
     elif hybrid_score >= 0.36:
-        reasons.append("proche du sujet exact")
+        technical_reasons.append("proche du sujet exact")
 
     title_matches = signals.get("title_matches", []) or []
     abstract_matches = signals.get("abstract_matches", []) or []
     if title_matches:
-        reasons.append(f"concepts couverts dans le titre : {', '.join(title_matches[:3])}")
+        technical_reasons.append(f"concepts couverts dans le titre : {', '.join(title_matches[:3])}")
     elif abstract_matches:
-        reasons.append(f"concepts surtout retrouvés dans l’abstract : {', '.join(abstract_matches[:3])}")
+        technical_reasons.append(f"concepts surtout retrouvés dans l’abstract : {', '.join(abstract_matches[:3])}")
     if abstract_overlap >= 0.45 or semantic_similarity >= 0.38:
-        reasons.append("l’abstract traite directement la combinaison des concepts du sujet")
+        technical_reasons.append("l’abstract traite directement la combinaison des concepts du sujet")
     if penalty >= 0.1:
-        reasons.append("article plus général que le sujet exact")
+        technical_reasons.append("article plus général que le sujet exact")
 
     for term in focus_terms:
         normalized_term = _normalize(term)
@@ -155,21 +157,21 @@ def _score_article(article: dict, focus_terms: list, focus_label: str) -> dict:
 
     if article.get("year") and article.get("year").isdigit() and int(article["year"]) >= 2020:
         score += 0.35
-        if not reasons:
-            reasons.append("publication récente")
+        if not technical_reasons:
+            technical_reasons.append("publication récente")
 
     if matched_terms:
         unique_matches = list(dict.fromkeys(matched_terms))
-        reasons.append(f"mentionne des termes liés à l’objectif : {', '.join(unique_matches[:3])}")
+        technical_reasons.append(f"mentionne des termes liés à l’objectif : {', '.join(unique_matches[:3])}")
 
     if focus_label == "Population spécifique" and matched_terms:
-        reasons.append("correspond à la population recherchée")
+        technical_reasons.append("correspond à la population recherchée")
     elif focus_label == "Contexte géographique" and matched_terms:
-        reasons.append("correspond au contexte géographique")
+        technical_reasons.append("correspond au contexte géographique")
     elif focus_label == "Outil ou test" and matched_terms:
-        reasons.append("mentionne l’outil ou le test étudié")
+        technical_reasons.append("mentionne l’outil ou le test étudié")
     elif focus_label == "Validité / performance" and matched_terms:
-        reasons.append("traite explicitement des performances ou de la validité")
+        technical_reasons.append("traite explicitement des performances ou de la validité")
 
     if (
         exact_title >= 0.72
@@ -189,16 +191,11 @@ def _score_article(article: dict, focus_terms: list, focus_label: str) -> dict:
     if penalty >= 0.12 and hybrid_score < 0.3 and not matched_terms:
         priority = "À vérifier"
 
-    ordered_reasons = []
-    for reason in reasons:
-        if reason and reason not in ordered_reasons:
-            ordered_reasons.append(reason)
-
     return {
         **article,
         "score": score,
         "priority": priority,
-        "reasons": ordered_reasons or ["correspondance partielle avec l’objectif de lecture"],
+        "technical_reasons": list(dict.fromkeys(reason for reason in technical_reasons if reason)),
         "centrality_band": (
             "central"
             if priority == "Très pertinent"
@@ -206,7 +203,6 @@ def _score_article(article: dict, focus_terms: list, focus_label: str) -> dict:
             else "contextual"
         ),
     }
-
 
 def prioritize_articles(
     articles: list,
@@ -217,28 +213,48 @@ def prioritize_articles(
     focus_label = custom_goal.strip() or FOCUS_OPTIONS.get(focus_key, FOCUS_OPTIONS["other"])
     focus_terms = _build_focus_terms(result, focus_key, custom_goal)
 
-    ranked = [
-        _score_article(article, focus_terms, focus_label)
-        for article in articles
-    ]
+    ranked = []
+    for article in articles:
+        scored_article = _score_article(article, focus_terms, focus_label)
+        concept_match = score_article_against_detected_concepts(scored_article, result)
+        ranked.append({
+            **scored_article,
+            "score": scored_article.get("score", 0) + concept_match.get("concept_score", 0),
+            "reasons": concept_match.get("reasons", []),
+            "matched_concepts": concept_match.get("matched_by_role", {}),
+            "concept_score": concept_match.get("concept_score", 0),
+        })
 
     ranked.sort(
         key=lambda item: (
             priority_rank(item["priority"]),
             -item.get("score", 0),
+            -item.get("concept_score", 0),
             -float(item.get("hybrid_score", 0.0) or 0.0),
             item.get("title", ""),
         )
     )
 
+    ranked_with_positions = []
+    for app_rank, article in enumerate(ranked, start=1):
+        pubmed_rank = article.get("pubmed_rank")
+        rank_delta = None
+        if isinstance(pubmed_rank, int):
+            rank_delta = pubmed_rank - app_rank
+        ranked_with_positions.append({
+            **article,
+            "app_rank": app_rank,
+            "rank_delta": rank_delta,
+        })
+
     return {
         "focus_key": focus_key,
         "focus_label": focus_label,
         "focus_terms": focus_terms,
-        "articles": ranked,
+        "articles": ranked_with_positions,
         "display_articles": [
             article
-            for article in ranked
+            for article in ranked_with_positions
             if article.get("priority") != "À vérifier"
             or float(article.get("hybrid_score", 0.0) or 0.0) >= 0.18
             or article.get("score", 0) >= 1.8

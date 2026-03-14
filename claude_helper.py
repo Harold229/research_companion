@@ -7,6 +7,8 @@ from pathlib import Path
 from openai import OpenAI
 from dotenv import load_dotenv
 from prompt_core import PROMPT_CORE
+from services.concept_classifier import build_classified_concepts
+from services.concept_classifier import classify_concept_role
 
 load_dotenv()
 
@@ -41,6 +43,8 @@ DEFAULT_CANONICAL_RESULT = {
     "framework": None,
     "components": {},
     "search_elements": [],
+    "classified_concepts": [],
+    "parsed_concepts": [],
     "geography": {
         "country": None,
         "region": None,
@@ -243,6 +247,302 @@ def normalize_search_elements(search_elements) -> list:
     return normalized
 
 
+def _normalize_text(value) -> str:
+    return " ".join(str(value or "").strip().lower().split())
+
+
+def _split_or_terms(value: str) -> list:
+    return [term.strip() for term in str(value or "").split(" OR ") if term.strip()]
+
+
+def _tokenize_for_quality(value: str) -> list:
+    return [
+        token
+        for token in _normalize_text(value).replace("-", " ").split()
+        if token
+    ]
+
+
+def _is_acronym(term: str) -> bool:
+    cleaned = str(term or "").replace(".", "").strip()
+    return cleaned.isupper() and 2 <= len(cleaned) <= 6
+
+
+def _is_prevalence_topic(data: dict) -> bool:
+    components = data.get("components") or {}
+    text = " ".join(
+        _normalize_text(value)
+        for value in (
+            components.get("outcome"),
+            data.get("explanation"),
+            data.get("research_question_fr"),
+            data.get("research_question_en"),
+        )
+        if value
+    )
+    prevalence_markers = (
+        "prévalence",
+        "prevalence",
+        "question de prévalence",
+    )
+    return any(marker in text for marker in prevalence_markers)
+
+
+def _is_comparison_element(element: dict, comparison_text: str) -> bool:
+    comparison = _normalize_text(comparison_text)
+    if not comparison:
+        return False
+
+    label = _normalize_text(element.get("label"))
+    reason = _normalize_text(element.get("reason"))
+    tiab_terms = [_normalize_text(term).strip('"') for term in _split_or_terms(element.get("tiab", ""))]
+
+    if any(keyword in label or keyword in reason for keyword in ("compar", "comparateur", "comparator", "reference standard", "gold standard")):
+        return True
+    if comparison == label:
+        return True
+    if comparison in tiab_terms:
+        return True
+    return False
+
+
+def _is_intervention_element(element: dict, intervention_text: str) -> bool:
+    intervention = _normalize_text(intervention_text)
+    if not intervention:
+        return False
+
+    label = _normalize_text(element.get("label"))
+    tiab_terms = [_normalize_text(term).strip('"') for term in _split_or_terms(element.get("tiab", ""))]
+
+    if intervention == label:
+        return True
+    if intervention in tiab_terms:
+        return True
+    return False
+
+
+def _is_reference_like_comparison(comparison_text: str) -> bool:
+    comparison = _normalize_text(comparison_text)
+    markers = (
+        "reference",
+        "gold standard",
+        "standard care",
+        "usual care",
+        "placebo",
+        "control",
+        "comparateur",
+        "comparateur de référence",
+        "test de référence",
+    )
+    return any(marker in comparison for marker in markers)
+
+
+def _merge_unique_terms(primary_value: str, secondary_value: str) -> str:
+    merged = []
+    for term in _split_or_terms(primary_value) + _split_or_terms(secondary_value):
+        if term not in merged:
+            merged.append(term)
+    return " OR ".join(merged)
+
+
+def _merge_intervention_and_comparison_elements(search_elements: list, components: dict) -> list:
+    intervention_text = (components or {}).get("intervention")
+    comparison_text = (components or {}).get("comparison")
+
+    if not intervention_text or not comparison_text or _is_reference_like_comparison(comparison_text):
+        return search_elements
+
+    intervention_index = None
+    comparison_index = None
+    merged = [dict(element) for element in search_elements]
+
+    for index, element in enumerate(merged):
+        if intervention_index is None and _is_intervention_element(element, intervention_text):
+            intervention_index = index
+        if comparison_index is None and _is_comparison_element(element, comparison_text):
+            comparison_index = index
+
+    if intervention_index is None or comparison_index is None or intervention_index == comparison_index:
+        return merged
+
+    intervention_element = dict(merged[intervention_index])
+    comparison_element = dict(merged[comparison_index])
+
+    intervention_element["tiab"] = _merge_unique_terms(
+        intervention_element.get("tiab", ""),
+        comparison_element.get("tiab", ""),
+    )
+    intervention_element["mesh"] = _merge_unique_terms(
+        intervention_element.get("mesh", ""),
+        comparison_element.get("mesh", ""),
+    ) or None
+    intervention_element["reason"] = (
+        intervention_element.get("reason")
+        or "Bloc intervention élargi pour couvrir aussi le produit comparé."
+    )
+
+    comparison_element["search_filter"] = False
+    comparison_element["priority"] = None
+    comparison_element["reason"] = (
+        "Produit comparé absorbé dans le même bloc que l’intervention, puis retiré comme filtre séparé."
+    )
+
+    merged[intervention_index] = intervention_element
+    merged[comparison_index] = comparison_element
+    return merged
+
+
+def _sanitize_comparison_search_elements(search_elements: list, components: dict) -> list:
+    intervention_text = (components or {}).get("intervention")
+    comparison_text = (components or {}).get("comparison")
+    if not comparison_text:
+        return search_elements
+
+    sanitized = _merge_intervention_and_comparison_elements(search_elements, components)
+    final_elements = []
+    for element in sanitized:
+        normalized = dict(element)
+        if _is_comparison_element(normalized, comparison_text) and not _is_intervention_element(normalized, intervention_text):
+            if normalized.get("search_filter"):
+                normalized["search_filter"] = False
+                normalized["priority"] = None
+                normalized["reason"] = "Comparateur gardé visible pour la compréhension, mais retiré du filtrage de la requête."
+        final_elements.append(normalized)
+    return final_elements
+
+
+def _is_methodological_topic(data: dict) -> bool:
+    components = data.get("components") or {}
+    text = " ".join(
+        _normalize_text(value)
+        for value in (
+            data.get("explanation"),
+            data.get("research_question_fr"),
+            data.get("research_question_en"),
+            components.get("intervention"),
+            components.get("exposure"),
+            components.get("outcome"),
+        )
+        if value
+    )
+    markers = (
+        "méthodolog",
+        "methodolog",
+        "statist",
+        "causal inference",
+        "time discret",
+        "missing data",
+        "imputation",
+        "regression",
+        "g-formula",
+        "tmle",
+        "inverse probability",
+    )
+    return any(marker in text for marker in markers)
+
+
+def _is_prevalence_measure_element(element: dict) -> bool:
+    label = _normalize_text(element.get("label"))
+    reason = _normalize_text(element.get("reason"))
+    terms = [_normalize_text(term) for term in _split_or_terms(element.get("tiab", ""))]
+    generic_terms = {
+        "prevalence",
+        "incidence",
+        "frequency",
+        "epidemiology",
+        "burden",
+    }
+
+    if "preval" in label or "epidemiolog" in label or "mesure" in label:
+        return True
+    if any(keyword in reason for keyword in ("prévalence", "prevalence", "épidémiolog", "epidemiolog")):
+        return True
+    if terms and all(term in generic_terms for term in terms):
+        return True
+    return False
+
+
+def _sanitize_prevalence_search_elements(search_elements: list) -> list:
+    explicit_prevalence_terms = {
+        "prevalence",
+        "point prevalence",
+        "period prevalence",
+        "lifetime prevalence",
+    }
+    sanitized = []
+
+    for element in search_elements:
+        normalized = dict(element)
+        if _is_prevalence_measure_element(normalized):
+            terms = _split_or_terms(normalized.get("tiab", ""))
+            kept_terms = [term for term in terms if _normalize_text(term) in explicit_prevalence_terms]
+            normalized["tiab"] = " OR ".join(kept_terms) if kept_terms else "prevalence"
+            normalized["mesh"] = None
+
+            if normalized.get("search_filter"):
+                if normalized.get("priority") == 2:
+                    normalized["search_filter"] = True
+                    normalized["priority"] = 2
+                    normalized["reason"] = (
+                        "Concept de prévalence conservé seulement comme affinement explicite."
+                    )
+                else:
+                    normalized["search_filter"] = False
+                    normalized["priority"] = None
+                    normalized["reason"] = (
+                        "Concept de prévalence gardé visible mais retiré du filtrage large pour éviter une requête trop rigide."
+                    )
+        sanitized.append(normalized)
+
+    return sanitized
+
+
+def _sanitize_methodological_search_elements(search_elements: list) -> list:
+    generic_weak_terms = {
+        "analysis",
+        "analyses",
+        "bias",
+        "causality",
+        "method",
+        "methods",
+        "methodological",
+        "model",
+        "models",
+        "statistical",
+        "statistics",
+        "study",
+        "studies",
+    }
+    sanitized = []
+
+    for element in search_elements:
+        normalized = dict(element)
+        role = classify_concept_role(normalized)
+        if role == "context":
+            sanitized.append(normalized)
+            continue
+
+        label_tokens = set(_tokenize_for_quality(normalized.get("label", "")))
+        kept_terms = []
+        for term in _split_or_terms(normalized.get("tiab", "")):
+            normalized_term = _normalize_text(term)
+            term_tokens = set(_tokenize_for_quality(term))
+            if normalized_term in generic_weak_terms:
+                continue
+            if len(label_tokens) >= 2 and not _is_acronym(term):
+                if term_tokens and not (term_tokens & label_tokens):
+                    continue
+            if term not in kept_terms:
+                kept_terms.append(term)
+
+        if kept_terms:
+            normalized["tiab"] = " OR ".join(kept_terms[:4])
+
+        sanitized.append(normalized)
+
+    return sanitized
+
+
 def normalize_result(result: dict | None) -> dict:
     """Apply the minimal JSON fallbacks required by the SPEC."""
     data = result if isinstance(result, dict) else {}
@@ -260,6 +560,12 @@ def normalize_result(result: dict | None) -> dict:
         components = {}
 
     search_elements = normalize_search_elements(data.get("search_elements"))
+    search_elements = _sanitize_comparison_search_elements(search_elements, components)
+    if _is_prevalence_topic(data):
+        search_elements = _sanitize_prevalence_search_elements(search_elements)
+    if _is_methodological_topic(data):
+        search_elements = _sanitize_methodological_search_elements(search_elements)
+    classified_concepts = build_classified_concepts(search_elements)
 
     geography = data.get("geography")
     if not isinstance(geography, dict):
@@ -276,6 +582,8 @@ def normalize_result(result: dict | None) -> dict:
         "framework": framework,
         "components": components,
         "search_elements": search_elements,
+        "classified_concepts": classified_concepts,
+        "parsed_concepts": classified_concepts,
         "geography": {
             "country": geography.get("country"),
             "region": geography.get("region"),

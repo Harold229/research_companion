@@ -2,6 +2,7 @@
 PubMed backend — translate canonical strategy into PubMed queries.
 """
 
+import re
 import requests
 import xml.etree.ElementTree as ET
 
@@ -56,7 +57,29 @@ def _extract_doi(article) -> str:
     return ""
 
 
-def _parse_pubmed_articles(fetch_root) -> list:
+def _extract_keywords(article) -> list:
+    keywords = []
+    for keyword in article.findall(".//KeywordList/Keyword"):
+        text = "".join(keyword.itertext()).strip()
+        if text and text not in keywords:
+            keywords.append(text)
+        if len(keywords) >= 8:
+            break
+    return keywords
+
+
+def _extract_mesh_terms(article) -> list:
+    mesh_terms = []
+    for heading in article.findall(".//MeshHeadingList/MeshHeading"):
+        descriptor = _safe_text(heading, "DescriptorName")
+        if descriptor and descriptor not in mesh_terms:
+            mesh_terms.append(descriptor)
+        if len(mesh_terms) >= 8:
+            break
+    return mesh_terms
+
+
+def _parse_pubmed_articles(fetch_root, rank_map: dict = None) -> list:
     articles = []
     for article in fetch_root.findall(".//PubmedArticle"):
         pmid = _safe_text(article, ".//MedlineCitation/PMID")
@@ -74,8 +97,13 @@ def _parse_pubmed_articles(fetch_root) -> list:
             "journal": _safe_text(article, ".//Journal/Title"),
             "year": _extract_pub_year(article),
             "authors": _extract_authors(article),
+            "keywords": _extract_keywords(article),
+            "mesh_terms": _extract_mesh_terms(article),
             "url": f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/" if pmid else "",
+            "pubmed_rank": (rank_map or {}).get(pmid),
         })
+    if rank_map:
+        articles.sort(key=lambda item: (rank_map.get(item.get("pmid"), 999999), item.get("title", "")))
     return articles
 
 
@@ -104,10 +132,37 @@ def apply_pubmed_date_filter(query: str, start_year: str = "", end_year: str = "
     return f"({query})\nAND {date_filter}"
 
 
+def _split_tiab_terms(value: str) -> list:
+    text = str(value or "").strip()
+    if not text:
+        return []
+    parts = re.split(r"\s+OR\s+", text)
+    return [part.strip() for part in parts if part.strip()]
+
+
+def _format_tiab_term(term: str) -> str:
+    cleaned = str(term or "").strip()
+    if not cleaned:
+        return ""
+    if "[" in cleaned and "]" in cleaned:
+        return cleaned
+
+    if cleaned.startswith('"') and cleaned.endswith('"'):
+        quoted = cleaned
+    elif " " in cleaned or "-" in cleaned:
+        quoted = f'"{cleaned}"'
+    else:
+        quoted = cleaned
+
+    return f"{quoted}[tiab]"
+
+
 def build_block(label: str, mesh_block: str = None, tiab_term: str = None) -> str:
     """Build a PubMed query block for one concept."""
     mesh = mesh_block or ""
-    tiab = f"({tiab_term})[Title/Abstract]" if tiab_term else ""
+    tiab_terms = [_format_tiab_term(term) for term in _split_tiab_terms(tiab_term)]
+    tiab_terms = [term for term in tiab_terms if term]
+    tiab = f"({' OR '.join(tiab_terms)})" if tiab_terms else ""
 
     if mesh and tiab:
         return f"(({mesh}) OR ({tiab}))"
@@ -165,6 +220,7 @@ def fetch_articles(query: str, max_results: int = 12) -> list:
         ids = [node.text for node in search_root.findall(".//IdList/Id") if node.text]
         if not ids:
             return []
+        rank_map = {pmid: index for index, pmid in enumerate(ids, start=1)}
 
         fetch_response = requests.get(
             "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi",
@@ -179,7 +235,7 @@ def fetch_articles(query: str, max_results: int = 12) -> list:
             return []
 
         fetch_root = ET.fromstring(fetch_response.text)
-        return _parse_pubmed_articles(fetch_root)
+        return _parse_pubmed_articles(fetch_root, rank_map=rank_map)
     except Exception:
         return []
 
@@ -293,7 +349,7 @@ def count_geographic_scopes(base_query: str, geography: dict, geography_tiab: st
 
     if geography_tiab:
         terms = [t.strip().strip('"') for t in geography_tiab.split(" OR ") if t.strip()]
-        geo_blocks = [f'"{t}"[Title/Abstract]' for t in terms]
+        geo_blocks = [f'"{t}"[tiab]' for t in terms]
         query = base_query + f"\nAND ({' OR '.join(geo_blocks)})"
         scopes["geo_filter"] = {
             "label": "Filtre géographique",
@@ -302,7 +358,7 @@ def count_geographic_scopes(base_query: str, geography: dict, geography_tiab: st
         }
 
     if continent:
-        query = base_query + f'\nAND ("{continent}"[Title/Abstract])'
+        query = base_query + f'\nAND ("{continent}"[tiab])'
         scopes["continent"] = {
             "label": continent,
             "query": query,
@@ -310,7 +366,7 @@ def count_geographic_scopes(base_query: str, geography: dict, geography_tiab: st
         }
 
     if region:
-        query = base_query + f'\nAND ("{region}"[Title/Abstract])'
+        query = base_query + f'\nAND ("{region}"[tiab])'
         scopes["region"] = {
             "label": region,
             "query": query,
@@ -318,7 +374,7 @@ def count_geographic_scopes(base_query: str, geography: dict, geography_tiab: st
         }
 
     if country:
-        query = base_query + f'\nAND ("{country}"[Title/Abstract])'
+        query = base_query + f'\nAND ("{country}"[tiab])'
         scopes["country"] = {
             "label": country,
             "query": query,

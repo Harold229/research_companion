@@ -4,7 +4,6 @@ import streamlit as st
 
 from abstract_reader_agent import assess_shortlist_with_agent
 from abstract_reader_agent import build_shortlist_for_agent
-from claude_helper import analyze_research_question
 from concept_editor import apply_editor_changes
 from concept_editor import clone_search_elements
 from concept_editor import EDITOR_STATE_OPTIONS
@@ -25,6 +24,7 @@ from query_expansion import apply_expansion_terms
 from query_expansion import build_expansion_shortlist
 from query_expansion import propose_query_expansion
 from query_expansion import RECOMMENDATION_LABELS
+from related_articles import build_related_articles_query
 from research_projects import create_project
 from research_projects import get_project_by_id
 from research_projects import get_recent_entries
@@ -34,9 +34,16 @@ from research_projects import save_project_zotero_target
 from research_projects import save_entry_to_project
 from reading_prioritization import FOCUS_OPTIONS
 from reading_prioritization import apply_agent_assessment
-from reading_prioritization import prioritize_articles
-from search_strategy import build_search_strategy
+from services.discovery import discover_articles
+from services.discovery import run_topic_discovery
+from services.query_builder import build_query_package
+from services.query_builder import build_query_package_for_elements
+from services.state_manager import load_analysis_entry
+from services.state_manager import reset_search_state
 from strategy_pack import build_search_strategy_pack
+from ui.results_blocks import render_article_details
+from ui.results_blocks import render_article_feedback_controls
+from ui.results_blocks import render_article_reasons
 from zotero_ready import build_zotero_ready_export
 from zotero_ready import build_zotero_ready_json
 from zotero_ready import build_zotero_ready_markdown
@@ -50,7 +57,6 @@ from zotero_integration import validate_zotero_api_key
 from zotero_integration import ZoteroIntegrationError
 
 
-build_pubmed_queries = pubmed_backend.build_pubmed_queries
 count_geographic_scopes = pubmed_backend.count_geographic_scopes
 fetch_articles = pubmed_backend.fetch_articles
 apply_pubmed_date_filter = pubmed_backend.apply_pubmed_date_filter
@@ -84,6 +90,26 @@ def get_reference_badge(article: dict) -> str:
     return "Référence de contexte"
 
 
+def get_rank_caption(article: dict) -> str:
+    app_rank = article.get("app_rank")
+    pubmed_rank = article.get("pubmed_rank")
+    parts = []
+    if isinstance(app_rank, int):
+        parts.append(f"Rang app {app_rank}")
+    if isinstance(pubmed_rank, int):
+        parts.append(f"Rang PubMed {pubmed_rank}")
+
+    rank_delta = article.get("rank_delta")
+    if isinstance(rank_delta, int) and rank_delta != 0:
+        if rank_delta > 0:
+            parts.append(f"Remonté de {rank_delta} place{'s' if rank_delta > 1 else ''}")
+        else:
+            delta = abs(rank_delta)
+            parts.append(f"Descendu de {delta} place{'s' if delta > 1 else ''}")
+
+    return " • ".join(parts)
+
+
 def get_pack_preview(pack: str, max_lines: int = 18) -> str:
     lines = pack.splitlines()
     if len(lines) <= max_lines:
@@ -102,6 +128,7 @@ def build_history_entry(
     strategy: dict,
     platform_outputs: dict,
     pack: str,
+    search_session_id: str,
 ) -> dict:
     presentation = get_question_presentation(result, user_question)
     reformulated = get_reformulated_question(user_question, result, presentation)
@@ -113,11 +140,78 @@ def build_history_entry(
         "user_question": user_question,
         "reformulated_question": reformulated,
         "framework": result.get("framework"),
+        "search_session_id": search_session_id,
         "result": result,
         "strategy": strategy,
         "platform_outputs": platform_outputs,
         "pack": pack,
     }
+
+
+def render_suggested_query(bramer: dict) -> None:
+    large = bramer.get("large", {})
+    strict = bramer.get("strict", {})
+    is_identical = bramer.get("is_identical", False)
+
+    st.subheader("Requête proposée")
+    st.caption("Commencez par une requête plausible et lisible, puis affinez seulement si nécessaire.")
+
+    st.write("**Version large**")
+    st.code(large.get("query", ""), language="text")
+    if large.get("elements_used"):
+        st.caption(f"Concepts inclus : {', '.join(large.get('elements_used', []))}")
+
+    if is_identical:
+        st.caption(
+            "Aucun filtre supplémentaire pertinent n’a été identifié. "
+            "La version large suffit pour démarrer."
+        )
+    else:
+        st.write("**Version ciblée**")
+        st.code(strict.get("query", ""), language="text")
+        added = [
+            element
+            for element in strict.get("elements_used", [])
+            if element not in large.get("elements_used", [])
+        ]
+        if added:
+            st.caption(f"Cette version ajoute : {', '.join(added)}")
+
+
+def render_what_i_understood(
+    *,
+    question: str,
+    components: dict,
+    presentation: dict,
+    reformulated_question: str,
+    visible_explanation: str,
+    project_title: str = "",
+) -> None:
+    st.subheader("Ce que j’ai compris")
+    if project_title:
+        st.caption(f"Projet : {project_title}")
+
+    normalized_question = " ".join(str(question or "").split()).strip()
+    normalized_reformulation = " ".join(str(reformulated_question or "").split()).strip()
+
+    if normalized_reformulation and normalized_reformulation.lower() != normalized_question.lower():
+        st.write(f"**Reformulation** : {reformulated_question}")
+    else:
+        st.write(f"**Sujet** : {question}")
+
+    st.write(f"**Type de sujet** : {presentation.get('question_type', 'question descriptive')}")
+
+    main_dimensions = []
+    for key, value in (components or {}).items():
+        if value:
+            label = get_component_label(key, presentation)
+            main_dimensions.append(f"{label} : {value}")
+
+    if main_dimensions:
+        st.caption("Dimensions principales : " + " • ".join(main_dimensions[:3]))
+
+    if visible_explanation:
+        st.caption(visible_explanation)
 
 
 def _get_articles_cache_key(entry: dict, query: str, scope: str = "default") -> str:
@@ -151,10 +245,10 @@ def _seed_editor_widget_state(entry: dict, elements: list) -> None:
 
 def _build_effective_analysis(entry: dict) -> tuple:
     edited_elements = _get_editor_elements(entry)
-    effective_result = dict(entry.get("result") or {})
-    effective_result["search_elements"] = clone_search_elements(edited_elements)
-    effective_strategy = build_search_strategy(effective_result)
-    effective_bramer = build_pubmed_queries(effective_strategy)
+    query_package = build_query_package_for_elements(entry.get("result") or {}, clone_search_elements(edited_elements))
+    effective_result = query_package.get("result", {})
+    effective_strategy = query_package.get("strategy", {})
+    effective_bramer = (query_package.get("platform_outputs") or {}).get("PubMed", {})
     return effective_result, effective_strategy, effective_bramer
 
 
@@ -330,13 +424,12 @@ def render_query_expansion(entry: dict, result: dict, strategy: dict, bramer: di
         else:
             enriched_result = dict(result)
             enriched_result["search_elements"] = apply_expansion_terms(search_elements, selected_proposals)
-            enriched_strategy = build_search_strategy(enriched_result)
-            enriched_bramer = build_pubmed_queries(enriched_strategy)
+            enriched_query_package = build_query_package(enriched_result)
             st.session_state[enriched_key] = {
                 "selected_proposals": selected_proposals,
-                "result": enriched_result,
-                "strategy": enriched_strategy,
-                "bramer": enriched_bramer,
+                "result": enriched_query_package.get("result", {}),
+                "strategy": enriched_query_package.get("strategy", {}),
+                "bramer": (enriched_query_package.get("platform_outputs") or {}).get("PubMed", {}),
             }
 
     enriched_state = st.session_state.get(enriched_key)
@@ -566,13 +659,47 @@ def render_zotero_ready_section(entry: dict, prioritized: dict, result: dict = N
             st.caption("Les articles retenus n’ont pas pu être enregistrés dans le projet pour le moment.")
 
 
+def _compute_prioritized_results(
+    entry: dict,
+    result: dict,
+    bramer: dict,
+    focus_key: str,
+    custom_goal: str,
+    time_filter: dict,
+) -> dict:
+    query = bramer["strict"]["query"] if not bramer.get("is_identical") else bramer["large"]["query"]
+    filtered_query = apply_pubmed_date_filter(
+        query,
+        start_year=time_filter.get("start_year", ""),
+        end_year=time_filter.get("end_year", ""),
+    )
+    cache_key = _get_articles_cache_key(entry, filtered_query, scope="reranking")
+    cached_payload = st.session_state.get(cache_key)
+
+    if cached_payload is None:
+        with st.spinner("Récupération et classement initial des articles..."):
+            cached_payload = discover_articles(
+                question=entry.get("user_question", ""),
+                result=result,
+                query=query,
+                focus_key=focus_key,
+                custom_goal=custom_goal,
+                max_results=50,
+                time_filter=time_filter,
+            )
+        st.session_state[cache_key] = cached_payload
+
+    return cached_payload.get("prioritized", {})
+
+
 def render_reading_focus(entry: dict, result: dict, bramer: dict) -> None:
     st.divider()
-    st.subheader("Focalisation de lecture")
-    st.write("Qu’aimeriez-vous repérer en priorité dans ces résultats ?")
+    st.subheader("Articles à regarder d’abord")
 
     goal_key = f"reading_focus_goal_{entry.get('id')}"
     suggestion_key = f"reading_focus_suggestion_{entry.get('id')}"
+    selected_central_key = f"selected_central_article_{entry.get('id')}"
+    article_feedback_key = f"article_feedback_{entry.get('id')}"
 
     suggestions = {
         "geography": "Je cherche surtout les études africaines",
@@ -580,103 +707,124 @@ def render_reading_focus(entry: dict, result: dict, bramer: dict) -> None:
         "validity": "Je veux d’abord les validations méthodologiques",
         "tool": "Je veux surtout les études qui comparent l’outil à une mesure de référence",
     }
-
-    st.caption("Suggestions rapides, si vous voulez partir d’un exemple :")
-    suggestion_cols = st.columns(len(suggestions))
-    for index, (focus_key, suggestion_text) in enumerate(suggestions.items()):
-        if suggestion_cols[index].button(FOCUS_OPTIONS[focus_key], key=f"{suggestion_key}_{focus_key}"):
-            st.session_state[goal_key] = suggestion_text
-            st.session_state[suggestion_key] = focus_key
-
-    custom_goal = st.text_area(
-        "Votre objectif de lecture",
-        placeholder=(
-            "Ex: Je veux surtout les études qui comparent la montre à une mesure de référence ; "
-            "Je cherche les études africaines ; Je veux d’abord les validations méthodologiques..."
-        ),
-        height=90,
-        key=goal_key,
-    ).strip()
-
-    st.write("Période des résultats")
-    st.caption("Ce filtre temporel agit sur les résultats affichés et leur priorisation, sans modifier la stratégie de recherche.")
     mode_key = f"time_filter_mode_{entry.get('id')}"
     start_key = f"time_filter_start_{entry.get('id')}"
     end_key = f"time_filter_end_{entry.get('id')}"
-
-    st.radio(
-        "Limiter les résultats à une période",
-        options=["Aucune limite", "Définir une période"],
-        horizontal=True,
-        key=mode_key,
-    )
-
-    if st.session_state.get(mode_key) == "Définir une période":
-        year_cols = st.columns(2)
-        year_cols[0].text_input(
-            "Année de début",
-            placeholder="Ex: 2018",
-            key=start_key,
-        )
-        year_cols[1].text_input(
-            "Année de fin",
-            placeholder="Ex: 2024",
-            key=end_key,
-        )
-
     time_filter = _get_time_filter_state(entry)
-    if time_filter.get("enabled") and time_filter.get("valid"):
-        st.caption(f"Filtre actif : {time_filter.get('label')}")
-    elif time_filter.get("error"):
-        st.caption(time_filter["error"])
-
     focus_key = st.session_state.get(suggestion_key, "other")
+    custom_goal = st.session_state.get(goal_key, "").strip()
     if not custom_goal:
         focus_key = "other"
-
-    if st.button("Prioriser la lecture", key=f"reading_focus_submit_{entry.get('id')}"):
-        if not time_filter.get("valid", True):
-            st.caption(time_filter.get("error") or "Le filtre temporel est invalide.")
-            return
-        query = bramer["strict"]["query"] if not bramer.get("is_identical") else bramer["large"]["query"]
-        query = apply_pubmed_date_filter(
-            query,
-            start_year=time_filter.get("start_year", ""),
-            end_year=time_filter.get("end_year", ""),
-        )
-        cache_key = _get_articles_cache_key(entry, query, scope="reranking")
-        articles = st.session_state.get(cache_key)
-
-        if articles is None:
-            with st.spinner("Récupération d’un premier lot d’articles PubMed..."):
-                articles = fetch_articles(query, max_results=50)
-            st.session_state[cache_key] = articles
-
-        reranked = rerank_articles_hybrid(
-            articles or [],
-            entry.get("user_question", ""),
-            custom_goal,
-        )
-        prioritized = prioritize_articles(reranked.get("articles", []), result, focus_key, custom_goal)
-        prioritized["time_filter"] = time_filter
-        prioritized["reranking"] = reranked
-        st.session_state[f"prioritized_articles_{entry.get('id')}"] = prioritized
 
     prioritized = st.session_state.get(f"prioritized_articles_{entry.get('id')}")
     current_time_filter = _get_time_filter_state(entry)
     if prioritized and prioritized.get("time_filter") != current_time_filter:
         prioritized = None
+    if prioritized is None and time_filter.get("valid", True):
+        prioritized = _compute_prioritized_results(entry, result, bramer, focus_key, custom_goal, time_filter)
+        st.session_state[f"prioritized_articles_{entry.get('id')}"] = prioritized
     if not prioritized:
         st.caption("Cette étape n’affine pas la stratégie de recherche : elle aide seulement à savoir quels articles regarder d’abord.")
         return
 
     if not prioritized.get("articles"):
-        st.caption("Aucun article n’a pu être récupéré pour cette priorisation. La stratégie de recherche n’a pas été modifiée.")
+        fallback = prioritized.get("fallback") or {}
+        if fallback.get("used"):
+            st.caption(
+                "Aucun article n’a été trouvé avec la version stricte. "
+                f"Même après relâchement de {', '.join(fallback.get('relaxed_labels', []))}, aucun article plausible n’a pu être récupéré."
+            )
+        else:
+            st.caption("Aucun article n’a pu être récupéré pour cette priorisation. La stratégie de recherche n’a pas été modifiée.")
         return
 
     active_time_filter = prioritized.get("time_filter") or _get_time_filter_state(entry)
     if active_time_filter.get("enabled") and active_time_filter.get("valid"):
         st.caption(f"Résultats actuellement limités à la période : {active_time_filter.get('label')}")
+
+    current_query = prioritized.get("discovery_query")
+    if not current_query:
+        current_query = bramer["strict"]["query"] if not bramer.get("is_identical") else bramer["large"]["query"]
+        current_query = apply_pubmed_date_filter(
+            current_query,
+            start_year=active_time_filter.get("start_year", ""),
+            end_year=active_time_filter.get("end_year", ""),
+        )
+
+    fallback = prioritized.get("fallback") or {}
+    if fallback.get("used"):
+        st.caption(
+            "Aucun article n’a été trouvé avec la version stricte. "
+            f"Les articles ci-dessous proviennent d’une version relâchée en retirant : {', '.join(fallback.get('relaxed_labels', []))}."
+        )
+
+    st.link_button("Ouvrir ces résultats dans PubMed", f'https://pubmed.ncbi.nlm.nih.gov/?term={current_query}')
+
+    with st.expander("Affiner cette priorisation", expanded=False):
+        st.write("Qu’aimeriez-vous repérer en priorité dans ces résultats ?")
+        st.caption("Suggestions rapides, si vous voulez partir d’un exemple :")
+        suggestion_cols = st.columns(len(suggestions))
+        for index, (suggested_focus_key, suggestion_text) in enumerate(suggestions.items()):
+            if suggestion_cols[index].button(FOCUS_OPTIONS[suggested_focus_key], key=f"{suggestion_key}_{suggested_focus_key}"):
+                st.session_state[goal_key] = suggestion_text
+                st.session_state[suggestion_key] = suggested_focus_key
+
+        custom_goal = st.text_area(
+            "Votre objectif de lecture",
+            placeholder=(
+                "Ex: Je veux surtout les études qui comparent la montre à une mesure de référence ; "
+                "Je cherche les études africaines ; Je veux d’abord les validations méthodologiques..."
+            ),
+            height=90,
+            key=goal_key,
+        ).strip()
+
+        st.write("Période des résultats")
+        st.caption("Ce filtre temporel agit sur les résultats affichés et leur priorisation, sans modifier la stratégie de recherche.")
+        st.radio(
+            "Limiter les résultats à une période",
+            options=["Aucune limite", "Définir une période"],
+            horizontal=True,
+            key=mode_key,
+        )
+
+        if st.session_state.get(mode_key) == "Définir une période":
+            year_cols = st.columns(2)
+            year_cols[0].text_input(
+                "Année de début",
+                placeholder="Ex: 2018",
+                key=start_key,
+            )
+            year_cols[1].text_input(
+                "Année de fin",
+                placeholder="Ex: 2024",
+                key=end_key,
+            )
+
+        refreshed_time_filter = _get_time_filter_state(entry)
+        if refreshed_time_filter.get("enabled") and refreshed_time_filter.get("valid"):
+            st.caption(f"Filtre actif : {refreshed_time_filter.get('label')}")
+        elif refreshed_time_filter.get("error"):
+            st.caption(refreshed_time_filter["error"])
+
+        refreshed_focus_key = st.session_state.get(suggestion_key, "other")
+        if not custom_goal:
+            refreshed_focus_key = "other"
+
+        if st.button("Actualiser la priorisation", key=f"reading_focus_submit_{entry.get('id')}"):
+            if not refreshed_time_filter.get("valid", True):
+                st.caption(refreshed_time_filter.get("error") or "Le filtre temporel est invalide.")
+                return
+            prioritized = _compute_prioritized_results(
+                entry,
+                result,
+                bramer,
+                refreshed_focus_key,
+                custom_goal,
+                refreshed_time_filter,
+            )
+            st.session_state[f"prioritized_articles_{entry.get('id')}"] = prioritized
+            st.rerun()
 
     st.caption(
         "Cette priorisation est une aide à la lecture. Elle repose d’abord sur le titre et l’abstract, et ne remplace pas une appréciation critique complète des articles."
@@ -716,6 +864,8 @@ def render_reading_focus(entry: dict, result: dict, bramer: dict) -> None:
     if prioritized.get("agent_enabled"):
         st.caption("Classement affiné par un agent à partir du titre, de l’abstract et de quelques métadonnées.")
 
+    article_feedback_store = st.session_state.setdefault(article_feedback_key, {})
+
     grouped = {
         "Très pertinent": [],
         "Pertinent": [],
@@ -742,18 +892,87 @@ def render_reading_focus(entry: dict, result: dict, bramer: dict) -> None:
             ] if part)
             if meta:
                 st.caption(meta)
+            rank_caption = get_rank_caption(article)
+            if rank_caption:
+                st.caption(rank_caption)
             st.caption(get_article_badge(article))
+            render_article_feedback_controls(entry.get("id"), article, article_feedback_store)
             with st.expander("Pourquoi cet article ?", expanded=False):
-                st.caption(f"Pourquoi il remonte : {', '.join(article.get('reasons', [])[:3])}")
+                render_article_reasons(article)
+                render_article_details(article)
 
-    central_article = next(
-        (
-            article for article in prioritized.get("articles", [])
-            if article.get("priority") == "Très pertinent" and article.get("pmid")
-        ),
-        None,
-    )
+    central_candidates = [article for article in visible_articles if article.get("pmid")]
+    central_article = None
+    if central_candidates:
+        option_map = {
+            article.get("pmid"): (
+                f"{article.get('title', 'Article sans titre')} "
+                f"({article.get('year') or 'année non précisée'})"
+            )
+            for article in central_candidates
+        }
+        default_pmid = st.session_state.get(selected_central_key)
+        if default_pmid not in option_map:
+            default_pmid = central_candidates[0].get("pmid")
+            st.session_state[selected_central_key] = default_pmid
+
+        st.write("**Choisir un article central**")
+        selected_pmid = st.radio(
+            "Cet article me semble le plus parlant",
+            options=list(option_map.keys()),
+            format_func=lambda pmid: option_map[pmid],
+            key=selected_central_key,
+        )
+        central_article = next(
+            (article for article in central_candidates if article.get("pmid") == selected_pmid),
+            None,
+        )
     if central_article:
+        st.divider()
+        st.subheader("Articles connexes")
+        related_query = build_related_articles_query(
+            current_query,
+            central_article,
+            subject_text=entry.get("user_question", ""),
+        )
+        related_cache_key = f"related_articles_{entry.get('id')}_{central_article.get('pmid')}_{hash(related_query)}"
+        related_articles = st.session_state.get(related_cache_key)
+        if related_articles is None:
+            with st.spinner("Recherche d’articles connexes..."):
+                related_articles = fetch_articles(related_query, max_results=12) if related_query else []
+            related_articles = [
+                article for article in related_articles
+                if article.get("pmid") != central_article.get("pmid")
+            ]
+            st.session_state[related_cache_key] = related_articles
+
+        if related_articles:
+            related_reranked = rerank_articles_hybrid(
+                related_articles,
+                entry.get("user_question", ""),
+                custom_goal,
+            )
+            visible_related = [
+                article for article in related_reranked.get("articles", [])
+                if float(article.get("hybrid_score", 0.0) or 0.0) >= 0.18
+            ][:5]
+            if not visible_related:
+                visible_related = related_reranked.get("articles", [])[:3]
+
+            for article in visible_related:
+                title = article.get("title") or "Article sans titre"
+                url = article.get("url")
+                title_line = f"[{title}]({url})" if url else title
+                st.markdown(f"- {title_line}")
+                meta = " · ".join(part for part in [
+                    ", ".join(article.get("authors", [])),
+                    article.get("year"),
+                ] if part)
+                if meta:
+                    st.caption(meta)
+        else:
+            st.caption("Aucun article connexe suffisamment proche n’a pu être proposé à partir de cet article.")
+
         st.divider()
         st.subheader("Cet article cite aussi")
         st.caption(central_article.get("title", "Article central"))
@@ -788,11 +1007,24 @@ def render_reading_focus(entry: dict, result: dict, bramer: dict) -> None:
                 ] if part)
                 if meta:
                     st.caption(meta)
+                identifier_parts = []
+                if article.get("pmid"):
+                    identifier_parts.append(f"PMID {article.get('pmid')}")
+                if article.get("doi"):
+                    identifier_parts.append(f"DOI {article.get('doi')}")
+                if identifier_parts:
+                    st.caption(" • ".join(identifier_parts))
                 st.caption(get_reference_badge(article))
                 with st.expander("Pourquoi cette référence ?", expanded=False):
                     st.caption(", ".join(article.get("hybrid_reasons", [])[:2]) or "Référence proche du sujet.")
         else:
-            st.caption("Les références citées n’étaient pas accessibles pour cet article central.")
+            st.caption("Les références citées n’étaient pas accessibles pour cet article central dans les données récupérables ici.")
+            st.caption("Pour continuer, vous pouvez utiliser les articles connexes ci-dessus ou relancer une recherche proche de cet article dans PubMed.")
+            if related_query:
+                st.link_button(
+                    "Chercher des articles proches dans PubMed",
+                    f'https://pubmed.ncbi.nlm.nih.gov/?term={related_query}',
+                )
 
     render_zotero_ready_section(entry, prioritized, result=result)
 
@@ -831,8 +1063,7 @@ def render_projects_overview(projects: list) -> None:
         cols[0].write(get_entry_title(entry))
         cols[1].caption(entry.get("created_at", "Date inconnue"))
         if cols[2].button("Ouvrir", key=f"open_project_entry_{entry.get('id')}"):
-            st.session_state["question_input"] = entry.get("user_question", "")
-            st.session_state["current_analysis"] = entry
+            load_analysis_entry(st.session_state, entry)
 
 
 def render_recent_entries(entries: list) -> None:
@@ -848,8 +1079,7 @@ def render_recent_entries(entries: list) -> None:
             cols[1].caption(entry.get("project_title", "Sans projet"))
             cols[1].caption(entry.get("created_at", "Date inconnue"))
             if cols[2].button("Rouvrir", key=f"open_recent_{entry.get('id')}"):
-                st.session_state["question_input"] = entry.get("user_question", "")
-                st.session_state["current_analysis"] = entry
+                load_analysis_entry(st.session_state, entry)
 
 
 def render_fake_paywall(entry: dict) -> None:
@@ -966,83 +1196,96 @@ def render_analysis(entry: dict) -> None:
     reformulated_question = get_reformulated_question(question, result, presentation)
     visible_explanation = get_visible_explanation(result, presentation)
 
-    st.subheader("Question analysée")
-    if entry.get("project_title"):
-        st.caption(f"Projet : {entry.get('project_title')}")
-    st.write(question)
-    st.write(f"Type de sujet : **{presentation.get('question_type', 'question descriptive')}**")
-    if presentation.get("show_framework") and framework:
-        st.caption(f"Framework méthodologique : {framework}")
+    render_what_i_understood(
+        question=question,
+        components=components,
+        presentation=presentation,
+        reformulated_question=reformulated_question if detected_intent == "structure" else "",
+        visible_explanation=visible_explanation,
+        project_title=entry.get("project_title") or "",
+    )
 
-    if detected_intent == "structure" and reformulated_question:
-        st.write("**Reformulation proposée**")
-        st.write(f"*{reformulated_question}*")
-
-    st.subheader("Composantes de la recherche")
-    if components:
-        for key, value in components.items():
-            if value:
-                label = get_component_label(key, presentation)
-                st.write(f"**{label}** : {value}")
-    else:
-        st.caption("Aucune composante structurée retournée.")
-
-    st.divider()
-    render_concept_editor(entry)
-    st.divider()
+    render_reading_focus(entry, result, bramer)
 
     large = bramer["large"]
     strict = bramer["strict"]
     excluded = bramer["excluded"]
     is_identical = bramer.get("is_identical", False)
 
+    st.divider()
+    render_suggested_query(bramer)
+
     large_count_label = format_results_count(large.get("count"))
     strict_count_label = format_results_count(strict.get("count"))
 
-    st.subheader(f"Recherche large — {large_count_label}")
-    st.code(large["query"], language="text")
-    if large["elements_used"]:
-        st.caption(f"Concepts retenus : {', '.join(large['elements_used'])}")
-    else:
-        st.caption("Aucun concept de recherche actif retourné.")
+    with st.expander("Comprendre et ajuster la stratégie", expanded=False):
+        if presentation.get("show_framework") and framework:
+            st.caption(f"Framework méthodologique identifié : {framework}")
 
-    if is_identical:
-        st.caption(
-            "Aucun filtre supplémentaire pertinent n’a été identifié. "
-            "Vous pouvez affiner en précisant un pays, un contexte, "
-            "une population ou un cadre d’étude."
-        )
-    else:
-        st.markdown("---")
+        st.subheader("Composantes de la recherche")
+        if components:
+            for key, value in components.items():
+                if value:
+                    label = get_component_label(key, presentation)
+                    st.write(f"**{label}** : {value}")
+        else:
+            st.caption("Aucune composante structurée retournée.")
 
-        added = [
-            e for e in strict["elements_used"]
-            if e not in large["elements_used"]
-        ]
-        added_text = (
-            f"L’élément{'s suivants ont été ajoutés' if len(added) > 1 else ' suivant a été ajouté'} "
-            f"pour restreindre les résultats : {', '.join(added)}."
-        )
+        classified_concepts = result.get("classified_concepts") or []
+        if classified_concepts:
+            st.write("**Concepts détectés**")
+            for concept in classified_concepts:
+                role = concept.get("role", "core")
+                st.caption(f"{concept.get('label', 'Concept')} · rôle : {role}")
 
-        st.subheader(f"Recherche restreinte — {strict_count_label}")
-        st.code(strict["query"], language="text")
-        st.caption(added_text)
+        st.divider()
+        render_concept_editor(entry)
+        st.divider()
 
-    if excluded:
-        with st.expander("Pourquoi certains concepts ne sont pas utilisés comme filtres ?", expanded=False):
-            for ex in excluded:
-                st.caption(
-                    f'Le concept "{ex["label"]}" n’est pas utilisé comme filtre : {ex["reason"]}'
-                )
+        st.subheader(f"Recherche large — {large_count_label}")
+        st.code(large["query"], language="text")
+        if large["elements_used"]:
+            st.caption(f"Concepts retenus : {', '.join(large['elements_used'])}")
+        else:
+            st.caption("Aucun concept de recherche actif retourné.")
 
-    render_query_expansion(entry, result, strategy, bramer, time_filter)
+        if is_identical:
+            st.caption(
+                "Aucun filtre supplémentaire pertinent n’a été identifié. "
+                "Vous pouvez affiner en précisant un pays, un contexte, "
+                "une population ou un cadre d’étude."
+            )
+        else:
+            st.markdown("---")
 
-    with st.expander("Détails méthodologiques", expanded=False):
-        if visible_explanation:
-            st.caption(visible_explanation)
-        st.caption(
-            "La stratégie commence large, puis ajoute seulement les filtres jugés réellement utiles pour éviter d’exclure trop tôt des articles pertinents."
-        )
+            added = [
+                e for e in strict["elements_used"]
+                if e not in large["elements_used"]
+            ]
+            added_text = (
+                f"L’élément{'s suivants ont été ajoutés' if len(added) > 1 else ' suivant a été ajouté'} "
+                f"pour restreindre les résultats : {', '.join(added)}."
+            )
+
+            st.subheader(f"Recherche restreinte — {strict_count_label}")
+            st.code(strict["query"], language="text")
+            st.caption(added_text)
+
+        if excluded:
+            with st.expander("Pourquoi certains concepts ne sont pas utilisés comme filtres ?", expanded=False):
+                for ex in excluded:
+                    st.caption(
+                        f'Le concept "{ex["label"]}" n’est pas utilisé comme filtre : {ex["reason"]}'
+                    )
+
+        render_query_expansion(entry, result, strategy, bramer, time_filter)
+
+        with st.expander("Détails méthodologiques", expanded=False):
+            if visible_explanation:
+                st.caption(visible_explanation)
+            st.caption(
+                "La stratégie commence large, puis ajoute seulement les filtres jugés réellement utiles pour éviter d’exclure trop tôt des articles pertinents."
+            )
 
     geography = result.get("geography") or {}
     if geography and any(v for v in geography.values() if v):
@@ -1073,8 +1316,6 @@ def render_analysis(entry: dict) -> None:
                     )
             else:
                 st.caption("Aucun résultat géographique détaillé disponible.")
-
-    render_reading_focus(entry, result, bramer)
 
     st.divider()
     st.subheader("Retour rapide")
@@ -1159,29 +1400,33 @@ get_session_id()
 
 with st.sidebar:
     projects = load_projects()
-    render_projects_overview(projects)
-    render_recent_entries(get_recent_entries(projects))
+    with st.expander("Projets", expanded=False):
+        render_projects_overview(projects)
+        render_recent_entries(get_recent_entries(projects))
 
-    st.divider()
-
-    new_project_title = st.text_input(
-        "Nouveau projet (facultatif)",
-        placeholder="Ex: Prévalence du diabète au Mali",
-        key="new_project_title",
-    )
-    if st.button("Créer ce projet", key="create_project_button"):
-        if new_project_title.strip():
-            try:
-                project = create_project(new_project_title.strip())
-                st.session_state["active_project_id"] = project.get("id")
-                st.success("Projet créé.")
-            except Exception:
-                st.caption("Le projet n’a pas pu être créé pour le moment.")
-        else:
-            st.caption("Saisissez d’abord un titre de projet.")
+    with st.expander("Organisation", expanded=False):
+        new_project_title = st.text_input(
+            "Nouveau projet (facultatif)",
+            placeholder="Ex: Prévalence du diabète au Mali",
+            key="new_project_title",
+        )
+        if st.button("Créer ce projet", key="create_project_button"):
+            if new_project_title.strip():
+                try:
+                    project = create_project(new_project_title.strip())
+                    st.session_state["active_project_id"] = project.get("id")
+                    st.success("Projet créé.")
+                except Exception:
+                    st.caption("Le projet n’a pas pu être créé pour le moment.")
+            else:
+                st.caption("Saisissez d’abord un titre de projet.")
 
     active_project = get_project_by_id(load_projects(), st.session_state.get("active_project_id", ""))
-    render_zotero_connection(active_project)
+    with st.expander("Zotero", expanded=False):
+        render_zotero_connection(active_project)
+
+if st.session_state.pop("reset_question_input_pending", False):
+    st.session_state.pop("question_input", None)
 
 question = st.text_area(
     "Quel est votre sujet de recherche ?",
@@ -1190,17 +1435,31 @@ question = st.text_area(
     key="question_input",
 )
 
-if st.button("Analyser ma question"):
+input_actions = st.columns([1, 1, 5])
+run_analysis = input_actions[0].button("Analyser ma question")
+new_search = input_actions[1].button("Nouvelle recherche")
+
+if new_search:
+    st.session_state["reset_question_input_pending"] = True
+    reset_search_state(st.session_state, clear_question=True, update_question=False)
+    st.rerun()
+
+if run_analysis:
     if question:
         try:
-            with st.spinner("Analyse de votre question..."):
-                result = analyze_research_question(question)
+            search_session_id = reset_search_state(
+                st.session_state,
+                question.strip(),
+                update_question=False,
+            )
+            with st.spinner("Analyse du sujet et découverte initiale..."):
+                discovery_payload = run_topic_discovery(question)
 
-            with st.spinner("Construction de la stratégie de recherche..."):
-                strategy = build_search_strategy(result)
-
-            with st.spinner("Construction des requêtes PubMed..."):
-                bramer = build_pubmed_queries(strategy)
+            result = discovery_payload.get("result", {})
+            query_package = discovery_payload.get("query_package", {})
+            strategy = query_package.get("strategy", {})
+            bramer = (query_package.get("platform_outputs") or {}).get("PubMed", {})
+            initial_discovery = discovery_payload.get("discovery", {})
 
             entry = build_history_entry(
                 user_question=question,
@@ -1213,6 +1472,7 @@ if st.button("Analyser ma question"):
                     strategy=strategy,
                     platform_outputs={"PubMed": bramer},
                 ),
+                search_session_id=search_session_id,
             )
             project_title = new_project_title.strip() or (active_project.get("title") if active_project else "")
             project_id = active_project.get("id") if active_project and not new_project_title.strip() else None
@@ -1230,8 +1490,12 @@ if st.button("Analyser ma question"):
                     project_title=project_title or question,
                 )
                 st.session_state["current_analysis"] = entry
+                if initial_discovery.get("prioritized"):
+                    st.session_state[f"prioritized_articles_{entry.get('id')}"] = initial_discovery["prioritized"]
             except Exception:
                 st.session_state["current_analysis"] = entry
+                if initial_discovery.get("prioritized"):
+                    st.session_state[f"prioritized_articles_{entry.get('id')}"] = initial_discovery["prioritized"]
                 st.caption("Le projet n’a pas pu être mis à jour, mais l’analyse reste disponible.")
 
         except Exception:
