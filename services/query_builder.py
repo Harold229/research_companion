@@ -7,6 +7,7 @@ from services.concept_classifier import classify_concept_role
 from services.concept_classifier import ROLE_LABELS
 from services.concept_classifier import split_controlled_terms
 from services.concept_classifier import split_synonyms
+from services.librarian_strategy_adapter import build_query_package_from_librarian_result
 
 ROLE_DESCRIPTIONS = {
     "core": "Concepts au coeur du sujet. Ils structurent la recherche de base.",
@@ -52,6 +53,14 @@ ROLE_RELAXATION_LABELS = {
 
 
 def build_query_package(result: dict) -> dict:
+    librarian_query_package = build_query_package_from_librarian_result(result or {})
+    if librarian_query_package:
+        return librarian_query_package
+
+    return _build_standard_query_package(result or {})
+
+
+def _build_standard_query_package(result: dict) -> dict:
     strategy = build_search_strategy(result or {})
     pubmed_queries = pubmed_backend.build_pubmed_queries(strategy)
     return {
@@ -67,7 +76,11 @@ def build_query_package(result: dict) -> dict:
 def build_query_package_for_elements(result: dict, search_elements: list) -> dict:
     effective_result = dict(result or {})
     effective_result["search_elements"] = deepcopy(search_elements or [])
-    return build_query_package(effective_result)
+    if list(search_elements or []) == list((result or {}).get("search_elements") or []):
+        librarian_query_package = build_query_package_from_librarian_result(effective_result)
+        if librarian_query_package:
+            return librarian_query_package
+    return _build_standard_query_package(effective_result)
 
 
 def get_preferred_discovery_query(query_package: dict) -> str:

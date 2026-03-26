@@ -255,6 +255,32 @@ def _split_or_terms(value: str) -> list:
     return [term.strip() for term in str(value or "").split(" OR ") if term.strip()]
 
 
+def _split_treatment_candidates(value: str) -> list:
+    normalized = str(value or "").strip()
+    if not normalized:
+        return []
+
+    pieces = [normalized]
+    separators = (" versus ", " vs ", " compared with ", " compared to ", " against ", " and ", " or ", "/")
+
+    for separator in separators:
+        updated = []
+        for piece in pieces:
+            if separator in piece.lower():
+                marker = separator.strip()
+                updated.extend(part.strip(" ,;:") for part in piece.split(marker))
+            else:
+                updated.append(piece)
+        pieces = updated
+
+    candidates = []
+    for piece in pieces:
+        candidate = _normalize_text(piece)
+        if candidate and candidate not in candidates:
+            candidates.append(candidate)
+    return candidates
+
+
 def _tokenize_for_quality(value: str) -> list:
     return [
         token
@@ -289,8 +315,8 @@ def _is_prevalence_topic(data: dict) -> bool:
 
 
 def _is_comparison_element(element: dict, comparison_text: str) -> bool:
-    comparison = _normalize_text(comparison_text)
-    if not comparison:
+    comparison_candidates = _split_treatment_candidates(comparison_text)
+    if not comparison_candidates:
         return False
 
     label = _normalize_text(element.get("label"))
@@ -299,24 +325,24 @@ def _is_comparison_element(element: dict, comparison_text: str) -> bool:
 
     if any(keyword in label or keyword in reason for keyword in ("compar", "comparateur", "comparator", "reference standard", "gold standard")):
         return True
-    if comparison == label:
+    if any(candidate == label for candidate in comparison_candidates):
         return True
-    if comparison in tiab_terms:
+    if any(candidate in tiab_terms for candidate in comparison_candidates):
         return True
     return False
 
 
 def _is_intervention_element(element: dict, intervention_text: str) -> bool:
-    intervention = _normalize_text(intervention_text)
-    if not intervention:
+    intervention_candidates = _split_treatment_candidates(intervention_text)
+    if not intervention_candidates:
         return False
 
     label = _normalize_text(element.get("label"))
     tiab_terms = [_normalize_text(term).strip('"') for term in _split_or_terms(element.get("tiab", ""))]
 
-    if intervention == label:
+    if any(candidate == label for candidate in intervention_candidates):
         return True
-    if intervention in tiab_terms:
+    if any(candidate in tiab_terms for candidate in intervention_candidates):
         return True
     return False
 
@@ -392,13 +418,57 @@ def _merge_intervention_and_comparison_elements(search_elements: list, component
     return merged
 
 
+def _merge_intervention_family_elements(search_elements: list, components: dict) -> list:
+    intervention_text = (components or {}).get("intervention")
+    comparison_text = (components or {}).get("comparison")
+
+    candidates = _split_treatment_candidates(intervention_text)
+    if comparison_text and not _is_reference_like_comparison(comparison_text):
+        for candidate in _split_treatment_candidates(comparison_text):
+            if candidate not in candidates:
+                candidates.append(candidate)
+
+    if len(candidates) < 2:
+        return [dict(element) for element in search_elements]
+
+    merged = [dict(element) for element in search_elements]
+    matched_indices = []
+    for index, element in enumerate(merged):
+        if _is_intervention_element(element, intervention_text) or _is_comparison_element(element, comparison_text):
+            matched_indices.append(index)
+
+    if len(matched_indices) < 2:
+        return merged
+
+    anchor_index = next((index for index in matched_indices if merged[index].get("search_filter")), matched_indices[0])
+    anchor = dict(merged[anchor_index])
+
+    for index in matched_indices:
+        if index == anchor_index:
+            continue
+        other = dict(merged[index])
+        anchor["tiab"] = _merge_unique_terms(anchor.get("tiab", ""), other.get("tiab", ""))
+        anchor["mesh"] = _merge_unique_terms(anchor.get("mesh", ""), other.get("mesh", "")) or None
+        if not anchor.get("reason"):
+            anchor["reason"] = "Interventions regroupées dans un seul bloc OR."
+
+        other["search_filter"] = False
+        other["priority"] = None
+        other["reason"] = "Intervention regroupée avec les autres produits dans un seul bloc OR, puis retirée comme filtre séparé."
+        merged[index] = other
+
+    merged[anchor_index] = anchor
+    return merged
+
+
 def _sanitize_comparison_search_elements(search_elements: list, components: dict) -> list:
     intervention_text = (components or {}).get("intervention")
     comparison_text = (components or {}).get("comparison")
     if not comparison_text:
         return search_elements
 
-    sanitized = _merge_intervention_and_comparison_elements(search_elements, components)
+    sanitized = _merge_intervention_family_elements(search_elements, components)
+    sanitized = _merge_intervention_and_comparison_elements(sanitized, components)
     final_elements = []
     for element in sanitized:
         normalized = dict(element)

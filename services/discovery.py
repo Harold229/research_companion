@@ -2,6 +2,7 @@ from claude_helper import analyze_research_question
 from hybrid_reranker import rerank_articles_hybrid
 from platform_backends import pubmed_backend
 from reading_prioritization import prioritize_articles
+from services.librarian_strategy_adapter import get_librarian_strategy_analysis
 from services.query_builder import build_fallback_query_attempts
 from services.query_builder import build_query_package
 from services.query_builder import get_preferred_discovery_query
@@ -96,8 +97,15 @@ def run_topic_discovery(
     max_results: int = 50,
     time_filter: dict | None = None,
 ) -> dict:
-    result = analyze_research_question(question)
-    query_package = build_query_package(result)
+    librarian_analysis = get_librarian_strategy_analysis(question)
+
+    if librarian_analysis:
+        result = librarian_analysis.get("result") or {}
+        query_package = librarian_analysis.get("query_package") or build_query_package(result)
+    else:
+        result = analyze_research_question(question)
+        query_package = build_query_package(result)
+
     base_query = get_preferred_discovery_query(query_package)
     discovery = discover_articles(
         question=question,
@@ -112,4 +120,5 @@ def run_topic_discovery(
         "result": result,
         "query_package": query_package,
         "discovery": discovery,
+        "strategy_source": "librarian_strategy" if librarian_analysis else "legacy",
     }
