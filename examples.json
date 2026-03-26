@@ -1,7 +1,12 @@
 [
   {
     "id": "A",
-    "tags": ["explore", "no_framework", "no_geo", "pediatric"],
+    "tags": [
+      "explore",
+      "no_framework",
+      "no_geo",
+      "pediatric"
+    ],
     "question_fr": "est-ce qu'il y a des études sur l'hyperkaliémie chez les enfants ?",
     "intent": "explore",
     "example_json": {
@@ -11,7 +16,11 @@
       "research_question_fr": "Existe-t-il des études sur l'hyperkaliémie chez les enfants ?",
       "research_question_en": "Are there studies on hyperkalemia in children?",
       "research_question_comment": "Reformulation en question exploratoire académique.",
-      "geography": {"country": null, "region": null, "continent": null},
+      "geography": {
+        "country": null,
+        "region": null,
+        "continent": null
+      },
       "geography_tiab": null,
       "components": {
         "population": "Enfants",
@@ -43,7 +52,13 @@
   },
   {
     "id": "B",
-    "tags": ["structure", "PEO", "M-KAP", "geo_africa", "HCP"],
+    "tags": [
+      "structure",
+      "PEO",
+      "M-KAP",
+      "geo_africa",
+      "HCP"
+    ],
     "question_fr": "connaissance des médecins sur la prise en charge de l'hyperkaliémie au Bénin",
     "intent": "structure",
     "example_json": {
@@ -53,7 +68,11 @@
       "research_question_fr": "Dans quelle mesure les médecins généralistes connaissent-ils la prise en charge de l'hyperkaliémie au Bénin ?",
       "research_question_en": "To what extent do general practitioners know about the management of hyperkalemia in Benin?",
       "research_question_comment": "Précision du type de médecin et formulation académique.",
-      "geography": {"country": "Benin", "region": "West Africa", "continent": "Sub-Saharan Africa"},
+      "geography": {
+        "country": "Benin",
+        "region": "West Africa",
+        "continent": "Sub-Saharan Africa"
+      },
       "geography_tiab": "Benin OR \"West Africa\" OR \"Sub-Saharan Africa\"",
       "components": {
         "population": "Médecins généralistes",
@@ -101,7 +120,13 @@
   },
   {
     "id": "M",
-    "tags": ["explore", "no_framework", "no_geo", "anesthesia", "generic_outcome"],
+    "tags": [
+      "explore",
+      "no_framework",
+      "no_geo",
+      "anesthesia",
+      "generic_outcome"
+    ],
     "question_fr": "accidents d’anesthésie",
     "intent": "explore",
     "example_json": {
@@ -111,7 +136,11 @@
       "research_question_fr": "Existe-t-il des études sur les accidents d’anesthésie ?",
       "research_question_en": "Are there studies on anesthesia-related accidents?",
       "research_question_comment": "Reformulation exploratoire standard.",
-      "geography": {"country": null, "region": null, "continent": null},
+      "geography": {
+        "country": null,
+        "region": null,
+        "continent": null
+      },
       "geography_tiab": null,
       "components": {
         "population": null,
@@ -143,7 +172,13 @@
   },
   {
     "id": "C",
-    "tags": ["structure", "PICO", "M-PREV", "geo_africa", "pediatric"],
+    "tags": [
+      "structure",
+      "PICO",
+      "M-PREV",
+      "geo_africa",
+      "pediatric"
+    ],
     "question_fr": "prévalence du diabète chez les enfants au Mali",
     "intent": "structure",
     "example_json": {
@@ -153,7 +188,11 @@
       "research_question_fr": "Quelle est la prévalence du diabète chez les enfants au Mali ?",
       "research_question_en": "What is the prevalence of diabetes in children in Mali?",
       "research_question_comment": "Formulation épidémiologique standard.",
-      "geography": {"country": "Mali", "region": "West Africa", "continent": "Sub-Saharan Africa"},
+      "geography": {
+        "country": "Mali",
+        "region": "West Africa",
+        "continent": "Sub-Saharan Africa"
+      },
       "geography_tiab": "Mali OR \"West Africa\" OR \"Sub-Saharan Africa\"",
       "components": {
         "population": "Enfants",
@@ -201,7 +240,12 @@
   },
   {
     "id": "D",
-    "tags": ["structure", "PEO", "M-ADH", "geo_africa"],
+    "tags": [
+      "structure",
+      "PEO",
+      "M-ADH",
+      "geo_africa"
+    ],
     "question_fr": "adhérence au traitement antirétroviral chez les adolescents au Cameroun",
     "intent": "structure",
     "example_json": {
@@ -211,7 +255,11 @@
       "research_question_fr": "Quel est le niveau d'adhérence au traitement antirétroviral chez les adolescents au Cameroun ?",
       "research_question_en": "What is the level of adherence to antiretroviral treatment among adolescents in Cameroon?",
       "research_question_comment": "Précision de la mesure et formulation académique.",
-      "geography": {"country": "Cameroon", "region": "Central Africa", "continent": "Sub-Saharan Africa"},
+      "geography": {
+        "country": "Cameroon",
+        "region": "Central Africa",
+        "continent": "Sub-Saharan Africa"
+      },
       "geography_tiab": "Cameroon OR \"Central Africa\" OR \"Sub-Saharan Africa\"",
       "components": {
         "population": "Adolescents",
@@ -259,7 +307,12 @@
   },
   {
     "id": "E",
-    "tags": ["structure", "PICO", "M-RISK", "geo_africa"],
+    "tags": [
+      "structure",
+      "PICO",
+      "M-RISK",
+      "geo_africa"
+    ],
     "question_fr": "facteurs de risque de l'AVC chez les adultes hypertendus en Côte d'Ivoire",
     "intent": "structure",
     "example_json": {
@@ -269,7 +322,11 @@
       "research_question_fr": "Quels sont les facteurs de risque d'accident vasculaire cérébral chez les adultes hypertendus en Côte d'Ivoire ?",
       "research_question_en": "What are the risk factors for stroke in hypertensive adults in Côte d'Ivoire?",
       "research_question_comment": "Formulation épidémiologique précisant la population et l'outcome.",
-      "geography": {"country": "Cote d'Ivoire", "region": "West Africa", "continent": "Sub-Saharan Africa"},
+      "geography": {
+        "country": "Cote d'Ivoire",
+        "region": "West Africa",
+        "continent": "Sub-Saharan Africa"
+      },
       "geography_tiab": "\"Cote d'Ivoire\" OR \"Ivory Coast\" OR \"West Africa\" OR \"Sub-Saharan Africa\"",
       "components": {
         "population": "Adultes hypertendus",
@@ -317,7 +374,12 @@
   },
   {
     "id": "F",
-    "tags": ["structure", "PICO", "M-MORT", "geo_africa"],
+    "tags": [
+      "structure",
+      "PICO",
+      "M-MORT",
+      "geo_africa"
+    ],
     "question_fr": "mortalité néonatale par sepsis dans les hôpitaux du Sénégal",
     "intent": "structure",
     "example_json": {
@@ -327,7 +389,11 @@
       "research_question_fr": "Quelle est la mortalité néonatale liée au sepsis dans les hôpitaux du Sénégal ?",
       "research_question_en": "What is the neonatal mortality due to sepsis in hospitals in Senegal?",
       "research_question_comment": "Formulation épidémiologique standard.",
-      "geography": {"country": "Senegal", "region": "West Africa", "continent": "Sub-Saharan Africa"},
+      "geography": {
+        "country": "Senegal",
+        "region": "West Africa",
+        "continent": "Sub-Saharan Africa"
+      },
       "geography_tiab": "Senegal OR \"West Africa\" OR \"Sub-Saharan Africa\"",
       "components": {
         "population": "Nouveau-nés hospitalisés",
@@ -375,7 +441,13 @@
   },
   {
     "id": "G",
-    "tags": ["structure", "PICO", "M-THER", "comparison", "no_geo"],
+    "tags": [
+      "structure",
+      "PICO",
+      "M-THER",
+      "comparison",
+      "no_geo"
+    ],
     "question_fr": "efficacité de la metformine vs insuline dans le diabète gestationnel",
     "intent": "structure",
     "example_json": {
@@ -385,7 +457,11 @@
       "research_question_fr": "Chez les femmes atteintes de diabète gestationnel, la metformine est-elle aussi efficace que l'insuline pour le contrôle glycémique ?",
       "research_question_en": "In women with gestational diabetes, is metformin as effective as insulin for glycemic control?",
       "research_question_comment": "Précision de l'outcome et formulation PICO.",
-      "geography": {"country": null, "region": null, "continent": null},
+      "geography": {
+        "country": null,
+        "region": null,
+        "continent": null
+      },
       "geography_tiab": null,
       "components": {
         "population": "Femmes avec diabète gestationnel",
@@ -417,7 +493,12 @@
   },
   {
     "id": "H",
-    "tags": ["structure", "PEO", "M-PEER", "geo_africa"],
+    "tags": [
+      "structure",
+      "PEO",
+      "M-PEER",
+      "geo_africa"
+    ],
     "question_fr": "influence des pairs sur le tabagisme chez les lycéens au Togo",
     "intent": "structure",
     "example_json": {
@@ -427,7 +508,11 @@
       "research_question_fr": "Quelle est l'influence des pairs sur le tabagisme chez les lycéens au Togo ?",
       "research_question_en": "What is the influence of peers on smoking among high school students in Togo?",
       "research_question_comment": "Formulation académique standard.",
-      "geography": {"country": "Togo", "region": "West Africa", "continent": "Sub-Saharan Africa"},
+      "geography": {
+        "country": "Togo",
+        "region": "West Africa",
+        "continent": "Sub-Saharan Africa"
+      },
       "geography_tiab": "Togo OR \"West Africa\" OR \"Sub-Saharan Africa\"",
       "components": {
         "population": "Lycéens",
@@ -475,7 +560,13 @@
   },
   {
     "id": "I",
-    "tags": ["structure", "SPIDER", "qualitative", "geo_africa", "no_mesh_outcome"],
+    "tags": [
+      "structure",
+      "SPIDER",
+      "qualitative",
+      "geo_africa",
+      "no_mesh_outcome"
+    ],
     "question_fr": "vécu des femmes vivant avec le VIH pendant la grossesse au Rwanda",
     "intent": "structure",
     "example_json": {
@@ -485,7 +576,11 @@
       "research_question_fr": "Comment les femmes vivant avec le VIH vivent-elles leur grossesse au Rwanda ?",
       "research_question_en": "How do women living with HIV experience pregnancy in Rwanda?",
       "research_question_comment": "Formulation qualitative SPIDER.",
-      "geography": {"country": "Rwanda", "region": "East Africa", "continent": "Sub-Saharan Africa"},
+      "geography": {
+        "country": "Rwanda",
+        "region": "East Africa",
+        "continent": "Sub-Saharan Africa"
+      },
       "geography_tiab": "Rwanda OR \"East Africa\" OR \"Sub-Saharan Africa\"",
       "components": {
         "population": "Femmes enceintes vivant avec le VIH",
@@ -533,7 +628,13 @@
   },
   {
     "id": "J",
-    "tags": ["structure", "PICO", "M-PREV", "no_mesh_intervention", "geo_africa"],
+    "tags": [
+      "structure",
+      "PICO",
+      "M-PREV",
+      "no_mesh_intervention",
+      "geo_africa"
+    ],
     "question_fr": "résistance aux antibiotiques chez les enfants hospitalisés en Éthiopie",
     "intent": "structure",
     "example_json": {
@@ -543,7 +644,11 @@
       "research_question_fr": "Quelle est la prévalence de la résistance aux antibiotiques chez les enfants hospitalisés en Éthiopie ?",
       "research_question_en": "What is the prevalence of antibiotic resistance in hospitalized children in Ethiopia?",
       "research_question_comment": "Précision de la mesure épidémiologique.",
-      "geography": {"country": "Ethiopia", "region": "East Africa", "continent": "Sub-Saharan Africa"},
+      "geography": {
+        "country": "Ethiopia",
+        "region": "East Africa",
+        "continent": "Sub-Saharan Africa"
+      },
       "geography_tiab": "Ethiopia OR \"East Africa\" OR \"Sub-Saharan Africa\"",
       "components": {
         "population": "Enfants hospitalisés",
@@ -591,7 +696,11 @@
   },
   {
     "id": "K",
-    "tags": ["explore", "geo_africa", "no_framework"],
+    "tags": [
+      "explore",
+      "geo_africa",
+      "no_framework"
+    ],
     "question_fr": "études sur le paludisme au Burkina Faso",
     "intent": "explore",
     "example_json": {
@@ -601,7 +710,11 @@
       "research_question_fr": "Existe-t-il des études sur le paludisme au Burkina Faso ?",
       "research_question_en": "Are there studies on malaria in Burkina Faso?",
       "research_question_comment": "Reformulation exploratoire standard.",
-      "geography": {"country": "Burkina Faso", "region": "West Africa", "continent": "Sub-Saharan Africa"},
+      "geography": {
+        "country": "Burkina Faso",
+        "region": "West Africa",
+        "continent": "Sub-Saharan Africa"
+      },
       "geography_tiab": "\"Burkina Faso\" OR \"West Africa\" OR \"Sub-Saharan Africa\"",
       "components": {
         "population": "Population générale",
@@ -633,7 +746,13 @@
   },
   {
     "id": "L",
-    "tags": ["structure", "PICO", "M-EDU", "geo_africa", "intervention"],
+    "tags": [
+      "structure",
+      "PICO",
+      "M-EDU",
+      "geo_africa",
+      "intervention"
+    ],
     "question_fr": "impact de l'éducation thérapeutique sur le contrôle du diabète chez les adultes au Niger",
     "intent": "structure",
     "example_json": {
@@ -643,7 +762,11 @@
       "research_question_fr": "Chez les adultes diabétiques au Niger, l'éducation thérapeutique améliore-t-elle le contrôle glycémique ?",
       "research_question_en": "In diabetic adults in Niger, does therapeutic education improve glycemic control?",
       "research_question_comment": "Formulation PICO avec intervention et outcome précisés.",
-      "geography": {"country": "Niger", "region": "West Africa", "continent": "Sub-Saharan Africa"},
+      "geography": {
+        "country": "Niger",
+        "region": "West Africa",
+        "continent": "Sub-Saharan Africa"
+      },
       "geography_tiab": "Niger OR \"West Africa\" OR \"Sub-Saharan Africa\"",
       "components": {
         "population": "Adultes diabétiques",
@@ -684,6 +807,67 @@
           "search_filter": true,
           "priority": 2,
           "reason": "Géographie mentionnée, utile pour affiner"
+        }
+      ],
+      "research_level": 2
+    }
+  },
+  {
+    "id": "N",
+    "tags": [
+      "structure",
+      "PEO",
+      "M-KAP",
+      "HCP",
+      "no_geo",
+      "conjugated_verb"
+    ],
+    "question_fr": "est-ce que les infirmiers savent bien gérer les convulsions du nourrisson",
+    "intent": "structure",
+    "example_json": {
+      "intent": "structure",
+      "framework": "PEO",
+      "explanation": "Le verbe « savent » indique une question de connaissance/pratique → règle A : PEO obligatoire. Même en formulation indirecte ou conjuguée, le sens reste KAP.",
+      "research_question_fr": "Dans quelle mesure les infirmiers maîtrisent-ils la prise en charge des convulsions du nourrisson ?",
+      "research_question_en": "To what extent do nurses master the management of infant seizures?",
+      "research_question_comment": "Formulation PEO académique précisant la population professionnelle et le sujet clinique.",
+      "geography": {
+        "country": null,
+        "region": null,
+        "continent": null
+      },
+      "geography_tiab": null,
+      "components": {
+        "population": "Infirmiers",
+        "intervention": null,
+        "comparison": null,
+        "outcome": "Connaissance et pratique de la gestion des convulsions",
+        "exposure": "Convulsions du nourrisson"
+      },
+      "search_elements": [
+        {
+          "label": "Population",
+          "tiab": "nurse OR nurses OR nursing staff OR registered nurse",
+          "mesh": "\"Nurses\"[MeSH]",
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Population professionnelle spécifique"
+        },
+        {
+          "label": "Condition",
+          "tiab": "convulsion OR infant seizure OR neonatal seizure OR seizure",
+          "mesh": null,
+          "search_filter": true,
+          "priority": 1,
+          "reason": "Condition clinique centrale"
+        },
+        {
+          "label": "Connaissance / KAP",
+          "tiab": "attitudes OR competence OR knowledge OR practice OR survey",
+          "mesh": "\"Health Knowledge, Attitudes, Practice\"[MeSH] OR \"Clinical Competence\"[MeSH] OR \"Surveys and Questionnaires\"[MeSH]",
+          "search_filter": false,
+          "priority": null,
+          "reason": "Concept KAP générique, un article pertinent peut ne pas mentionner explicitement knowledge ou practice"
         }
       ],
       "research_level": 2

@@ -1273,9 +1273,21 @@ def render_analysis(entry: dict) -> None:
 
         if excluded:
             with st.expander("Pourquoi certains concepts ne sont pas utilisés comme filtres ?", expanded=False):
+                has_merged_intervention = False
                 for ex in excluded:
+                    reason = ex["reason"]
+                    is_merged = "regroupé" in reason.lower() or "absorbé" in reason.lower()
+                    if is_merged:
+                        has_merged_intervention = True
                     st.caption(
-                        f'Le concept "{ex["label"]}" n’est pas utilisé comme filtre : {ex["reason"]}'
+                        f’Le concept "{ex["label"]}" n\’est pas utilisé comme filtre : {reason}’
+                    )
+                if has_merged_intervention:
+                    st.info(
+                        "Certains synonymes du comparateur ont été intégrés dans le bloc intervention "
+                        "pour élargir la couverture de la recherche. C’est une pratique courante en revue "
+                        "systématique : regrouper l’intervention et le comparateur dans un seul filtre OR "
+                        "évite de perdre des articles qui mentionnent l’un ou l’autre."
                     )
 
         render_query_expansion(entry, result, strategy, bramer, time_filter)

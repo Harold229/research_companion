@@ -87,12 +87,10 @@ def build_search_strategy(json_result: dict) -> dict:
     priority_2 = [e for e in active if e.get("priority") == 2]
     role_map = _build_role_map(json_result)
 
-    wide_elements = [
-        e for e in priority_1
-        if _should_keep_in_wide(e, role_map) and not _is_outcome_like_in_wide(e, json_result)
-    ]
-    if not wide_elements:
-        wide_elements = priority_1
+    # SPEC rule: wide = tous les search_elements actifs avec priority = 1.
+    # Pas de filtre de rôle supplémentaire — la priorité assignée par le LLM
+    # est la seule source de vérité pour la stratégie large.
+    wide_elements = list(priority_1)
     narrow_elements = priority_1 + priority_2
 
     return {
