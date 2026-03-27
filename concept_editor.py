@@ -54,7 +54,7 @@ def apply_editor_changes(base_elements: list, edited_rows: list) -> list:
         if not updated.get("tiab") and not updated.get("mesh"):
             updated["search_filter"] = False
             updated["priority"] = None
-            updated["reason"] = "Aucun terme conservé dans l’éditeur."
+            updated["reason"] = "Aucun terme conservé dans l'éditeur."
         elif state == "large":
             updated["search_filter"] = True
             updated["priority"] = 1
@@ -66,7 +66,7 @@ def apply_editor_changes(base_elements: list, edited_rows: list) -> list:
         else:
             updated["search_filter"] = False
             updated["priority"] = None
-            updated["reason"] = updated.get("reason") or "Concept désactivé dans l’éditeur."
+            updated["reason"] = updated.get("reason") or "Concept désactivé dans l'éditeur."
 
         updated_elements.append(updated)
 

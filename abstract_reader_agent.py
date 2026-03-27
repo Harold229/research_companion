@@ -88,7 +88,7 @@ Retourne uniquement un JSON valide de cette forme :
     {{
       "article_id": "A1",
       "priority": "Très pertinent",
-      "reason": "Répond directement à l’objectif de lecture et correspond à la population étudiée."
+      "reason": "Répond directement à l'objectif de lecture et correspond à la population étudiée."
     }}
   ]
 }}

@@ -130,11 +130,11 @@ def rerank_articles_hybrid(articles: list, subject_text: str, focus_text: str = 
         if title_matches:
             reasons.append(f"concepts visibles dans le titre : {', '.join(title_matches[:4])}")
         elif abstract_matches:
-            reasons.append(f"concepts surtout portés par l’abstract : {', '.join(abstract_matches[:4])}")
+            reasons.append(f"concepts surtout portés par l'abstract : {', '.join(abstract_matches[:4])}")
         if semantic_similarity >= 0.34:
             reasons.append("abstract proche du sujet complet")
         if focus_overlap >= 0.4 and focus_tokens:
-            reasons.append("correspond aussi à l’angle de lecture demandé")
+            reasons.append("correspond aussi à l'angle de lecture demandé")
         if penalty >= 0.1:
             reasons.append("reste plus général que le sujet exact")
 

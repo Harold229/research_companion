@@ -419,7 +419,7 @@ def _merge_intervention_and_comparison_elements(search_elements: list, component
     comparison_element["search_filter"] = False
     comparison_element["priority"] = None
     comparison_element["reason"] = (
-        "Produit comparé absorbé dans le même bloc que l’intervention, puis retiré comme filtre séparé."
+        "Produit comparé absorbé dans le même bloc que l'intervention, puis retiré comme filtre séparé."
     )
 
     merged[intervention_index] = intervention_element

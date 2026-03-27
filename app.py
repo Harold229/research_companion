@@ -163,7 +163,7 @@ def render_suggested_query(bramer: dict) -> None:
 
     if is_identical:
         st.caption(
-            "Aucun filtre supplémentaire pertinent n’a été identifié. "
+            "Aucun filtre supplémentaire pertinent n'a été identifié. "
             "La version large suffit pour démarrer."
         )
     else:
@@ -187,7 +187,7 @@ def render_what_i_understood(
     visible_explanation: str,
     project_title: str = "",
 ) -> None:
-    st.subheader("Ce que j’ai compris")
+    st.subheader("Ce que j'ai compris")
     if project_title:
         st.caption(f"Projet : {project_title}")
 
@@ -260,7 +260,7 @@ def render_concept_editor(entry: dict) -> None:
     st.caption("Modifiez les concepts avant de relancer votre lecture des résultats. Les requêtes PubMed affichées plus bas se mettront à jour en conséquence.")
 
     if not elements:
-        st.caption("Aucun concept éditable n’est disponible pour cette stratégie.")
+        st.caption("Aucun concept éditable n'est disponible pour cette stratégie.")
         return
 
     for index, element in enumerate(elements):
@@ -342,21 +342,21 @@ def render_query_expansion(entry: dict, result: dict, strategy: dict, bramer: di
     st.divider()
     st.subheader("Expansion guidée de la requête")
     st.caption(
-        "À partir des premiers articles trouvés, l’app peut proposer quelques termes réellement utilisés dans la littérature pour enrichir une version optionnelle de la requête."
+        "À partir des premiers articles trouvés, l'app peut proposer quelques termes réellement utilisés dans la littérature pour enrichir une version optionnelle de la requête."
     )
     if time_filter.get("enabled") and time_filter.get("valid"):
         st.caption(f"La lecture initiale des articles respecte actuellement la période : {time_filter.get('label')}.")
 
-    if st.button("Proposer des termes d’expansion", key=f"query_expansion_run_{entry.get('id')}"):
+    if st.button("Proposer des termes d'expansion", key=f"query_expansion_run_{entry.get('id')}"):
         cache_key = _get_articles_cache_key(entry, filtered_query, scope="expansion")
         articles = st.session_state.get(cache_key)
         if articles is None:
-            with st.spinner("Récupération d’un noyau initial d’articles..."):
+            with st.spinner("Récupération d'un noyau initial d'articles..."):
                 articles = fetch_articles(filtered_query, max_results=12)
             st.session_state[cache_key] = articles
 
         if not articles:
-            st.caption("Aucun article initial n’a pu être récupéré pour proposer une expansion.")
+            st.caption("Aucun article initial n'a pu être récupéré pour proposer une expansion.")
         else:
             shortlist = build_expansion_shortlist(articles)
             try:
@@ -369,7 +369,7 @@ def render_query_expansion(entry: dict, result: dict, strategy: dict, bramer: di
                     "filtered_query": filtered_query,
                 }
             except Exception:
-                st.caption("La proposition d’expansion est indisponible pour le moment.")
+                st.caption("La proposition d'expansion est indisponible pour le moment.")
 
     proposals_state = st.session_state.get(proposals_key)
     if not proposals_state:
@@ -377,7 +377,7 @@ def render_query_expansion(entry: dict, result: dict, strategy: dict, bramer: di
 
     proposals = proposals_state.get("proposals", [])
     if not proposals:
-        st.caption("Aucun terme d’expansion prudent n’a été proposé à partir de ce premier noyau d’articles.")
+        st.caption("Aucun terme d'expansion prudent n'a été proposé à partir de ce premier noyau d'articles.")
         return
 
     st.caption(
@@ -508,7 +508,7 @@ def _get_time_filter_state(entry: dict) -> dict:
     elif start_year:
         label = f"Depuis {start_year}"
     elif end_year:
-        label = f"Jusqu’à {end_year}"
+        label = f"Jusqu'à {end_year}"
     else:
         label = ""
 
@@ -604,7 +604,7 @@ def render_zotero_connection(project) -> None:
             try:
                 save_project_zotero_target(project["id"], zotero_mapping)
             except Exception:
-                st.caption("La collection cible Zotero n’a pas pu être enregistrée dans le projet.")
+                st.caption("La collection cible Zotero n'a pas pu être enregistrée dans le projet.")
 
 
 def render_zotero_ready_section(entry: dict, prioritized: dict, result: dict = None) -> None:
@@ -625,7 +625,7 @@ def render_zotero_ready_section(entry: dict, prioritized: dict, result: dict = N
     st.subheader("Articles retenus et argumentaire")
     st.caption("Sortie structurée réutilisable plus tard pour des tags, notes et collections Zotero.")
 
-    with st.expander("Voir l’export Zotero-ready", expanded=False):
+    with st.expander("Voir l'export Zotero-ready", expanded=False):
         for article in export_data.get("articles", [])[:5]:
             st.markdown(f"**{article.get('title') or 'Article sans titre'}**")
             st.caption(
@@ -635,7 +635,7 @@ def render_zotero_ready_section(entry: dict, prioritized: dict, result: dict = N
             st.caption(f"Tags suggérés : {', '.join(article.get('tags', [])) or 'Aucun tag'}")
             with st.expander("Pourquoi cet article ?", expanded=False):
                 st.caption(f"Justification : {article.get('justification', 'Non précisée')}")
-                st.caption(f"Note d’argumentaire : {article.get('argument_note', 'Non précisée')}")
+                st.caption(f"Note d'argumentaire : {article.get('argument_note', 'Non précisée')}")
 
         st.download_button(
             "Télécharger en JSON",
@@ -656,7 +656,7 @@ def render_zotero_ready_section(entry: dict, prioritized: dict, result: dict = N
         try:
             save_project_articles(entry["project_id"], export_data)
         except Exception:
-            st.caption("Les articles retenus n’ont pas pu être enregistrés dans le projet pour le moment.")
+            st.caption("Les articles retenus n'ont pas pu être enregistrés dans le projet pour le moment.")
 
 
 def _compute_prioritized_results(
@@ -694,7 +694,7 @@ def _compute_prioritized_results(
 
 def render_reading_focus(entry: dict, result: dict, bramer: dict) -> None:
     st.divider()
-    st.subheader("Articles à regarder d’abord")
+    st.subheader("Articles à regarder d'abord")
 
     goal_key = f"reading_focus_goal_{entry.get('id')}"
     suggestion_key = f"reading_focus_suggestion_{entry.get('id')}"
@@ -703,9 +703,9 @@ def render_reading_focus(entry: dict, result: dict, bramer: dict) -> None:
 
     suggestions = {
         "geography": "Je cherche surtout les études africaines",
-        "factors": "Je veux d’abord les articles sur les facteurs associés",
-        "validity": "Je veux d’abord les validations méthodologiques",
-        "tool": "Je veux surtout les études qui comparent l’outil à une mesure de référence",
+        "factors": "Je veux d'abord les articles sur les facteurs associés",
+        "validity": "Je veux d'abord les validations méthodologiques",
+        "tool": "Je veux surtout les études qui comparent l'outil à une mesure de référence",
     }
     mode_key = f"time_filter_mode_{entry.get('id')}"
     start_key = f"time_filter_start_{entry.get('id')}"
@@ -724,18 +724,18 @@ def render_reading_focus(entry: dict, result: dict, bramer: dict) -> None:
         prioritized = _compute_prioritized_results(entry, result, bramer, focus_key, custom_goal, time_filter)
         st.session_state[f"prioritized_articles_{entry.get('id')}"] = prioritized
     if not prioritized:
-        st.caption("Cette étape n’affine pas la stratégie de recherche : elle aide seulement à savoir quels articles regarder d’abord.")
+        st.caption("Cette étape n'affine pas la stratégie de recherche : elle aide seulement à savoir quels articles regarder d'abord.")
         return
 
     if not prioritized.get("articles"):
         fallback = prioritized.get("fallback") or {}
         if fallback.get("used"):
             st.caption(
-                "Aucun article n’a été trouvé avec la version stricte. "
-                f"Même après relâchement de {', '.join(fallback.get('relaxed_labels', []))}, aucun article plausible n’a pu être récupéré."
+                "Aucun article n'a été trouvé avec la version stricte. "
+                f"Même après relâchement de {', '.join(fallback.get('relaxed_labels', []))}, aucun article plausible n'a pu être récupéré."
             )
         else:
-            st.caption("Aucun article n’a pu être récupéré pour cette priorisation. La stratégie de recherche n’a pas été modifiée.")
+            st.caption("Aucun article n'a pu être récupéré pour cette priorisation. La stratégie de recherche n'a pas été modifiée.")
         return
 
     active_time_filter = prioritized.get("time_filter") or _get_time_filter_state(entry)
@@ -754,15 +754,15 @@ def render_reading_focus(entry: dict, result: dict, bramer: dict) -> None:
     fallback = prioritized.get("fallback") or {}
     if fallback.get("used"):
         st.caption(
-            "Aucun article n’a été trouvé avec la version stricte. "
-            f"Les articles ci-dessous proviennent d’une version relâchée en retirant : {', '.join(fallback.get('relaxed_labels', []))}."
+            "Aucun article n'a été trouvé avec la version stricte. "
+            f"Les articles ci-dessous proviennent d'une version relâchée en retirant : {', '.join(fallback.get('relaxed_labels', []))}."
         )
 
     st.link_button("Ouvrir ces résultats dans PubMed", f'https://pubmed.ncbi.nlm.nih.gov/?term={current_query}')
 
     with st.expander("Affiner cette priorisation", expanded=False):
-        st.write("Qu’aimeriez-vous repérer en priorité dans ces résultats ?")
-        st.caption("Suggestions rapides, si vous voulez partir d’un exemple :")
+        st.write("Qu'aimeriez-vous repérer en priorité dans ces résultats ?")
+        st.caption("Suggestions rapides, si vous voulez partir d'un exemple :")
         suggestion_cols = st.columns(len(suggestions))
         for index, (suggested_focus_key, suggestion_text) in enumerate(suggestions.items()):
             if suggestion_cols[index].button(FOCUS_OPTIONS[suggested_focus_key], key=f"{suggestion_key}_{suggested_focus_key}"):
@@ -773,7 +773,7 @@ def render_reading_focus(entry: dict, result: dict, bramer: dict) -> None:
             "Votre objectif de lecture",
             placeholder=(
                 "Ex: Je veux surtout les études qui comparent la montre à une mesure de référence ; "
-                "Je cherche les études africaines ; Je veux d’abord les validations méthodologiques..."
+                "Je cherche les études africaines ; Je veux d'abord les validations méthodologiques..."
             ),
             height=90,
             key=goal_key,
@@ -827,13 +827,13 @@ def render_reading_focus(entry: dict, result: dict, bramer: dict) -> None:
             st.rerun()
 
     st.caption(
-        "Cette priorisation est une aide à la lecture. Elle repose d’abord sur le titre et l’abstract, et ne remplace pas une appréciation critique complète des articles."
+        "Cette priorisation est une aide à la lecture. Elle repose d'abord sur le titre et l'abstract, et ne remplace pas une appréciation critique complète des articles."
     )
     reranking = prioritized.get("reranking") or {}
     if reranking.get("signals_used"):
         with st.expander("Détails méthodologiques", expanded=False):
             st.caption(
-                "Les résultats ont d’abord été rerankés pour rapprocher les articles les plus centraux du sujet exact avant la priorisation finale : "
+                "Les résultats ont d'abord été rerankés pour rapprocher les articles les plus centraux du sujet exact avant la priorisation finale : "
                 + ", ".join(reranking.get("signals_used", []))
                 + "."
             )
@@ -848,7 +848,7 @@ def render_reading_focus(entry: dict, result: dict, bramer: dict) -> None:
         st.caption(
             f"Vous pouvez aussi faire lire une shortlist de {len(shortlist)} articles à un agent pour affiner cette priorisation."
         )
-        if st.button("Faire lire la shortlist par l’agent", key=f"reading_focus_agent_{entry.get('id')}"):
+        if st.button("Faire lire la shortlist par l'agent", key=f"reading_focus_agent_{entry.get('id')}"):
             try:
                 with st.spinner("Lecture rapide des titres et abstracts de la shortlist..."):
                     assessment = assess_shortlist_with_agent(
@@ -859,10 +859,10 @@ def render_reading_focus(entry: dict, result: dict, bramer: dict) -> None:
                 prioritized = apply_agent_assessment(prioritized, shortlist, assessment)
                 st.session_state[f"prioritized_articles_{entry.get('id')}"] = prioritized
             except Exception:
-                st.caption("L’agent lecteur d’abstracts est indisponible pour le moment. La priorisation simple reste disponible.")
+                st.caption("L'agent lecteur d'abstracts est indisponible pour le moment. La priorisation simple reste disponible.")
 
     if prioritized.get("agent_enabled"):
-        st.caption("Classement affiné par un agent à partir du titre, de l’abstract et de quelques métadonnées.")
+        st.caption("Classement affiné par un agent à partir du titre, de l'abstract et de quelques métadonnées.")
 
     article_feedback_store = st.session_state.setdefault(article_feedback_key, {})
 
@@ -938,7 +938,7 @@ def render_reading_focus(entry: dict, result: dict, bramer: dict) -> None:
         related_cache_key = f"related_articles_{entry.get('id')}_{central_article.get('pmid')}_{hash(related_query)}"
         related_articles = st.session_state.get(related_cache_key)
         if related_articles is None:
-            with st.spinner("Recherche d’articles connexes..."):
+            with st.spinner("Recherche d'articles connexes..."):
                 related_articles = fetch_articles(related_query, max_results=12) if related_query else []
             related_articles = [
                 article for article in related_articles
@@ -971,7 +971,7 @@ def render_reading_focus(entry: dict, result: dict, bramer: dict) -> None:
                 if meta:
                     st.caption(meta)
         else:
-            st.caption("Aucun article connexe suffisamment proche n’a pu être proposé à partir de cet article.")
+            st.caption("Aucun article connexe suffisamment proche n'a pu être proposé à partir de cet article.")
 
         st.divider()
         st.subheader("Cet article cite aussi")
@@ -1018,7 +1018,7 @@ def render_reading_focus(entry: dict, result: dict, bramer: dict) -> None:
                 with st.expander("Pourquoi cette référence ?", expanded=False):
                     st.caption(", ".join(article.get("hybrid_reasons", [])[:2]) or "Référence proche du sujet.")
         else:
-            st.caption("Les références citées n’étaient pas accessibles pour cet article central dans les données récupérables ici.")
+            st.caption("Les références citées n'étaient pas accessibles pour cet article central dans les données récupérables ici.")
             st.caption("Pour continuer, vous pouvez utiliser les articles connexes ci-dessus ou relancer une recherche proche de cet article dans PubMed.")
             if related_query:
                 st.link_button(
@@ -1091,12 +1091,12 @@ def render_fake_paywall(entry: dict) -> None:
     st.warning("Le pack complet est actuellement proposé comme fonctionnalité premium en test.")
     st.write(
         "Le pack complet fournit une version claire, structurée et réutilisable de votre stratégie de recherche, "
-        "pour retrouver votre travail plus tard, l’affiner plus facilement et éviter de repartir de zéro."
+        "pour retrouver votre travail plus tard, l'affiner plus facilement et éviter de repartir de zéro."
     )
 
     if st.button("Je veux débloquer cette fonctionnalité", key=f"paywall_unlock_{entry_id}"):
         send_paywall_event(build_paywall_payload(entry, "paywall_click_unlock"))
-        st.caption("Le paiement n’est pas encore ouvert. Vous pouvez tout de même nous indiquer votre intérêt.")
+        st.caption("Le paiement n'est pas encore ouvert. Vous pouvez tout de même nous indiquer votre intérêt.")
 
     if st.button("Je suis intéressé", key=f"paywall_interest_{entry_id}"):
         send_paywall_event(build_paywall_payload(entry, "paywall_click_interest"))
@@ -1151,13 +1151,13 @@ def render_fake_paywall(entry: dict) -> None:
 
     if st.session_state.get(refusal_open_key):
         refusal_reason = st.selectbox(
-            "Qu’est-ce qui vous freine le plus ?",
+            "Qu'est-ce qui vous freine le plus ?",
             options=[
                 "",
-                "Je veux d’abord tester davantage",
-                "Ce n’est pas encore assez clair pour moi",
+                "Je veux d'abord tester davantage",
+                "Ce n'est pas encore assez clair pour moi",
                 "Le prix me semble trop élevé",
-                "Je n’en ai pas besoin pour l’instant",
+                "Je n'en ai pas besoin pour l'instant",
             ],
             format_func=lambda value: "Choisir une réponse (facultatif)" if value == "" else value,
             key=f"paywall_refusal_reason_{entry_id}",
@@ -1251,9 +1251,9 @@ def render_analysis(entry: dict) -> None:
 
         if is_identical:
             st.caption(
-                "Aucun filtre supplémentaire pertinent n’a été identifié. "
+                "Aucun filtre supplémentaire pertinent n'a été identifié. "
                 "Vous pouvez affiner en précisant un pays, un contexte, "
-                "une population ou un cadre d’étude."
+                "une population ou un cadre d'étude."
             )
         else:
             st.markdown("---")
@@ -1263,7 +1263,7 @@ def render_analysis(entry: dict) -> None:
                 if e not in large["elements_used"]
             ]
             added_text = (
-                f"L’élément{'s suivants ont été ajoutés' if len(added) > 1 else ' suivant a été ajouté'} "
+                f"L'élément{'s suivants ont été ajoutés' if len(added) > 1 else ' suivant a été ajouté'} "
                 f"pour restreindre les résultats : {', '.join(added)}."
             )
 
@@ -1280,14 +1280,14 @@ def render_analysis(entry: dict) -> None:
                     if is_merged:
                         has_merged_intervention = True
                     st.caption(
-                        f’Le concept "{ex["label"]}" n\’est pas utilisé comme filtre : {reason}’
+                        f'Le concept "{ex["label"]}" n\'est pas utilisé comme filtre : {reason}'
                     )
                 if has_merged_intervention:
                     st.info(
                         "Certains synonymes du comparateur ont été intégrés dans le bloc intervention "
-                        "pour élargir la couverture de la recherche. C’est une pratique courante en revue "
-                        "systématique : regrouper l’intervention et le comparateur dans un seul filtre OR "
-                        "évite de perdre des articles qui mentionnent l’un ou l’autre."
+                        "pour élargir la couverture de la recherche. C'est une pratique courante en revue "
+                        "systématique : regrouper l'intervention et le comparateur dans un seul filtre OR "
+                        "évite de perdre des articles qui mentionnent l'un ou l'autre."
                     )
 
         render_query_expansion(entry, result, strategy, bramer, time_filter)
@@ -1296,7 +1296,7 @@ def render_analysis(entry: dict) -> None:
             if visible_explanation:
                 st.caption(visible_explanation)
             st.caption(
-                "La stratégie commence large, puis ajoute seulement les filtres jugés réellement utiles pour éviter d’exclure trop tôt des articles pertinents."
+                "La stratégie commence large, puis ajoute seulement les filtres jugés réellement utiles pour éviter d'exclure trop tôt des articles pertinents."
             )
 
     geography = result.get("geography") or {}
@@ -1331,7 +1331,7 @@ def render_analysis(entry: dict) -> None:
 
     st.divider()
     st.subheader("Retour rapide")
-    st.write("Avant de poursuivre, 30 secondes pour nous aider à améliorer l’outil.")
+    st.write("Avant de poursuivre, 30 secondes pour nous aider à améliorer l'outil.")
 
     rating = st.slider(
         "Cet outil vous a-t-il été utile ?",
@@ -1342,8 +1342,8 @@ def render_analysis(entry: dict) -> None:
     )
 
     feedback_comment = st.text_area(
-        "Qu’est-ce qui a manqué ou prêté à confusion ?",
-        placeholder="Ex: Je n’ai pas compris comment l’analyse fonctionnait...",
+        "Qu'est-ce qui a manqué ou prêté à confusion ?",
+        placeholder="Ex: Je n'ai pas compris comment l'analyse fonctionnait...",
         height=100,
         key=f"feedback_comment_{entry.get('id')}",
     )
@@ -1359,9 +1359,9 @@ def render_analysis(entry: dict) -> None:
                 rating=rating,
                 comment=feedback_comment,
             )
-            st.success("Merci. Votre retour nous aide à améliorer l’outil.")
+            st.success("Merci. Votre retour nous aide à améliorer l'outil.")
         except Exception:
-            st.caption("Le feedback est indisponible pour le moment. L’application reste utilisable.")
+            st.caption("Le feedback est indisponible pour le moment. L'application reste utilisable.")
 
     st.divider()
     st.subheader("Actions finales")
@@ -1381,7 +1381,7 @@ def render_analysis(entry: dict) -> None:
     if time_filter.get("enabled") and time_filter.get("valid"):
         st.caption(f"Filtre temporel actuellement reflété dans le pack : {time_filter.get('label')}.")
     preview = get_pack_preview(pack)
-    with st.expander("Voir l’aperçu du pack", expanded=False):
+    with st.expander("Voir l'aperçu du pack", expanded=False):
         st.text_area(
             "Aperçu du pack",
             value=preview,
@@ -1389,7 +1389,7 @@ def render_analysis(entry: dict) -> None:
             key=f"pack_preview_{entry.get('id')}",
         )
         st.download_button(
-            "Télécharger l’aperçu du pack",
+            "Télécharger l'aperçu du pack",
             data=preview,
             file_name="search_strategy_pack_preview.md",
             mime="text/markdown",
@@ -1429,9 +1429,9 @@ with st.sidebar:
                     st.session_state["active_project_id"] = project.get("id")
                     st.success("Projet créé.")
                 except Exception:
-                    st.caption("Le projet n’a pas pu être créé pour le moment.")
+                    st.caption("Le projet n'a pas pu être créé pour le moment.")
             else:
-                st.caption("Saisissez d’abord un titre de projet.")
+                st.caption("Saisissez d'abord un titre de projet.")
 
     active_project = get_project_by_id(load_projects(), st.session_state.get("active_project_id", ""))
     with st.expander("Zotero", expanded=False):
@@ -1508,10 +1508,10 @@ if run_analysis:
                 st.session_state["current_analysis"] = entry
                 if initial_discovery.get("prioritized"):
                     st.session_state[f"prioritized_articles_{entry.get('id')}"] = initial_discovery["prioritized"]
-                st.caption("Le projet n’a pas pu être mis à jour, mais l’analyse reste disponible.")
+                st.caption("Le projet n'a pas pu être mis à jour, mais l'analyse reste disponible.")
 
         except Exception:
-            st.error("L’analyse est temporairement indisponible. Veuillez réessayer plus tard.")
+            st.error("L'analyse est temporairement indisponible. Veuillez réessayer plus tard.")
     else:
         st.warning("Veuillez décrire votre sujet de recherche.")
 

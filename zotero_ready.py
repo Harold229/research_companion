@@ -48,7 +48,7 @@ def _build_tags(article: dict, prioritized: dict, result: dict) -> list:
 
 
 def _build_argument_note(article: dict, prioritized: dict) -> str:
-    focus_label = _clean(prioritized.get("focus_label"), "l’objectif de lecture")
+    focus_label = _clean(prioritized.get("focus_label"), "l'objectif de lecture")
     reasons = article.get("reasons") or []
     primary_reason = _clean(reasons[0]) if reasons else "Semble utile pour le sujet, mais demande une vérification plus détaillée."
     priority = _clean(article.get("priority"), "À vérifier")
@@ -123,7 +123,7 @@ def build_zotero_ready_markdown(export_data: dict) -> str:
             f"- DOI : {_clean(article.get('doi'), 'Non précisé')}",
             f"- Justification : {_clean(article.get('justification'), 'Non précisée')}",
             f"- Tags suggérés : {', '.join(article.get('tags', [])) or 'Aucun tag'}",
-            f"- Note d’argumentaire : {_clean(article.get('argument_note'), 'Non précisée')}",
+            f"- Note d'argumentaire : {_clean(article.get('argument_note'), 'Non précisée')}",
             "",
         ])
 

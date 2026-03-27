@@ -119,13 +119,13 @@ def _format_methodology_summary(
         (
             f"- La stratégie a été construite autour des concepts essentiels suivants : {', '.join(wide_labels)}."
             if wide_labels else
-            "- Aucun concept central n’a été explicitement retenu dans la stratégie."
+            "- Aucun concept central n'a été explicitement retenu dans la stratégie."
         ),
     ]
 
     if strategy.get("is_identical"):
         lines.append(
-            "- Aucun filtre d’affinement supplémentaire n’a été jugé suffisamment pertinent pour produire une version restreinte distincte."
+            "- Aucun filtre d'affinement supplémentaire n'a été jugé suffisamment pertinent pour produire une version restreinte distincte."
         )
     elif added_labels:
         lines.append(
@@ -143,8 +143,8 @@ def _format_filter_rationale(excluded: list) -> str:
         )
 
     lines = [
-        "- Un concept n’est pas utilisé comme filtre actif lorsqu’un article pertinent pourrait rester utile même sans le mentionner explicitement dans les champs recherchés.",
-        "- Cette approche limite les exclusions abusives et suit une logique de recherche d’abord large, puis progressivement affinée.",
+        "- Un concept n'est pas utilisé comme filtre actif lorsqu'un article pertinent pourrait rester utile même sans le mentionner explicitement dans les champs recherchés.",
+        "- Cette approche limite les exclusions abusives et suit une logique de recherche d'abord large, puis progressivement affinée.",
     ]
     lines.extend(
         f"- {item.get('label', 'Concept')} : {item.get('reason', 'Sans justification')}"
@@ -161,7 +161,7 @@ def _format_how_to_use(strategy: dict) -> str:
     if strategy.get("is_identical"):
         return "\n".join([
             "- Utilisez la stratégie affichée comme point de départ principal.",
-            "- Si le volume de résultats reste trop large ou trop hétérogène, affinez ensuite par pays, contexte, population ou cadre d’étude.",
+            "- Si le volume de résultats reste trop large ou trop hétérogène, affinez ensuite par pays, contexte, population ou cadre d'étude.",
             "- Gardez la version actuelle comme référence de base pour documenter une première exploration rigoureuse.",
         ])
 
@@ -187,11 +187,11 @@ def _format_refinement_paths(result: dict, strategy: dict) -> str:
     if not components.get("population"):
         suggestions.append("Préciser la population concernée si vous visez un sous-groupe particulier.")
     if not components.get("setting"):
-        suggestions.append("Ajouter un contexte de soins, un type de structure ou un cadre d’étude si cela peut aider à resserrer la recherche.")
+        suggestions.append("Ajouter un contexte de soins, un type de structure ou un cadre d'étude si cela peut aider à resserrer la recherche.")
     if "géographie" not in excluded_labels and strategy.get("is_identical"):
-        suggestions.append("Ajouter un cadre géographique peut être la première piste d’affinement la plus simple.")
+        suggestions.append("Ajouter un cadre géographique peut être la première piste d'affinement la plus simple.")
     if any(label in excluded_labels for label in {"mesure épidémiologique", "validité", "complications génériques"}):
-        suggestions.append("Éviter d’ajouter comme filtres des notions transversales trop larges si elles ne sont pas au cœur du sujet.")
+        suggestions.append("Éviter d'ajouter comme filtres des notions transversales trop larges si elles ne sont pas au cœur du sujet.")
 
     if not suggestions:
         suggestions.append("La stratégie actuelle est déjà cohérente ; les ajustements futurs peuvent porter sur le contexte, la population ou la période étudiée.")
@@ -216,15 +216,16 @@ def _build_reusable_text(
             f"La stratégie de recherche a retenu les concepts suivants comme noyau principal : {', '.join(wide_labels) or 'aucun concept actif explicite'}."
         )
     else:
+        narrow_extra = ', '.join(label for label in narrow_labels if label not in wide_labels) or "des éléments d'affinement complémentaires"
         strategy_sentence = (
             f"La version large repose sur {', '.join(wide_labels) or 'aucun concept actif explicite'}, "
-            f"puis une version restreinte ajoute {', '.join(label for label in narrow_labels if label not in wide_labels) or 'des éléments d’affinement complémentaires'}."
+            f"puis une version restreinte ajoute {narrow_extra}."
         )
 
     excluded_sentence = (
-        f"Les notions suivantes ont été laissées hors du filtrage actif afin d’éviter une stratégie trop restrictive : {', '.join(excluded_labels)}."
+        f"Les notions suivantes ont été laissées hors du filtrage actif afin d'éviter une stratégie trop restrictive : {', '.join(excluded_labels)}."
         if excluded_labels else
-        "Aucun concept supplémentaire n’a dû être explicitement écarté du filtrage actif."
+        "Aucun concept supplémentaire n'a dû être explicitement écarté du filtrage actif."
     )
 
     filter_text = ""
@@ -250,7 +251,7 @@ def build_search_strategy_pack(
     result_filters: dict = None,
 ) -> str:
     """
-    Construit un export markdown lisible pour l’analyse courante.
+    Construit un export markdown lisible pour l'analyse courante.
     """
     framework = result.get("framework")
     is_identical = strategy.get("is_identical", False)
@@ -265,11 +266,11 @@ def build_search_strategy_pack(
     narrow = strategy.get("narrow", {})
 
     methodology_note = (
-        "Aucun filtre supplémentaire pertinent n’a été identifié. "
-        "Vous pouvez affiner en précisant un pays, un contexte, une population ou un cadre d’étude."
+        "Aucun filtre supplémentaire pertinent n'a été identifié. "
+        "Vous pouvez affiner en précisant un pays, un contexte, une population ou un cadre d'étude."
         if is_identical else
         "La stratégie large utilise les concepts essentiels (priority = 1). "
-        "La stratégie restreinte ajoute les concepts d’affinement (priority = 2) "
+        "La stratégie restreinte ajoute les concepts d'affinement (priority = 2) "
         "pour réduire le volume de résultats."
     )
 
@@ -324,7 +325,7 @@ def build_search_strategy_pack(
         "## 10. Comment utiliser la version large et la version restreinte",
         _format_how_to_use(strategy),
         "",
-        "## 11. Pistes d’affinement",
+        "## 11. Pistes d'affinement",
         _format_refinement_paths(result, strategy),
         "",
         "## 12. Requêtes par plateforme disponible",

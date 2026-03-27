@@ -65,7 +65,7 @@ def validate_zotero_api_key(api_key: str) -> dict:
     user_id = data.get("userID")
     username = data.get("username") or data.get("name") or ""
     if not user_id:
-        raise ZoteroIntegrationError("Impossible d’identifier la bibliothèque Zotero associée à cette clé.")
+        raise ZoteroIntegrationError("Impossible d'identifier la bibliothèque Zotero associée à cette clé.")
 
     return {
         "api_key": api_key.strip(),

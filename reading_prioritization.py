@@ -12,7 +12,7 @@ FOCUS_OPTIONS = {
     "factors": "Facteurs associés",
     "population": "Population spécifique",
     "geography": "Contexte géographique",
-    "study_type": "Type d’étude",
+    "study_type": "Type d'étude",
     "tool": "Outil ou test",
     "validity": "Validité / performance",
     "other": "Autre objectif libre",
@@ -138,9 +138,9 @@ def _score_article(article: dict, focus_terms: list, focus_label: str) -> dict:
     if title_matches:
         technical_reasons.append(f"concepts couverts dans le titre : {', '.join(title_matches[:3])}")
     elif abstract_matches:
-        technical_reasons.append(f"concepts surtout retrouvés dans l’abstract : {', '.join(abstract_matches[:3])}")
+        technical_reasons.append(f"concepts surtout retrouvés dans l'abstract : {', '.join(abstract_matches[:3])}")
     if abstract_overlap >= 0.45 or semantic_similarity >= 0.38:
-        technical_reasons.append("l’abstract traite directement la combinaison des concepts du sujet")
+        technical_reasons.append("l'abstract traite directement la combinaison des concepts du sujet")
     if penalty >= 0.1:
         technical_reasons.append("article plus général que le sujet exact")
 
@@ -155,21 +155,21 @@ def _score_article(article: dict, focus_terms: list, focus_label: str) -> dict:
             score += 2
             matched_terms.append(term)
 
-    if article.get("year") and article.get("year").isdigit() and int(article["year"]) >= 2020:
+    if str(article.get("year", "")).isdigit() and int(article["year"]) >= 2020:
         score += 0.35
         if not technical_reasons:
             technical_reasons.append("publication récente")
 
     if matched_terms:
         unique_matches = list(dict.fromkeys(matched_terms))
-        technical_reasons.append(f"mentionne des termes liés à l’objectif : {', '.join(unique_matches[:3])}")
+        technical_reasons.append(f"mentionne des termes liés à l'objectif : {', '.join(unique_matches[:3])}")
 
     if focus_label == "Population spécifique" and matched_terms:
         technical_reasons.append("correspond à la population recherchée")
     elif focus_label == "Contexte géographique" and matched_terms:
         technical_reasons.append("correspond au contexte géographique")
     elif focus_label == "Outil ou test" and matched_terms:
-        technical_reasons.append("mentionne l’outil ou le test étudié")
+        technical_reasons.append("mentionne l'outil ou le test étudié")
     elif focus_label == "Validité / performance" and matched_terms:
         technical_reasons.append("traite explicitement des performances ou de la validité")
 
@@ -286,7 +286,7 @@ def apply_agent_assessment(prioritized: dict, shortlist: list, assessment: dict)
             updated_articles.append({
                 **article,
                 "priority": assessed_priority,
-                "reasons": [assessed.get("reason", "Classé par lecture rapide du titre et de l’abstract.")],
+                "reasons": [assessed.get("reason", "Classé par lecture rapide du titre et de l'abstract.")],
                 "ranking_source": "agent",
             })
         else:

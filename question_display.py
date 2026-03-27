@@ -243,7 +243,7 @@ def get_visible_explanation(result: dict, presentation: dict) -> str:
             "Question encore large, utile pour repérer rapidement si la littérature existe sur ce sujet."
         ),
         "question de prévalence": (
-            "Question descriptive visant à estimer la fréquence d’un problème de santé dans une population ou un contexte donné."
+            "Question descriptive visant à estimer la fréquence d'un problème de santé dans une population ou un contexte donné."
         ),
         "question descriptive": (
             "Question descriptive visant à mieux caractériser un problème de santé, une situation ou un contexte."
@@ -253,26 +253,26 @@ def get_visible_explanation(result: dict, presentation: dict) -> str:
         ),
         "question interventionnelle": (
             raw_explanation
-            or "Question interventionnelle visant à évaluer l’effet d’une intervention sur un critère de jugement."
+            or "Question interventionnelle visant à évaluer l'effet d'une intervention sur un critère de jugement."
         ),
         "question pronostique": (
-            "Question visant à estimer l’évolution probable d’un état de santé ou la survenue d’un événement futur."
+            "Question visant à estimer l'évolution probable d'un état de santé ou la survenue d'un événement futur."
         ),
         "question diagnostique": (
-            "Question visant à évaluer la capacité d’un test, d’un score ou d’un outil à identifier correctement une condition."
+            "Question visant à évaluer la capacité d'un test, d'un score ou d'un outil à identifier correctement une condition."
         ),
         "question de validité / validation": (
-            "Question visant à évaluer la validité, la fiabilité ou les performances d’un outil, d’un test ou d’un algorithme."
+            "Question visant à évaluer la validité, la fiabilité ou les performances d'un outil, d'un test ou d'un algorithme."
         ),
         "question qualitative": (
             raw_explanation
             or "Question qualitative visant à comprendre des perceptions, expériences, barrières ou facilitateurs."
         ),
         "question méthodologique": (
-            "Question portant sur le choix, l’usage ou la pertinence d’une méthode d’étude ou d’analyse."
+            "Question portant sur le choix, l'usage ou la pertinence d'une méthode d'étude ou d'analyse."
         ),
         "question statistique": (
-            "Question portant sur la comparaison ou le choix d’une méthode statistique pour analyser des données."
+            "Question portant sur la comparaison ou le choix d'une méthode statistique pour analyser des données."
         ),
     }
 
